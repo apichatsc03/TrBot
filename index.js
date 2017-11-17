@@ -74,16 +74,15 @@ function handleMessageEvent(event) {
           .then(response => {
             console.log(response.data._embedded.funds[0]);
             data = response.data._embedded.funds[0]
+            msg = {
+                type: 'text',
+                text: `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
+            };
     
           })
           .catch(error => {
             console.log(error);
           });
-
-        msg = {
-            type: 'text',
-            text: `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
-        };
     }
 
     return client.replyMessage(event.replyToken, msg);
