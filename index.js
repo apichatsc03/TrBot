@@ -70,19 +70,22 @@ function handleMessageEvent(event) {
             }
         }
     } else {
+        console.log(resp)
+        console.log(" >>> " , eventText)
         http.get(`${apiEndpoint}/search?riskLevel=&taxBenefit=-1&location=-1&keyword=&${eventText}&sort=fundResult.sweightTotal,DESC`, resp => {
             var body = '';
-            resp.on('data', function (d) {
-                body += d;
-            });
-            resp.on('end', function () {
-                console.log(body)
-                var json = JSON.parse(body);
-                msg = {
-                    type: 'text',
-                    text: json
-                };
-            });
+            console.log(resp)
+            // resp.on('data', function (d) {
+            //     body += d;
+            // });
+            // resp.on('end', function () {
+            //     console.log(body)
+            //     var json = JSON.parse(body);
+            //     msg = {
+            //         type: 'text',
+            //         text: json
+            //     };
+            // });
         }).on('error', err => {
             msg = {
                 type: 'text',
