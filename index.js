@@ -35,8 +35,9 @@ function handleMessageEvent(event) {
         text: 'สวัสดีครับยินดีต้อนรับ'
     };
 
-    var eventText = event.message.text.toLowerCase();
-
+    var eventText = event.message.text.toLowerCase().split("search").join("")
+    
+    let keyword = "%"+$(eventText).val()+"%"
     if (eventText === "about you") {
         msg = {
             "type": "template",
@@ -68,10 +69,14 @@ function handleMessageEvent(event) {
         }
     } else {
 
-        axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25K-MPLUS%25`)
+        axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`)
           .then(response => {
-            console.log(response.data.url);
-            console.log(response.data.explanation);
+            console.log(response.data_embedded.funds);
+            let data = response.data_embedded.funds
+            msg = {
+                type: 'text',
+                text: `${data[0].fundNameTh} ( ${data[0].fundCode} ) https://wwww.treasurist.com/${data[0].fundId}/${data[0].fundNameEn}`
+            };
           })
           .catch(error => {
             console.log(error);
