@@ -75,10 +75,11 @@ function handleMessageEvent(event) {
         http.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25K-MPLUS%25`, 
         resp => {
             var body = '';
-            console.log(resp.data._embedded)
-            // resp.on('data', function (d) {
-            //     body += d;
-            // });
+            console.log("DATA ", resp.data)
+            resp.on('data', function (d) {
+                body += d;
+                console.log("BODY ", body)
+            });
             // resp.on('end', function () {
             //     console.log(body)
             //     var json = JSON.parse(body);
