@@ -1,9 +1,6 @@
-// import * as axios from 'axios'
-// import _ from 'lodash'
 const express = require('express');
 const line = require('@line/bot-sdk');
-var http = require("http");
-var apiEndpoint = "http://treasurist.com"
+const axios = require('axios');
 
 require('dotenv').config();
 
@@ -70,26 +67,15 @@ function handleMessageEvent(event) {
             }
         }
     } else {
-        http.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25K-MPLUS%25`, 
-        resp => {
-            var body = '';
-            resp.on('data', function (d) {
-                body += d;
-            });
-            resp.on('end', function () {
-                console.log(" >>> ", body)
-            //     var json = JSON.parse(body);
-            //     msg = {
-            //         type: 'text',
-            //         text: json
-            //     };
-            });
-        }).on('error', err => {
-            msg = {
-                type: 'text',
-                text: 'Not found!!!'
-            };
-        })
+
+        axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25K-MPLUS%25`)
+          .then(response => {
+            console.log(response.data.url);
+            console.log(response.data.explanation);
+          })
+          .catch(error => {
+            console.log(error);
+          });
     }
 
     return client.replyMessage(event.replyToken, msg);
