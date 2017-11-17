@@ -71,8 +71,8 @@ function handleMessageEvent(event) {
         var keyword = eventText.split("search").join("")
         axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`)
           .then(response => {
-            console.log(response.data_embedded.funds);
-            let data = response.data_embedded.funds
+            console.log(response.data._embedded);
+            let data = response.data._embedded.funds
             msg = {
                 type: 'text',
                 text: `${data[0].fundNameTh} ( ${data[0].fundCode} ) https://wwww.treasurist.com/${data[0].fundId}/${data[0].fundNameEn}`
