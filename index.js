@@ -70,12 +70,13 @@ function handleMessageEvent(event) {
             }
         }
     } else {
-        let data =  http.get(`${apiEndpoint}/search?riskLevel=&taxBenefit=-1&location=-1&keyword=&${eventText}&sort=fundResult.sweightTotal,DESC`, resp => {
+        http.get(`${apiEndpoint}/search?riskLevel=&taxBenefit=-1&location=-1&keyword=&${eventText}&sort=fundResult.sweightTotal,DESC`, resp => {
             var body = '';
             resp.on('data', function (d) {
                 body += d;
             });
             resp.on('end', function () {
+                console.log(body)
                 var json = JSON.parse(body);
                 msg = {
                     type: 'text',
