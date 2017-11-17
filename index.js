@@ -79,7 +79,6 @@ function handleMessageEvent(event) {
     var eventText = event.message.text.toLowerCase();
 
     if (eventText === "about you") {
-        let data = listRecommend()
         msg = {
             "type": "template",
             "altText": "Welcome to Treasurist",
@@ -91,7 +90,7 @@ function handleMessageEvent(event) {
                 "actions": [
                     {
                       "type": "uri",
-                      "label": "",
+                      "label": "Test",
                       "uri": "https://www.treasurist.com/suitabilityTest"
                     },
                     {
@@ -110,7 +109,7 @@ function handleMessageEvent(event) {
         }
     } else if (eventText === "top") {
         // let data = listRecommend()
-        var msg = {
+        msg = {
             type: 'text',
             text: 'Work in process....'
         };
