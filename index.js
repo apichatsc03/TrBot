@@ -70,7 +70,7 @@ function handleMessageEvent(event) {
             }
         }
     } else {
-        console.log(resp)
+        
         console.log(" >>> " , eventText)
         http.get(`https://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25K-MPLUS%25`, 
         resp => {
