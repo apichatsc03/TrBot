@@ -1,5 +1,5 @@
-import * as axios from 'axios'
-import _ from 'lodash'
+// import * as axios from 'axios'
+// import _ from 'lodash'
 const express = require('express');
 const line = require('@line/bot-sdk');
 
@@ -14,45 +14,45 @@ const config = {
 
 const client = new line.Client(config);
 
-const listRecommend = () => {
-    let data = {}
-    this.search('funds', 'homeList', {}, {
-      page: 0,
-      size: 6,
-      sort: "fundResult.sweightTotal,DESC"
-    }, 'fundList').then(resp => {
-      data = resp.data._embedded
-    }).catch(err => {
-      console.error(err)
-    })
+// const listRecommend = () => {
+//     let data = {}
+//     this.search('funds', 'homeList', {}, {
+//       page: 0,
+//       size: 6,
+//       sort: "fundResult.sweightTotal,DESC"
+//     }, 'fundList').then(resp => {
+//       data = resp.data._embedded
+//     }).catch(err => {
+//       console.error(err)
+//     })
 
-  return data
-}
+//   return data
+// }
 
 
-axios.defaults.baseURL = 'https://treasurist.com/api';
-axios.defaults.headers.common['TR-Device-Type'] = 'Web'
-axios.interceptors.request.use(function (config) {
-    // Do something before request is sent
-    return config;
-  }, function (error) {
-    // Do something with request error
-    return Promise.reject(error);
-  });
+// axios.defaults.baseURL = 'https://treasurist.com/api';
+// axios.defaults.headers.common['TR-Device-Type'] = 'Web'
+// axios.interceptors.request.use(function (config) {
+//     // Do something before request is sent
+//     return config;
+//   }, function (error) {
+//     // Do something with request error
+//     return Promise.reject(error);
+//   });
 
-// Add a response interceptor
-axios.interceptors.response.use(function (response) {
-    // Do something with response data
-    return response;
+// // Add a response interceptor
+// axios.interceptors.response.use(function (response) {
+//     // Do something with response data
+//     return response;
 
-  }, function (error) {
-    // Do something with response error
-    console.log("axios interceptor error: ", error.status)
-    if(error.status === 404){
-      return Promise.reject('404 Not found')
-    }
-    return Promise.reject(error);
-  });
+//   }, function (error) {
+//     // Do something with response error
+//     console.log("axios interceptor error: ", error.status)
+//     if(error.status === 404){
+//       return Promise.reject('404 Not found')
+//     }
+//     return Promise.reject(error);
+//   });
 
 app.post('/webhook', line.middleware(config), (req, res) => {
     Promise
@@ -109,20 +109,20 @@ function handleMessageEvent(event) {
             }
         }
     } else if (eventText === "top") {
-        let data = listRecommend()
+        // let data = listRecommend()
         var msg = {
             type: 'text',
-            text: {data}
+            text: 'Work in process....'
         };
     }
 
     return client.replyMessage(event.replyToken, msg);
 }
 
-function search(resource, method, query, pageable, projection){
-    let params = _.assign({}, pageable, {projection}, query)
-    return axios.get(resource+'/search/'+method, {auth, params})
-}
+// function search(resource, method, query, pageable, projection){
+//     let params = _.assign({}, pageable, {projection}, query)
+//     return axios.get(resource+'/search/'+method, {auth, params})
+// }
 
 app.set('port', (process.env.PORT || 5000));
 
