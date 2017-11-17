@@ -70,33 +70,28 @@ function handleMessageEvent(event) {
             }
         }
     } else {
-        let data = getInfoForRender(`${apiEndpoint}/search?riskLevel=&taxBenefit=-1&location=-1&keyword=&${eventText}&sort=fundResult.sweightTotal,DESC`)
-        
-        msg = {
-            type: 'text',
-            text: data
-        };
+        let data =  http.get(`${apiEndpoint}/search?riskLevel=&taxBenefit=-1&location=-1&keyword=&${eventText}&sort=fundResult.sweightTotal,DESC`, resp => {
+            var body = '';
+            resp.on('data', function (d) {
+                body += d;
+            });
+            resp.on('end', function () {
+                var json = JSON.parse(body);
+                msg = {
+                    type: 'text',
+                    text: json
+                };
+            });
+        }).on('error', err => {
+            msg = {
+                type: 'text',
+                text: 'Not found!!!'
+            };
+        })
     }
 
     return client.replyMessage(event.replyToken, msg);
 }
-
-function getInfoForRender(getUrl){
-    http.get(getUrl, resp => {
-        var body = '';
-        resp.on('data', function (d) {
-            body += d;
-        });
-        resp.on('end', function () {
-            var json = JSON.parse(body);
-        });
-
-    }).on('error', err => {
-
-    })
-    return json
-}
-
 
 app.set('port', (process.env.PORT || 5000));
 
