@@ -3,7 +3,7 @@
 const express = require('express');
 const line = require('@line/bot-sdk');
 var http = require("http");
-var apiEndpoint = "https://treasurist.com"
+var apiEndpoint = "http://treasurist.com"
 
 require('dotenv').config();
 
