@@ -98,8 +98,7 @@ function resultList(data) {
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                     "title": `${s.fundCode} :: ${s.fundNameTh}`, 
-                    "text": `${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) 
-                            ราคาล่าสุด ณ ${moment(s.lastestNavDateList[0].navDate).locale("TH").format("D MMMM YYYY")}  `,
+                    "text": `${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`,
                     "actions": [
                         {
                             "type": "uri",
