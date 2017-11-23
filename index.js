@@ -1,6 +1,7 @@
 const express = require('express');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
+const moment = require('moment');
 
 require('dotenv').config();
 
@@ -94,7 +95,7 @@ function resultList(data) {
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                     "title": `${s.fundCode} :: ${s.fundNameTh}`, 
-                    "text": `${lastestNavDateList[0].nav ? lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) ราคาล่าสุด ณ ${moment(lastestNavDateList[0].navDate).locale("TH").format("D MMMM YYYY")}`,
+                    "text": `${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) ราคาล่าสุด ณ ${moment(s.lastestNavDateList[0].navDate).locale("TH").format("D MMMM YYYY")}`,
                     "actions": [
                         {
                             "type": "uri",
