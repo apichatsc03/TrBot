@@ -85,13 +85,18 @@ function handleMessageEvent(event) {
     } else {
         var keyword = eventText.split("search").join("")
         
-        var data = getData(keyword);
+        getData(keyword).then(function (content) {
+            console.log(content.toString('base64'));
+            console.log("name > ", content)
+            msg = {
+                type: 'text',
+                text: content.fundNameTh
+            };
+        }).catch(function (error) {
+            // error
+        });
         // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
-        console.log("name > ", data)
-        // msg = {
-        //     type: 'text',
-        //     text: data.fundNameTh
-        // };
+    
     }
 
     return client.replyMessage(event.replyToken, msg);
