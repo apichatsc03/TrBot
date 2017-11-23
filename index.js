@@ -72,12 +72,13 @@ function handleMessageEvent(event) {
             let data = response.data._embedded.funds
             console.log("Data size > ", data.length)
             let msg =  resultList(data)
+            console.log("Here !!!")
             return client.replyMessage(event.replyToken, msg);
           })
           .catch(error => {
             console.log(error);
           });
-        console.log("Here !!!")
+  
         // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
     }
 
