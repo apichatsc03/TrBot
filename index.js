@@ -37,7 +37,7 @@ const getData = (keyword) => {
 
 const getProgressiblePromise = async (promise) => {
     try {
-      let resp = await promise._embedded
+      let resp = await promise
       return resp
     } catch (err) {
       throw err
@@ -82,12 +82,13 @@ function handleMessageEvent(event) {
                 
             }
         }
+        return client.replyMessage(event.replyToken, msg);
     } else {
         var keyword = eventText.split("search").join("")
         
         getData(keyword).then(function (content) {
             console.log(content.toString('base64'));
-            console.log("name > ", content)
+            console.log("name > ", content._embedded)
             msg = {
                 type: 'text',
                 text: 'dddddd'
@@ -96,7 +97,7 @@ function handleMessageEvent(event) {
             // error
         });
         // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
-    
+        return client.replyMessage(event.replyToken, msg);
     }
 
     return client.replyMessage(event.replyToken, msg);
