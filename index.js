@@ -32,7 +32,7 @@ function handleEvent(event) {
 const getData = (keyword) => {
     let requestedUrl = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`
     let promise = axios.get(requestedUrl)   
-    return  getProgressiblePromise(promise)
+    return  getProgressiblePromise(promise._embedded)
   }
 
 const getProgressiblePromise = async (promise) => {
@@ -88,16 +88,17 @@ function handleMessageEvent(event) {
         
         getData(keyword).then(function (content) {
             console.log(content.toString('base64'));
-            console.log("name > ", content._embedded)
+            console.log("name > ", content)
             msg = {
                 type: 'text',
                 text: 'dddddd'
             };
+            return client.replyMessage(event.replyToken, msg);
         }).catch(function (error) {
             // error
         });
         // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
-        return client.replyMessage(event.replyToken, msg);
+        
     }
 
     return client.replyMessage(event.replyToken, msg);
