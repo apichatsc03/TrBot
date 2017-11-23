@@ -30,11 +30,7 @@ function handleEvent(event) {
 }
 
 function handleMessageEvent(event) {
-    var msg = {
-        type: 'text',
-        text: 'สวัสดีครับยินดีต้อนรับ'
-    };
-
+    var msg
     var eventText = event.message.text.toLowerCase()
     
 
@@ -67,6 +63,7 @@ function handleMessageEvent(event) {
                 
             }
         }
+        return client.replyMessage(event.replyToken, msg);
     } else {
         var keyword = eventText.split("search").join("")
         
@@ -79,18 +76,18 @@ function handleMessageEvent(event) {
                 text: data.fundNameTh
             };
         
-            return client.replyMessage(event.replyToken, msg);
+           
           })
           .catch(error => {
             console.log(error);
           });
 
         // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
-        
+        return client.replyMessage(event.replyToken, msg);
         
     }
 
-    return client.replyMessage(event.replyToken, msg);
+    // return client.replyMessage(event.replyToken, msg);
 }
 
 app.set('port', (process.env.PORT || 5000));
