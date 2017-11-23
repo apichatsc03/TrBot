@@ -97,7 +97,7 @@ function resultList(data) {
             "columns": data.map( s => {
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) ราคาล่าสุด ณ ${moment(s.lastestNavDateList[0].navDate).locale("TH").format("D MMMM YYYY")}`, 
+                    "title": `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) ราคาล่าสุด ณ ${s.lastestNavDateList[0].navDate}`, 
                     "text": `${s.fundNameTh} `,
                     "actions": [
                         {
