@@ -37,7 +37,7 @@ const getData = (keyword) => {
 
 const getProgressiblePromise = async (promise) => {
     try {
-      let resp = await promise
+      let resp = await promise._embedded
       return resp
     } catch (err) {
       throw err
@@ -90,7 +90,7 @@ function handleMessageEvent(event) {
             console.log("name > ", content)
             msg = {
                 type: 'text',
-                text: content.fundNameTh
+                text: 'dddddd'
             };
         }).catch(function (error) {
             // error
