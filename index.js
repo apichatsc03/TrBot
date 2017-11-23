@@ -1,7 +1,6 @@
 const express = require('express');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
-const moment = require('moment');
 
 require('dotenv').config();
 
@@ -71,7 +70,7 @@ function handleMessageEvent(event) {
         axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`)
           .then(response => {
             let data = response.data._embedded.funds
-            console.log("Data size > ", data != undefined && data.length)
+            console.log("Data size > ", data.length)
             let msg =  resultList(data)
             return client.replyMessage(event.replyToken, msg);
           })
@@ -86,7 +85,7 @@ function handleMessageEvent(event) {
 }
 
 function resultList(data) {
-    let resultList = {
+    let resultList = (data !== null ||  data !== undefined) && {
         "type": "template",
         "altText": "this is a carousel template",
         "template": {
@@ -94,8 +93,8 @@ function resultList(data) {
             "columns": data.map( s => {
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": `${s.fundCode} :: ${s.fundNameTh}`, 
-                    "text": `${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) ราคาล่าสุด ณ ${s.lastestNavDateList[0].navDate}`,
+                    "title": s.fundCode + " :: " +  s.fundNameTh, 
+                    "text": s.fundNameTh,
                     "actions": [
                         {
                             "type": "uri",
