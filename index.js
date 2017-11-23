@@ -72,10 +72,7 @@ function handleMessageEvent(event) {
           .then(response => {
             let data = response.data._embedded.funds
             console.log("Data size > ", data != undefined && data.length)
-            let msg =  data != undefined ? resultList(data) : {
-                "type": "text",
-                "text": "Search Not Found!!"
-            }
+            let msg =  resultList(data)
             return client.replyMessage(event.replyToken, msg);
           })
           .catch(error => {
