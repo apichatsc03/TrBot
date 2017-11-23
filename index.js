@@ -71,7 +71,10 @@ function handleMessageEvent(event) {
           .then(response => {
             let data = response.data._embedded.funds
             console.log("Data size > ", data.length)
-            let msg =  resultList(data)
+            let msg =  data != undefined ? resultList(data) : {
+                "type": "text",
+                "text": "Search Not Found!!"
+            }
             console.log("Here !!!")
             return client.replyMessage(event.replyToken, msg);
           })
@@ -94,8 +97,8 @@ function resultList(data) {
             "columns": data.map( s => {
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": s.fundCode + " :: " +  s.fundNameTh, 
-                    "text": s.fundNameTh,
+                    "title": `${s.fundCode} :: ${s.fundNameTh}`, 
+                    "text": `${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) ราคาล่าสุด ณ ${s.lastestNavDateList[0].navDate}`,
                     "actions": [
                         {
                             "type": "uri",
