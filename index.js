@@ -1,7 +1,7 @@
 const express = require('express');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
-import {moment} from 'moment'
+const moment = require('moment');
 require('dotenv').config();
 
 const app = express();
