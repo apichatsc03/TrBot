@@ -85,7 +85,7 @@ function handleMessageEvent(event) {
 }
 
 function resultList(data) {
-    let resultList = {
+    let resultList = (data !== null ||  data !== undefined) && {
         "type": "template",
         "altText": "this is a carousel template",
         "template": {
@@ -99,7 +99,7 @@ function resultList(data) {
                         {
                             "type": "uri",
                             "label": "View detail",
-                            "uri": `http://www.treasurist.com/funds/${s.fundId}/${fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()}`
+                            "uri": `http://www.treasurist.com/funds/${s.fundId}/${s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()}`
                         }
                     ]
                   }
