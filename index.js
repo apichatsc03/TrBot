@@ -1,7 +1,7 @@
 const express = require('express');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
-const moment = require('moment');
+import moment from 'moment'
 require('dotenv').config();
 
 const app = express();
@@ -97,8 +97,8 @@ function resultList(data) {
             "columns": data.map( s => {
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": `${s.fundCode} :: ${s.fundNameTh}`, 
-                    "text": `${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`,
+                    "title": `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) ราคาล่าสุด ณ ${moment(s.lastestNavDateList[0].navDate).locale("TH").format("D MMMM YYYY")}`, 
+                    "text": `${s.fundNameTh} `,
                     "actions": [
                         {
                             "type": "uri",
