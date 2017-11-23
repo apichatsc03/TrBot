@@ -30,12 +30,12 @@ function handleEvent(event) {
 }
 
 function handleMessageEvent(event) {
-    var msg
+
     var eventText = event.message.text.toLowerCase()
     
 
     if (eventText === "about you") {
-        msg = {
+        let msg = {
             "type": "template",
             "altText": "Welcome to Treasurist",
             "template": {
@@ -71,18 +71,17 @@ function handleMessageEvent(event) {
           .then(response => {
             let data = response.data._embedded.funds[0]
             console.log("name > ", data.fundNameTh)
-            return msg = {
+            let msg = {
                 type: 'text',
                 text: data.fundNameTh
             };
+            return client.replyMessage(event.replyToken, msg);
           })
           .catch(error => {
             console.log(error);
           });
         console.log("Here !!!")
         // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
-        return client.replyMessage(event.replyToken, msg);
-        
     }
 
     // return client.replyMessage(event.replyToken, msg);
