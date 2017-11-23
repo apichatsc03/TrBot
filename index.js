@@ -69,12 +69,9 @@ function handleMessageEvent(event) {
         
         axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`)
           .then(response => {
-            let data = response.data._embedded.funds[0]
-            console.log("name > ", data.fundNameTh)
-            let msg = {
-                type: 'text',
-                text: data.fundNameTh
-            };
+            let data = response.data._embedded.funds
+            console.log("Data size > ", data.length)
+            let msg =  resultList(data)
             return client.replyMessage(event.replyToken, msg);
           })
           .catch(error => {
@@ -85,6 +82,32 @@ function handleMessageEvent(event) {
     }
 
     // return client.replyMessage(event.replyToken, msg);
+}
+
+function resultList(data) {
+    let resultList = {
+        "type": "template",
+        "altText": "this is a carousel template",
+        "template": {
+            "type": "carousel",
+            "columns": data.map( s => {
+                return {
+                    "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
+                    "title": s.fundCode, 
+                    "text": s.fundNameTh,
+                    "actions": [
+                        {
+                            "type": "uri",
+                            "label": "View detail",
+                            "uri": `http://www.treasurist.com/funds/${s.fundId}/${fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()}`
+                        }
+                    ]
+                  }
+            })
+        }
+      }
+
+    return resultList
 }
 
 app.set('port', (process.env.PORT || 5000));
