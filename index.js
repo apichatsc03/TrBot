@@ -79,7 +79,7 @@ function handleMessageEvent(event) {
           });
 
         // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
-        console.log("name > ", data.fundNameTh)
+        console.log("name > ", data)
         msg = {
             type: 'text',
             text: data.fundNameTh
