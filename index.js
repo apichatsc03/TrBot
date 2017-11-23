@@ -71,17 +71,15 @@ function handleMessageEvent(event) {
           .then(response => {
             let data = response.data._embedded.funds[0]
             console.log("name > ", data.fundNameTh)
-            msg = {
+            return msg = {
                 type: 'text',
                 text: data.fundNameTh
             };
-        
-           
           })
           .catch(error => {
             console.log(error);
           });
-
+        console.log("Here !!!")
         // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
         return client.replyMessage(event.replyToken, msg);
         
