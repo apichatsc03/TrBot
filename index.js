@@ -88,10 +88,10 @@ function handleMessageEvent(event) {
         var data = getData(keyword);
         // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
         console.log("name > ", data)
-        msg = {
-            type: 'text',
-            text: data.fundNameTh
-        };
+        // msg = {
+        //     type: 'text',
+        //     text: data.fundNameTh
+        // };
     }
 
     return client.replyMessage(event.replyToken, msg);
