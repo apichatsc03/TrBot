@@ -29,6 +29,21 @@ function handleEvent(event) {
     }
 }
 
+export const getData = (keyword) => {
+    let requestedUrl = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`
+    let promise = axios.get(requestedUrl)   
+    return  getProgressiblePromise(promise)
+  }
+
+const getProgressiblePromise = async (promise) => {
+    try {
+      let resp = await promise
+      return resp
+    } catch (err) {
+      throw err
+    }
+}
+
 function handleMessageEvent(event) {
     var msg = {
         type: 'text',
@@ -70,14 +85,7 @@ function handleMessageEvent(event) {
     } else {
         var keyword = eventText.split("search").join("")
         
-        var data = axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`)
-          .then(response => {
-            return response.data._embedded.funds[0]
-          })
-          .catch(error => {
-            console.log(error);
-          });
-
+        var data = getData(keyword);
         // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
         console.log("name > ", data)
         msg = {
