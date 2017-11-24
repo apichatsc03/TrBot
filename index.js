@@ -98,7 +98,7 @@ function resultList(data) {
             "columns": data.map( s => {
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": `${s.fundCode}`, 
+                    "title": `${s.fundCode} (${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)})`, 
                     "text": `${s.fundNameTh}`,
                     "actions": [
                         {
