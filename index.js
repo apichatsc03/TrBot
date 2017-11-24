@@ -146,7 +146,7 @@ function resultList(data) {
 function handlePostBackEvent(event) {
     var eventPostback = event.postback.data.split("&")
     var eventPostbackAction = eventPostback[0] != undefined && eventPostback[0].split("=")[1]
-    var eventPostBackItem = eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 1
+    var eventPostBackItem = eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0
     console.log(question[eventPostBackItem].choices);
     if (eventPostbackAction === "test" && eventPostBackItem <= 16) {
         console.log(eventPostBackItem);
@@ -156,15 +156,13 @@ function handlePostBackEvent(event) {
             "template": {
                 "type": "buttons",
                 "text": question[eventPostBackItem].question,
-                "actions": [
-                    question[eventPostBackItem].choices.map(c => {
-                        return {
-                            "type": "postback",
-                            "label": c.text,
-                            "data": `action=test&itemid=${eventPostBackItem+1}&value=${c.value}`
-                        }
-                    })
-                ]
+                "actions": question[eventPostBackItem].choices.map(c => {
+                            return {
+                                "type": "postback",
+                                "label": c.text,
+                                "data": `action=test&itemid=${eventPostBackItem+1}&value=${c.value}`
+                            }
+                        })
             }
         }
         return client.replyMessage(event.replyToken, msg);
