@@ -1,6 +1,7 @@
 const express = require('express');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
+const moment = require('moment');
 require('dotenv').config();
 
 const app = express();
@@ -88,6 +89,7 @@ function handleMessageEvent(event) {
 }
 
 function resultList(data) {
+    console.log("date " ,moment(s.lastestNavDateList[0].navDate).locale("TH").format("D MM YYYY"))
     let resultList = (data !== null ||  data !== undefined) && {
         "type": "template",
         "altText": "this is a carousel template",
@@ -109,7 +111,7 @@ function resultList(data) {
             })
         }
       }
-
+    
     return resultList
 }
 
