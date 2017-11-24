@@ -83,7 +83,6 @@ function handleMessageEvent(event) {
             "altText": "Test open port",
             "template": {
                 "type": "buttons",
-                "thumbnailImageUrl": "https://example.com/bot/images/image.jpg",
                 "title": "เริ่มวงแผนการลงทุนที่เหมาะกับคุณ",
                 "actions": [
                     {
