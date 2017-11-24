@@ -46,6 +46,7 @@ function handleMessageEvent(event) {
     var eventText = event.message.text.toLowerCase()
     var re = /(\bsearch\b)/;
     if (eventText === "about you") {
+        console.log(eventText);
         let msg = {
             "type": "template",
             "altText": "Welcome to Treasurist",
@@ -76,6 +77,7 @@ function handleMessageEvent(event) {
         }
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "test") {
+        console.log(eventText);
         let msg = {
             "type": "template",
             "altText": "Test open port",
@@ -94,6 +96,7 @@ function handleMessageEvent(event) {
         }
         return client.replyMessage(event.replyToken, msg);
     } else if (re.test(eventText)) {
+        console.log(`${re.test(eventText)} :: ${eventText}`);
         var keyword = eventText.split("search").join("")
 
         axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`)
