@@ -141,7 +141,7 @@ function resultList(data) {
     return resultList
 }
 
-function handleMessageEvent(event) {
+function handlePostBackEvent(event) {
     var eventPostback = event.postback.data.split("&")
     var eventPostbackAction = eventPostback[0] != undefined && eventPostback[0].split("=")[1]
     var eventPostBackItem = eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 1
