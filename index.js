@@ -73,7 +73,7 @@ function handleMessageEvent(event) {
             console.log("Data size > ",  data != undefined && data.length)
             let msg =  data != undefined ? resultList(data) : {
                 "type": "text",
-                "text": "Search Not Found!!"
+                "text": "Search Not Found!, Please Try Again."
             }
             console.log("Here !!!")
             // console.log("msg >> ", msg)
