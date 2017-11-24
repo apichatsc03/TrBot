@@ -147,7 +147,7 @@ function handlePostBackEvent(event) {
     var eventPostback = event.postback.data.split("&")
     var eventPostbackAction = eventPostback[0] != undefined && eventPostback[0].split("=")[1]
     var eventPostBackItem = eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 1
-    console.log(question[eventPostBackItem].question.choices);
+    console.log(question[eventPostBackItem].choices);
     if (eventPostbackAction === "test" && eventPostBackItem <= 16) {
         console.log(eventPostBackItem);
         let msg = {
@@ -155,7 +155,7 @@ function handlePostBackEvent(event) {
             "altText": question[eventPostBackItem].altQuestion,
             "template": {
                 "type": "buttons",
-                "title": question[eventPostBackItem].question,
+                "text": question[eventPostBackItem].question,
                 "actions": [
                     question[eventPostBackItem].choices.map(c => {
                         return {
