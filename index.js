@@ -2,7 +2,8 @@ const express = require('express');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
 const moment = require('moment');
-const question = require('./src/testResulte/Questionair')
+const question = require('./src/testResulte/Questionair');
+const crypto = require('crypto');
 
 require('dotenv').config();
 
