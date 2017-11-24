@@ -99,7 +99,7 @@ function resultList(data) {
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                     "title": `${s.fundCode}`, 
-                    "text": `${s.fundNameTh} ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)}`,
+                    "text": `${s.fundNameTh}`,
                     "actions": [
                         {
                             "type": "uri",
