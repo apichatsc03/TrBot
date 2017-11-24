@@ -17,13 +17,13 @@ const config = {
 const client = new line.Client(config);
 
 app.post('/webhook', line.middleware(config), (req, res) => {
-    if (!validate_signature(req.headers['x-line-signature'], req.body)) {
-        return;
-    } else {
+    // if (!validate_signature(req.headers['x-line-signature'], req.body)) {
+    //     return;
+    // } else {
 
         Promise.all(req.body.events.map(handleEvent))
             .then((result) => res.json(result));
-    }
+    // }
 });
 
 function validate_signature(signature, body) {
@@ -35,7 +35,7 @@ function handleEvent(event) {
     console.log(event);
     if (event.type === 'message' && event.message.type === 'text') {
         handleMessageEvent(event);
-    } else if (event.type === postback) {
+    } else if (event.type === 'postback') {
         handlePostBackEvent(event);
     } else {
         return Promise.resolve(null);
