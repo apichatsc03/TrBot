@@ -33,7 +33,6 @@ function handleMessageEvent(event) {
 
     var eventText = event.message.text.toLowerCase()
     
-
     if (eventText === "about you") {
         let msg = {
             "type": "template",
@@ -75,18 +74,12 @@ function handleMessageEvent(event) {
                 "type": "text",
                 "text": "Search Not Found!, Please Try Again."
             }
-            console.log("Here !!!")
-            // console.log("msg >> ", msg)
             return client.replyMessage(event.replyToken, msg);
           })
           .catch(error => {
             console.log(error);
           });
-  
-        // var textValue = `${data.fundNameTh} ( ${data.fundCode} ) https://wwww.treasurist.com/${data.fundId}/${data.fundNameEn}`
     }
-
-    // return client.replyMessage(event.replyToken, msg);
 }
 
 function resultList(data) {
