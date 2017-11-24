@@ -99,7 +99,7 @@ function resultList(data) {
                 console.log("date " ,moment(s.lastestNavDateList[0].navDate).locale("TH").format("D MM YYYY"))
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) ราคาล่าสุด ณ ${s.lastestNavDateList[0].navDate}`, 
+                    "title": `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'}`, 
                     "text": `${s.fundNameTh}`,
                     "actions": [
                         {
