@@ -1,4 +1,4 @@
-export default [
+module.exports = [
     {
         question: "ปัจจุบันคุณอายุเท่าไร",
         altQuestion: "วันเดือนปีเกิด",
