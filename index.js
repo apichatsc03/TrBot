@@ -76,7 +76,7 @@ function handleMessageEvent(event) {
                 "text": "Search Not Found!!"
             }
             console.log("Here !!!")
-            console.log("msg >> ", msg)
+            // console.log("msg >> ", msg)
             return client.replyMessage(event.replyToken, msg);
           })
           .catch(error => {
@@ -99,7 +99,7 @@ function resultList(data) {
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                     "title": `${s.fundCode}`, 
-                    "text": `${s.fundNameTh} ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) ราคาล่าสุด  ณ ${moment(s.lastestNavDateList[0].navDate).locale("TH").format("D MMM YYYY")}`,
+                    "text": `${s.fundNameTh} ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)}`,
                     "actions": [
                         {
                             "type": "uri",
