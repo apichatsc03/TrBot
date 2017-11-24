@@ -89,13 +89,14 @@ function handleMessageEvent(event) {
 }
 
 function resultList(data) {
-    console.log("date " ,moment(s.lastestNavDateList[0].navDate).locale("TH").format("D MM YYYY"))
+
     let resultList = (data !== null ||  data !== undefined) && {
         "type": "template",
         "altText": "this is a carousel template",
         "template": {
             "type": "carousel",
             "columns": data.map( s => {
+                console.log("date " ,moment(s.lastestNavDateList[0].navDate).locale("TH").format("D MM YYYY"))
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                     "title": `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit) ราคาล่าสุด ณ ${s.lastestNavDateList[0].navDate}`, 
