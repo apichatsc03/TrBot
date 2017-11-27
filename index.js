@@ -17,13 +17,13 @@ const config = {
 const client = new line.Client(config);
 
 app.post('/webhook', line.middleware(config), (req, res) => {
-    // if (!validate_signature(req.headers['x-line-signature'], req.body)) {
-    //     return;
-    // } else {
+    if (!validate_signature(req.headers['x-line-signature'], req.body)) {
+        return;
+    } else {
 
         Promise.all(req.body.events.map(handleEvent))
             .then((result) => res.json(result));
-    // }
+    }
 });
 
 function validate_signature(signature, body) {
@@ -98,9 +98,8 @@ function handleMessageEvent(event) {
         }
         return client.replyMessage(event.replyToken, msg);
     } else if (re.test(eventText)) {
-        console.log(`${re.test(eventText)} :: ${eventText}`);
         var keyword = eventText.split("search")[1]
-
+        console.log(`${re.test(eventText)} :: ${keyword}`);
         axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`)
             .then(response => {
                 let data = response.data._embedded.funds
