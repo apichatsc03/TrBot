@@ -43,7 +43,7 @@ function handleEvent(event) {
         .filter( tr => tr.userId = event.source.userId)
         .map( tr => {
             console.log("tr >>", tr)
-            handlePostBackEvent(event, tr);
+            return handlePostBackEvent(event, tr);
         }) 
     } else {
         return Promise.resolve(null);
