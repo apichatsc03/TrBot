@@ -6,7 +6,7 @@ const axios = require('axios');
 const moment = require('moment');
 const question = require('./src/testResult/Questionair');
 const crypto = require('crypto');
-const _ = request('lodash');
+const _ = require('lodash');
 
 require('dotenv').config();
 
