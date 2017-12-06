@@ -160,7 +160,7 @@ module.exports = [
         type: "choice",
         key: "derivatives",
         choices: [
-            { text: "ไม่ได้ / ไม่แน่ใจ", value: 0 },
+            { text: "ไม่ได้", value: 0 },
             { text: "ได้", value: 1 }
         ]
     },
@@ -170,7 +170,7 @@ module.exports = [
         type: "choice",
         key: "q12",
         choices: [
-            { text: "ไม่ได้ / ไม่แน่ใจ", value: 0 },
+            { text: "ไม่ได้", value: 0 },
             { text: "ได้", value: 1 }
         ]
     },
@@ -180,7 +180,7 @@ module.exports = [
         type: "choice",
         key: "q13",
         choices: [
-            { text: "ไม่ได้ / ไม่แน่ใจ", value: 0 },
+            { text: "ไม่ได้", value: 0 },
             { text: "ได้", value: 1 }
         ]
     }
