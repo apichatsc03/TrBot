@@ -167,7 +167,7 @@ function resultList(data) {
 
 function handlePostBackEvent(event, suitTest) {
 
-    var eventPostback = event.postback.data ? event.postback.data.split("&") : undefined; 
+    var eventPostback = event.postback.data != undefined ? event.postback.data.split("&") : undefined; 
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
     var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : _.last(suitTest.resultTest).question;
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
