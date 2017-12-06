@@ -37,7 +37,18 @@ function handleEvent(event) {
 
     console.log(event);
     if (event.type === 'message' && event.message.type === 'text') {
-        handleMessageEvent(event);
+        isTesting = _.find(testResult, ['userId', event.source.userId]);
+        if (!isTesting) {
+            handleMessageEvent(event);
+        } else {
+            testResult
+            .filter( tr => tr.userId = event.source.userId)
+            .map( tr => {
+                console.log("tr >>", tr)
+                return handlePostBackEvent(event, tr);
+            })
+        }
+       
     } else if (event.type === 'postback') {
         testResult
         .filter( tr => tr.userId = event.source.userId)
@@ -155,16 +166,15 @@ function resultList(data) {
 }
 
 function handlePostBackEvent(event, suitTest) {
-    var eventPostback = event.postback.data.split("&")
-    var eventPostbackAction = eventPostback[0] != undefined && eventPostback[0].split("=")[1]
-    var eventPostBackItem = eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0
-    var eventPostBackItemValue = eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined
 
-    
+    var eventPostback = event.postback.data ? event.postback.data.split("&") : undefined; 
+    var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
+    var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : _.last(suitTest.resultTest).question;
+    var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
 
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
-        let result = eventPostBackItem != 0 && { "question": eventPostBackItem, "value": eventPostBackItemValue }
-        suitTest.resultTest = eventPostBackItem != 0 && _.concat([], suitTest.resultTest, [result]);
+        let result = eventPostBackItem != 0 ? { "question": eventPostBackItem, "value": eventPostBackItemValue }: undefined
+        suitTest.resultTest = result != undefined ? _.concat([], suitTest.resultTest, [result]) : []
         console.log("resultTest >>", suitTest)
         console.log(eventPostBackItem);
         let msg
@@ -187,8 +197,7 @@ function handlePostBackEvent(event, suitTest) {
             }
         } else {
             msg = {
-                "type": "template",
-                "altText": question[eventPostBackItem].altQuestion,
+                "type": "text",
                 "text": question[eventPostBackItem].question
             }
         }
