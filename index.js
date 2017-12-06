@@ -204,7 +204,7 @@ function handlePostBackEvent(event, suitTest) {
         return client.replyMessage(event.replyToken, msg);
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
         let resultInput = eventPostBackItem != 0 && { "question": eventPostBackItem, "value": eventPostBackItemValue }
-        suitTest.resultTest = eventPostBackItem != 0 && _.concat([], suitTest.resultInput, [resultInput]);
+        suitTest.resultTest = eventPostBackItem != 0 && _.concat([], suitTest.resultTest, [resultInput]);
         console.log("resultTest >>", suitTest)
         let msg = {
             "type": "template",
