@@ -16,11 +16,13 @@ const config = {
 
 const client = new line.Client(config);
 
+const userId = undefined;
+const testResulte = undefined;
+
 app.post('/webhook', line.middleware(config), (req, res) => {
     if (!validate_signature(req.headers['x-line-signature'], req.body)) {
         return;
     } else {
-
         Promise.all(req.body.events.map(handleEvent))
             .then((result) => res.json(result));
     }
@@ -36,6 +38,7 @@ function handleEvent(event) {
     if (event.type === 'message' && event.message.type === 'text') {
         handleMessageEvent(event);
     } else if (event.type === 'postback') {
+        userId = event.source.userId
         handlePostBackEvent(event);
     } else {
         return Promise.resolve(null);
@@ -44,6 +47,8 @@ function handleEvent(event) {
 
 function handleMessageEvent(event) {
     var eventText = event.message.text.toLowerCase()
+    var eventType = event.source.type
+
     var re = /(\bsearch\b)/;
     if (eventText === "about you") {
         console.log(eventText);
@@ -76,8 +81,9 @@ function handleMessageEvent(event) {
             }
         }
         return client.replyMessage(event.replyToken, msg);
-    } else if (eventText === "test") {
+    } else if (eventText === "test" && eventType === "user") {
         console.log(eventText);
+
         let msg = {
             "type": "template",
             "altText": "Welcome to Treasurist",
@@ -93,7 +99,6 @@ function handleMessageEvent(event) {
                         "data": "action=test"
                     }
                 ]
-
             }
         }
         return client.replyMessage(event.replyToken, msg);
@@ -146,26 +151,58 @@ function handlePostBackEvent(event) {
     var eventPostback = event.postback.data.split("&")
     var eventPostbackAction = eventPostback[0] != undefined && eventPostback[0].split("=")[1]
     var eventPostBackItem = eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0
+    var eventPostBackItemValue = eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined
+
+    let result = { "question": eventPostBackItem, "value": eventPostBackItemValue }
     console.log(question[eventPostBackItem].choices);
-    if (eventPostbackAction === "test" && eventPostBackItem <= 16) {
+
+    if (eventPostbackAction === "test" && eventPostBackItem < 16) {
         console.log(eventPostBackItem);
+        let msg
+        question[eventPostBackItem].choices != undefined ?
+            msg = {
+                "type": "template",
+                "altText": question[eventPostBackItem].altQuestion,
+                "template": {
+                    "type": "buttons",
+                    "text": question[eventPostBackItem].question,
+                    "actions": question[eventPostBackItem].choices.map(c => {
+                        return {
+                            "type": "postback",
+                            "label": c.text,
+                            "data": `action=test&itemid=${eventPostBackItem + 1}&value=${c.value}`
+                        }
+                    })
+                }
+            }
+            :
+            msg = {
+                "type": "template",
+                "altText": question[eventPostBackItem].altQuestion,
+                "text": question[eventPostBackItem].question
+            }
+
+        testResulte = _.assign({}, testResulte, result);
+        return client.replyMessage(event.replyToken, msg);
+    } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
+        testResulte = _.assign({}, testResulte, result);
         let msg = {
             "type": "template",
-            "altText": question[eventPostBackItem].altQuestion,
+            "altText": "Test Complte",
             "template": {
                 "type": "buttons",
-                "text": question[eventPostBackItem].question,
-                "actions": question[eventPostBackItem].choices.map(c => {
-                            return {
-                                "type": "postback",
-                                "label": c.text,
-                                "data": `action=test&itemid=${eventPostBackItem+1}&value=${c.value}`
-                            }
-                        })
+                "title": "Test Complte",
+                "text": "See Result Test Click 'View'",
+                "actions": [
+                    {
+                        "type": "uri",
+                        "label": "View",
+                        "uri": "https://www.treasurist.com/suitabilityTest"
+                    }
+                ]
             }
         }
-        return client.replyMessage(event.replyToken, msg);
-    } 
+    }
 }
 
 app.set('port', (process.env.PORT || 5000));
