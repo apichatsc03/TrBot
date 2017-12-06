@@ -222,6 +222,7 @@ function handlePostBackEvent(event, suitTest) {
                 ]
             }
         }
+        return client.replyMessage(event.replyToken, msg);
     }
 }
 
