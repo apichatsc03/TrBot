@@ -18,7 +18,7 @@ const config = {
 };
 
 const client = new line.Client(config);
-const testResult = [];
+let testResult;
 
 app.post('/webhook', line.middleware(config), (req, res) => {
     if (!validate_signature(req.headers['x-line-signature'], req.body)) {
@@ -106,7 +106,7 @@ function handleMessageEvent(event) {
                 ]
             }
         }
-        _.concat([],testResult, [{"userId": event.source.userId}])
+        testResult = _.concat([], [{"userId": event.source.userId}])
         console.log("testResult >>", testResult)
         return client.replyMessage(event.replyToken, msg);
     } else if (re.test(eventText)) {
