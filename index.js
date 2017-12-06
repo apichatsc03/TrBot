@@ -106,7 +106,7 @@ function handleMessageEvent(event) {
                 ]
             }
         }
-        _.concat(testResult, [{"userId": event.source.userId}])
+        testResult = _.concat([],testResult, [{"userId": event.source.userId}])
         console.log("testResult >>", testResult)
         return client.replyMessage(event.replyToken, msg);
     } else if (re.test(eventText)) {
