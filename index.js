@@ -160,9 +160,12 @@ function handlePostBackEvent(event, resultTest) {
     var eventPostBackItem = eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0
     var eventPostBackItemValue = eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined
 
-    let result = { "question": eventPostBackItem, "value": eventPostBackItemValue }
+    
 
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
+        let result = eventPostBackItem != 0 && { "question": eventPostBackItem, "value": eventPostBackItemValue }
+        resultTest = eventPostBackItem != 0 && _.assign({}, resultTest, result);
+        console.log("resultTest >>", resultTest)
         console.log(eventPostBackItem);
         let msg
         if (question[eventPostBackItem].choices != undefined) {
@@ -189,13 +192,10 @@ function handlePostBackEvent(event, resultTest) {
                 "text": question[eventPostBackItem].question
             }
         }
-          
-        resultTest = _.assign({}, resultTest, result);
-        console.log("tr >>", tr)
         return client.replyMessage(event.replyToken, msg);
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
         resultTest = _.assign({}, resultTest, result);
-        console.log("tr >>", tr)
+        console.log("resultTest >>", resultTest)
         let msg = {
             "type": "template",
             "altText": "Test Complte",
