@@ -1,9 +1,12 @@
+import { request } from 'http';
+
 const express = require('express');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
 const moment = require('moment');
 const question = require('./src/testResult/Questionair');
 const crypto = require('crypto');
+const _ = request('lodash');
 
 require('dotenv').config();
 
