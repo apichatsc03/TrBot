@@ -2,7 +2,7 @@ const express = require('express');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
 const moment = require('moment');
-const question = require('./src/testResulte/Questionair');
+const question = require('./src/testResult/Questionair');
 const crypto = require('crypto');
 
 require('dotenv').config();
@@ -15,9 +15,7 @@ const config = {
 };
 
 const client = new line.Client(config);
-
-const userId = undefined;
-const testResulte = undefined;
+const testResult = [];
 
 app.post('/webhook', line.middleware(config), (req, res) => {
     if (!validate_signature(req.headers['x-line-signature'], req.body)) {
@@ -38,8 +36,12 @@ function handleEvent(event) {
     if (event.type === 'message' && event.message.type === 'text') {
         handleMessageEvent(event);
     } else if (event.type === 'postback') {
-        userId = event.source.userId
-        handlePostBackEvent(event);
+        testResult
+        .filter( tr => tr.userId = event.source.userId)
+        .map( tr => {
+            console.log("tr >>", tr)
+            handlePostBackEvent(event, tr);
+        }) 
     } else {
         return Promise.resolve(null);
     }
@@ -101,6 +103,8 @@ function handleMessageEvent(event) {
                 ]
             }
         }
+        _.concat(testResult, [{"userId": userId}])
+        console.log("testResult >>", testResult)
         return client.replyMessage(event.replyToken, msg);
     } else if (re.test(eventText)) {
         var keyword = eventText.split("search ")[1]
@@ -147,19 +151,19 @@ function resultList(data) {
     return resultList
 }
 
-function handlePostBackEvent(event) {
+function handlePostBackEvent(event, resultTest) {
     var eventPostback = event.postback.data.split("&")
     var eventPostbackAction = eventPostback[0] != undefined && eventPostback[0].split("=")[1]
     var eventPostBackItem = eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0
     var eventPostBackItemValue = eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined
 
     let result = { "question": eventPostBackItem, "value": eventPostBackItemValue }
-    console.log(question[eventPostBackItem].choices);
 
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
         console.log(eventPostBackItem);
         let msg
-        question[eventPostBackItem].choices != undefined ?
+        if (question[eventPostBackItem].choices != undefined) {
+            console.log(question[eventPostBackItem].choices);
             msg = {
                 "type": "template",
                 "altText": question[eventPostBackItem].altQuestion,
@@ -175,17 +179,20 @@ function handlePostBackEvent(event) {
                     })
                 }
             }
-            :
+        } else {
             msg = {
                 "type": "template",
                 "altText": question[eventPostBackItem].altQuestion,
                 "text": question[eventPostBackItem].question
             }
-
-        testResulte = _.assign({}, testResulte, result);
+        }
+          
+        resultTest = _.assign({}, resultTest, result);
+        console.log("tr >>", tr)
         return client.replyMessage(event.replyToken, msg);
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
-        testResulte = _.assign({}, testResulte, result);
+        resultTest = _.assign({}, resultTest, result);
+        console.log("tr >>", tr)
         let msg = {
             "type": "template",
             "altText": "Test Complte",
