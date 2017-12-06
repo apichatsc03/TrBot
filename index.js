@@ -106,7 +106,7 @@ function handleMessageEvent(event) {
                 ]
             }
         }
-        testResult = _.concat([], [{"userId": event.source.userId}])
+        testResult = _.concat([], [{"userId": event.source.userId, "resultTest": []}])
         console.log("testResult >>", testResult)
         return client.replyMessage(event.replyToken, msg);
     } else if (re.test(eventText)) {
@@ -154,7 +154,7 @@ function resultList(data) {
     return resultList
 }
 
-function handlePostBackEvent(event, resultTest) {
+function handlePostBackEvent(event, suitTest) {
     var eventPostback = event.postback.data.split("&")
     var eventPostbackAction = eventPostback[0] != undefined && eventPostback[0].split("=")[1]
     var eventPostBackItem = eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0
@@ -164,8 +164,8 @@ function handlePostBackEvent(event, resultTest) {
 
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
         let result = eventPostBackItem != 0 && { "question": eventPostBackItem, "value": eventPostBackItemValue }
-        resultTest = eventPostBackItem != 0 && _.assign({}, resultTest, result);
-        console.log("resultTest >>", resultTest)
+        suitTest.resultTest = eventPostBackItem != 0 && _.concat([], suitTest.resultTest, [result]);
+        console.log("resultTest >>", suitTest)
         console.log(eventPostBackItem);
         let msg
         if (question[eventPostBackItem].choices != undefined) {
@@ -194,8 +194,9 @@ function handlePostBackEvent(event, resultTest) {
         }
         return client.replyMessage(event.replyToken, msg);
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
-        resultTest = _.assign({}, resultTest, result);
-        console.log("resultTest >>", resultTest)
+        let resultInput = eventPostBackItem != 0 && { "question": eventPostBackItem, "value": eventPostBackItemValue }
+        suitTest = eventPostBackItem != 0 && _.concat([], suitTest.resultInput, [result]);
+        console.log("resultTest >>", suitTest)
         let msg = {
             "type": "template",
             "altText": "Test Complte",
