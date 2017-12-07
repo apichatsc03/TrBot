@@ -246,9 +246,9 @@ function getAnswerObj(currentQuestion, selectedValue) {
 
 
 function doSubmitQuiz(resultTest, event) {
-    var data = resultTest
+    var data = _.assign({} ,resultTest, {isOpenPortfolio: isOpenPortfolio ? isOpenPortfolio : "N", isNextBuy: "Y", year: 10})
     delete data.userId
-    axios.post("http://treasurist.com:8080/quizzes", data)
+    axios.post("http://103.86.49.87:8080/quizzes", data)
         .then(resp => {
             var quiz = resp.data
             let msg = {
@@ -256,13 +256,13 @@ function doSubmitQuiz(resultTest, event) {
                 "altText": "Test Complte",
                 "template": {
                     "type": "buttons",
-                    "title": getTitle(quiz.score),
+                    "title": `รูปแบบการลงทุนที่เหมาะกับคุณ ${getTitle(quiz.score)}`,
                     "text":  `See Result Test Click 'View'`,
                     "actions": [
                         {
                             "type": "uri",
                             "label": "View",
-                            "uri": `https://www.treasurist.com/testResult/${quiz.id}`
+                            "uri": `https://103.86.49.87/suitabilityResultChatBot/${quiz.id}`
                         }
                     ]
                 }
