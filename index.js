@@ -37,16 +37,15 @@ function handleEvent(event) {
 
     console.log(event);
     if (event.type === 'message' && event.message.type === 'text') {
-        isTesting = _.find(testResult, ['userId', event.source.userId]);
+        var isTesting = _.find(testResult, ['userId', event.source.userId]);
         if (!isTesting) {
             handleMessageEvent(event);
         } else {
-            testResult
-            .filter( tr => tr.userId = event.source.userId)
-            .map( tr => {
-                console.log("tr >>", tr)
-                return handlePostBackEvent(event, tr);
-            })
+            testResult.filter( tr => tr.userId = event.source.userId)
+                .map( tr => {
+                    console.log("tr >>", tr)
+                    return handlePostBackEvent(event, tr);
+                })
         }
        
     } else if (event.type === 'postback') {
@@ -117,7 +116,7 @@ function handleMessageEvent(event) {
                 ]
             }
         }
-        testResult = _.concat([], [{"userId": event.source.userId, "resultTest": []}])
+        testResult = _.concat([], [{"userId": event.source.userId}])
         console.log("testResult >>", testResult)
         return client.replyMessage(event.replyToken, msg);
     } else if (re.test(eventText)) {
@@ -173,8 +172,8 @@ function handlePostBackEvent(event, suitTest) {
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
 
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
-        let result = eventPostBackItem != 0 ? { "question": eventPostBackItem, "value": eventPostBackItemValue }: undefined
-        suitTest.resultTest = result != undefined ? _.concat([], suitTest.resultTest, [result]) : []
+        let result = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem, eventPostBackItemValue) : undefined
+        suitTest = result != undefined ? _.assign({}, suitTest, result) : undefined
         console.log("resultTest >>", suitTest)
         console.log(eventPostBackItem);
         let msg
@@ -203,9 +202,10 @@ function handlePostBackEvent(event, suitTest) {
         }
         return client.replyMessage(event.replyToken, msg);
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
-        let resultInput = eventPostBackItem != 0 && { "question": eventPostBackItem, "value": eventPostBackItemValue }
-        suitTest.resultTest = eventPostBackItem != 0 && _.concat([], suitTest.resultTest, [resultInput]);
-        console.log("resultTest >>", suitTest)
+        let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem, eventPostBackItemValue) : undefined
+        suitTest = resultInput != undefined ? _.assign({}, suitTest, resultInput) : undefined
+        var linkURL = doSubmitQuiz(suitTest)
+        console.log("linkURL >>", linkURL)
         let msg = {
             "type": "template",
             "altText": "Test Complte",
@@ -224,6 +224,37 @@ function handlePostBackEvent(event, suitTest) {
         }
         return client.replyMessage(event.replyToken, msg);
     }
+}
+
+function getAnswerObj(currentQuestion, selectedValue) {
+    let q = question[currentQuestion]
+    let obj = {}
+    if (q.key.charAt(0) === "q") {
+      let selected = _.find(q.choices, c => c.value == selectedValue)
+      obj[`${q.key}Question`] = q.question
+      obj[`${q.key}AltQuestion`] = q.altQuestion
+      obj[`${q.key}Text`] = selected.text
+      obj[`${q.key}Value`] = selected.value+""
+    } else {
+      obj[q.key] = selectedValue
+    }
+    return obj
+}
+
+
+const doSubmitQuiz = (resultTest) => {
+    var data = resultTest
+    delete data.userId
+    console.log("data >> ", data)
+    axios.post("http://treasurist.com/api/quizzes", data)
+        .then(resp => {
+            console.log("quizId" ,resp.data.id)
+            // return `https://www.treasurist.com/testResult/${resp.data.id}`
+        })
+        .catch(error => {
+            console.error(error)
+        })
+    
 }
 
 app.set('port', (process.env.PORT || 5000));
