@@ -35,8 +35,6 @@ function validate_signature(signature, body) {
 }
 
 function handleEvent(event) {
-
-    console.log(event);
     if (event.type === 'message' && event.message.type === 'text') {
         var isTesting = _.find(testResult, ['userId', event.source.userId]);
         if (!isTesting) {
@@ -44,7 +42,6 @@ function handleEvent(event) {
         } else {
             testResult.filter( tr => tr.userId = event.source.userId)
                 .map( tr => {
-                    console.log("tr >>", tr)
                     return handlePostBackEvent(event, tr);
                 })
         }
@@ -53,7 +50,6 @@ function handleEvent(event) {
         testResult
         .filter( tr => tr.userId = event.source.userId)
         .map( tr => {
-            console.log("tr >>", tr)
             return handlePostBackEvent(event, tr);
         }) 
     } else {
@@ -67,7 +63,6 @@ function handleMessageEvent(event) {
 
     var re = /(\bsearch\b)/;
     if (eventText === "about you") {
-        console.log(eventText);
         let msg = {
             "type": "template",
             "altText": "Welcome to Treasurist",
@@ -98,8 +93,6 @@ function handleMessageEvent(event) {
         }
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "test" && eventType === "user") {
-        console.log(eventText);
-
         let msg = {
             "type": "template",
             "altText": "Welcome to Treasurist",
@@ -118,15 +111,12 @@ function handleMessageEvent(event) {
             }
         }
         testResult = _.concat([], [{"userId": event.source.userId}])
-        console.log("testResult >>", testResult)
         return client.replyMessage(event.replyToken, msg);
     } else if (re.test(eventText)) {
         var keyword = eventText.split("search ")[1]
-        console.log(`${re.test(eventText)} :: ${keyword}`);
         axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`)
             .then(response => {
                 let data = response.data._embedded.funds
-                console.log("Data size > ", data != undefined && data.length)
                 let msg = data != undefined ? resultList(data) : {
                     "type": "text",
                     "text": "Search Not Found!, Please Try Again."
@@ -175,11 +165,8 @@ function handlePostBackEvent(event, suitTest) {
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
         let result = eventPostBackItem != 0 ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
         suitTest = result != undefined ? _.merge(suitTest, result) : undefined
-        console.log("resultTest >>", suitTest)
-        console.log(eventPostBackItem);
-        let msg
+        let msg = undefined
         if (question[eventPostBackItem].choices != undefined) {
-            console.log(question[eventPostBackItem].choices);
             msg = {
                 "type": "template",
                 "altText": question[eventPostBackItem].altQuestion,
@@ -206,30 +193,11 @@ function handlePostBackEvent(event, suitTest) {
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
         let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem - 1, eventPostBackItemValue) : undefined
         suitTest = resultInput != undefined ? _.merge(suitTest, resultInput) : undefined
-        var linkURL = doSubmitQuiz(suitTest)
-        console.log("linkURL >>", linkURL)
-        let msg = {
-            "type": "template",
-            "altText": "Test Complte",
-            "template": {
-                "type": "buttons",
-                "title": "Test Complte",
-                "text": "See Result Test Click 'View'",
-                "actions": [
-                    {
-                        "type": "uri",
-                        "label": "View",
-                        "uri": "https://www.treasurist.com/suitabilityTest"
-                    }
-                ]
-            }
-        }
-        return client.replyMessage(event.replyToken, msg);
+        doSubmitQuiz(suitTest)
     }
 }
 
 function getAnswerObj(currentQuestion, selectedValue) {
-    console.log
     let q = question[currentQuestion]
     let obj = {}
     if (q.key.charAt(0) === "q") {
@@ -245,14 +213,30 @@ function getAnswerObj(currentQuestion, selectedValue) {
 }
 
 
-const doSubmitQuiz = (resultTest) => {
+function doSubmitQuiz(resultTest) {
     var data = resultTest
     delete data.userId
     console.log("data >> ", data)
     axios.post("http://treasurist.com/api/quizzes", data)
         .then(resp => {
-            console.log("quizId" ,resp.data.id)
-            // return `https://www.treasurist.com/testResult/${resp.data.id}`
+            console.log("resp >>" , resp)
+            let msg = {
+                "type": "template",
+                "altText": "Test Complte",
+                "template": {
+                    "type": "buttons",
+                    "title": "Test Complte",
+                    "text": "See Result Test Click 'View'",
+                    "actions": [
+                        {
+                            "type": "uri",
+                            "label": "View",
+                            "uri": `https://www.treasurist.com/testResult/${resp.data.id}`
+                        }
+                    ]
+                }
+            }
+            return client.replyMessage(event.replyToken, msg);
         })
         .catch(error => {
             console.error(error)
