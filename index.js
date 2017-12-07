@@ -256,13 +256,13 @@ function doSubmitQuiz(resultTest, event) {
                 "altText": "Test Complte",
                 "template": {
                     "type": "buttons",
-                    "title": `รูปแบบการลงทุนที่เหมาะกับคุณ ${getTitle(quiz.score)}`,
-                    "text":  `See Result Test Click 'View'`,
+                    "title": `รูปแบบการลงทุนที่เหมาะกับคุณ`,
+                    "text":  `${getTitle(quiz.score)} See Result Test Click 'View'`,
                     "actions": [
                         {
                             "type": "uri",
                             "label": "View",
-                            "uri": `http://103.86.49.87/suitabilityResultChatBot/${quiz.id}`
+                            "uri": `http://103.86.49.87/chatBotTestResult/${quiz.id}`
                         }
                     ]
                 }
