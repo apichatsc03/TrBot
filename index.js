@@ -218,7 +218,7 @@ function doSubmitQuiz(resultTest, event) {
     console.log("data >> ", data)
     axios.post("http://treasurist.com/api/quizzes", data)
         .then(resp => {
-            console.log("resp >>" , resp)
+            console.log("resp >>" , resp.data._embedded.quizzes)
             var quiz = resp.data
             let msg = {
                 "type": "template",
