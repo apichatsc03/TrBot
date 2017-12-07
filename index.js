@@ -1,4 +1,4 @@
-const  request  = require('http');
+const request = require('http');
 const express = require('express');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
@@ -17,6 +17,39 @@ const config = {
 };
 
 const client = new line.Client(config);
+
+const getTitle = (score) => {
+    if (score >= 36) {
+        return ("เสี่ยงสูง เพิ่มโอกาสได้ผลตอบแทนสูงมากในระยะยาว")
+    } else if (score >= 30) {
+        return ("เสี่ยงปานกลางถึงสูง สร้างโอกาสได้ผลตอบแทนสูง")
+    } else if (score >= 23) {
+        return ("เสี่ยงปานกลาง เน้นสร้างกระแสรายได้ที่เติบโต")
+    } else if (score >= 17) {
+        return ("เสี่ยงต่ำถึงปานกลาง เน้นสร้างกระแสรายได้ที่สม่ำเสมอ")
+    } else if (score <= 16) {
+        return ("เสี่ยงต่ำ เน้นเอาชนะเงินเฟ้อ")
+    } else {
+        return
+    }
+}
+
+const getDesc = (score) => {
+    if (score >= 36) {
+        return ("เน้นลงทุน 7 ปีขึ้นไป เหมาะกับคนรุ่นใหม่ที่มีระยะเวลาการลงทุนยาว รวมถึงการลงทุนเพื่อเกษียณ โดยในบางช่วงของการลงทุนอาจพบความผันผวนในระดับสูงเนื่องจากมีสินทรัพย์เสี่ยงสูง เช่นกองทุนหุ้น ในสัดส่วนประมาณ 65% ของการลงทุนโดยรวม")
+    } else if (score >= 30) {
+        return ("เน้นลงทุนระยะยาว 5-7 ปีขึ้นไป เพื่อให้การลงทุนเติบโตในอัตราที่ดี หรือใช้เป็นการลงทุนเพื่อการเกษียณ โดยจะมีสินทรัพย์เสี่ยงสูง เช่นกองทุนหุ้นซึ่งมีโอกาสให้ผลตอบแทนสูง ในสัดส่วนประมาณ 50% ของการลงทุนโดยรวม")
+    } else if (score >= 23) {
+        return ("เป้าหมายหลักคือเน้นสร้างรายได้ที่สม่ำเสมอและมีแนวโน้มเติบโต หรือเพื่อเก็บเงินในระยะกลางซึ่งมีระยะเวลาลงทุน 3-5 ปีขึ้นไป สามารถรับความผันผวนจากการลงทุนในกองทุนหุ้น ซึ่งมีโอกาสให้ผลตอบแทนสูงได้ในสัดส่วนประมาณ 30% ของการลงทุนโดยรวม")
+    } else if (score >= 17) {
+        return ("มีระยะเวลาลงทุน 2-3 ปีขึ้นไป หรืออาจใช้เป็นรูปแบบการลงทุนหลังเกษียณที่สามารถรับความผันผวนจากการลงทุนในกองทุนหุ้น ซึ่งมีโอกาสให้ผลตอบแทนสูงได้ในสัดส่วนประมาณ 15% ของการลงทุนทั้งหมด แต่ในภาพรวมยังมีความแน่นอนพอสมควร")
+    } else if (score <= 16) {
+        return ("มีระยะเวลาลงทุน 1-2 ปีขึ้นไป หรืออาจใช้เป็นรูปแบบการลงทุนหลังเกษียณที่เน้นลงทุนในสินทรัพย์ที่มีความแน่นอนสูงมาก")
+    } else {
+        return
+    }
+}
+
 let testResult;
 let currentQuestion;
 
@@ -39,18 +72,18 @@ function handleEvent(event) {
         if (!isTesting) {
             handleMessageEvent(event);
         } else {
-            testResult.filter( tr => tr.userId = event.source.userId)
-                .map( tr => {
+            testResult.filter(tr => tr.userId = event.source.userId)
+                .map(tr => {
                     return handlePostBackEvent(event, tr);
                 })
         }
-       
+
     } else if (event.type === 'postback') {
         testResult
-        .filter( tr => tr.userId = event.source.userId)
-        .map( tr => {
-            return handlePostBackEvent(event, tr);
-        }) 
+            .filter(tr => tr.userId = event.source.userId)
+            .map(tr => {
+                return handlePostBackEvent(event, tr);
+            })
     } else {
         return Promise.resolve(null);
     }
@@ -109,7 +142,7 @@ function handleMessageEvent(event) {
                 ]
             }
         }
-        testResult = _.concat([], [{"userId": event.source.userId}])
+        testResult = _.concat([], [{ "userId": event.source.userId }])
         return client.replyMessage(event.replyToken, msg);
     } else if (re.test(eventText)) {
         var keyword = eventText.split("search ")[1]
@@ -155,8 +188,8 @@ function resultList(data) {
 }
 
 function handlePostBackEvent(event, suitTest) {
-    
-    var eventPostback = event.postback != undefined ? event.postback.data.split("&") : undefined; 
+
+    var eventPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
     var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : currentQuestion + 1;
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
@@ -200,13 +233,13 @@ function getAnswerObj(currentQuestion, selectedValue) {
     let q = question[currentQuestion]
     let obj = {}
     if (q.key.charAt(0) === "q") {
-      let selected = _.find(q.choices, c => c.value == selectedValue)
-      obj[`${q.key}Question`] = q.question
-      obj[`${q.key}AltQuestion`] = q.altQuestion
-      obj[`${q.key}Text`] = selected.text
-      obj[`${q.key}Value`] = selected.value
+        let selected = _.find(q.choices, c => c.value == selectedValue)
+        obj[`${q.key}Question`] = q.question
+        obj[`${q.key}AltQuestion`] = q.altQuestion
+        obj[`${q.key}Text`] = selected.text
+        obj[`${q.key}Value`] = selected.value
     } else {
-      obj[q.key] = selectedValue
+        obj[q.key] = selectedValue
     }
     return obj
 }
@@ -215,24 +248,21 @@ function getAnswerObj(currentQuestion, selectedValue) {
 function doSubmitQuiz(resultTest, event) {
     var data = resultTest
     delete data.userId
-    console.log("data >> ", data)
     axios.post("http://treasurist.com:8080/quizzes", data)
         .then(resp => {
-            console.log("resp >>" , resp)
-            console.log("resp.data >>" , resp.data)
             var quiz = resp.data
             let msg = {
                 "type": "template",
                 "altText": "Test Complte",
                 "template": {
                     "type": "buttons",
-                    "title": "Test Complte",
-                    "text": "See Result Test Click 'View'",
+                    "title": getTitle(quiz.score),
+                    "text": `${getDesc(quiz.score)} See Result Test Click 'View'`,
                     "actions": [
                         {
                             "type": "uri",
                             "label": "View",
-                            "uri": `https://www.treasurist.com/testResult`
+                            "uri": `https://www.treasurist.com/testResult/${quiz.id}`
                         }
                     ]
                 }
@@ -242,8 +272,8 @@ function doSubmitQuiz(resultTest, event) {
         .catch(error => {
             console.error(error)
         })
-    
 }
+
 
 app.set('port', (process.env.PORT || 5000));
 
