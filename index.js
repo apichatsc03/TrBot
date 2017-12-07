@@ -216,6 +216,7 @@ function doSubmitQuiz(resultTest, event) {
     var data = resultTest
     delete data.userId
     console.log("data >> ", JSON.stringify(data))
+    console.log("data2 >> ", data)
     axios.post("http://treasurist.com/api/quizzes", data)
         .then(resp => {
             console.log("resp1 >>" , resp)
