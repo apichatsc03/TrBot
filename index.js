@@ -262,7 +262,7 @@ function doSubmitQuiz(resultTest, event) {
                         {
                             "type": "uri",
                             "label": "View",
-                            "uri": `https://103.86.49.87/suitabilityResultChatBot/${quiz.id}`
+                            "uri": `http://103.86.49.87/suitabilityResultChatBot/${quiz.id}`
                         }
                     ]
                 }
