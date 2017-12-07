@@ -215,13 +215,12 @@ function getAnswerObj(currentQuestion, selectedValue) {
 function doSubmitQuiz(resultTest, event) {
     var data = resultTest
     delete data.userId
-    console.log("data >> ", JSON.stringify(data))
-    console.log("data2 >> ", data)
-    axios.post("http://treasurist.com/api/quizzes", data)
+    console.log("data >> ", data)
+    axios.post("http://treasurist.com:8080/quizzes", data)
         .then(resp => {
-            console.log("resp1 >>" , resp)
-            console.log("resp2 >>" , resp.data)
-            var quiz = resp
+            console.log("resp >>" , resp)
+            console.log("resp.data >>" , resp.data)
+            var quiz = resp.data
             let msg = {
                 "type": "template",
                 "altText": "Test Complte",
