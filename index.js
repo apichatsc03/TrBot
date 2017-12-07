@@ -258,7 +258,7 @@ function doSubmitQuiz(resultTest, event) {
                 "template": {
                     "type": "buttons",
                     "title": `รูปแบบการลงทุนที่เหมาะกับคุณ`,
-                    "text":  `${getTitle(quiz.score)} See Result Test Click 'View'`,
+                    "text":  `See Result Test Click 'View'`,
                     "actions": [
                         {
                             "type": "uri",
