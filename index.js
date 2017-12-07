@@ -204,7 +204,7 @@ function getAnswerObj(currentQuestion, selectedValue) {
       obj[`${q.key}Question`] = q.question
       obj[`${q.key}AltQuestion`] = q.altQuestion
       obj[`${q.key}Text`] = selected.text
-      obj[`${q.key}Value`] = selected.value+""
+      obj[`${q.key}Value`] = selected.value
     } else {
       obj[q.key] = selectedValue
     }
@@ -215,11 +215,11 @@ function getAnswerObj(currentQuestion, selectedValue) {
 function doSubmitQuiz(resultTest, event) {
     var data = resultTest
     delete data.userId
-    console.log("data >> ", data)
-    axios.post("http://treasurist.com/api/questions", data)
+    console.log("data >> ", JSON.stringify(data))
+    axios.post("http://treasurist.com/api/quizzes", JSON.stringify(data))
         .then(resp => {
             console.log("resp1 >>" , resp)
-            console.log("resp2 >>" , resp.data._embedded.question)
+            console.log("resp2 >>" , resp.data)
             var quiz = resp
             let msg = {
                 "type": "template",
