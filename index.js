@@ -257,7 +257,7 @@ function doSubmitQuiz(resultTest, event) {
                 "template": {
                     "type": "buttons",
                     "title": getTitle(quiz.score),
-                    "text": `${getDesc(quiz.score)} See Result Test Click 'View'`,
+                    "text":  `See Result Test Click 'View'`,
                     "actions": [
                         {
                             "type": "uri",
