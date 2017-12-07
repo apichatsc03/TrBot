@@ -1,3 +1,5 @@
+import { read } from 'fs';
+
 const  request  = require('http');
 
 const express = require('express');
@@ -193,7 +195,7 @@ function handlePostBackEvent(event, suitTest) {
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
         let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem - 1, eventPostBackItemValue) : undefined
         suitTest = resultInput != undefined ? _.merge(suitTest, resultInput) : undefined
-        doSubmitQuiz(suitTest)
+        doSubmitQuiz(suitTest, event)
     }
 }
 
@@ -213,14 +215,14 @@ function getAnswerObj(currentQuestion, selectedValue) {
 }
 
 
-function doSubmitQuiz(resultTest) {
+function doSubmitQuiz(resultTest, event) {
     var data = resultTest
     delete data.userId
     console.log("data >> ", data)
     axios.post("http://treasurist.com/api/quizzes", data)
         .then(resp => {
-            console.log("resp >>" , resp.config.data)
-            var quiz = resp.config.data
+            console.log("resp >>" , resp)
+            var quiz = resp.data
             let msg = {
                 "type": "template",
                 "altText": "Test Complte",
