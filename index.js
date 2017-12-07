@@ -169,7 +169,7 @@ function handlePostBackEvent(event, suitTest) {
     
     var eventPostback = event.postback != undefined ? event.postback.data.split("&") : undefined; 
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
-    var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : currentQuestion;
+    var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : currentQuestion + 1;
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
 
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
@@ -229,6 +229,7 @@ function handlePostBackEvent(event, suitTest) {
 }
 
 function getAnswerObj(currentQuestion, selectedValue) {
+    console.log
     let q = question[currentQuestion]
     let obj = {}
     if (q.key.charAt(0) === "q") {
