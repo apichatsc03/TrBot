@@ -250,6 +250,7 @@ function doSubmitQuiz(resultTest, event) {
     delete data.userId
     axios.post("http://103.86.49.87:8080/quizzes", data)
         .then(resp => {
+            console.log("data >> ", resp.data) 
             var quiz = resp.data
             let msg = {
                 "type": "template",
