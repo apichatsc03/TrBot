@@ -218,8 +218,9 @@ function doSubmitQuiz(resultTest, event) {
     console.log("data >> ", data)
     axios.post("http://treasurist.com/api/questions", data)
         .then(resp => {
-            console.log("resp >>" , resp.data)
-            var quiz = resp.data
+            console.log("resp1 >>" , resp)
+            console.log("resp2 >>" , resp.data._embedded.question)
+            var quiz = resp
             let msg = {
                 "type": "template",
                 "altText": "Test Complte",
