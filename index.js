@@ -1,7 +1,4 @@
-import { read } from 'fs';
-
 const  request  = require('http');
-
 const express = require('express');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
