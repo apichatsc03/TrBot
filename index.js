@@ -19,6 +19,7 @@ const config = {
 
 const client = new line.Client(config);
 let testResult;
+let currentQuestion;
 
 app.post('/webhook', line.middleware(config), (req, res) => {
     if (!validate_signature(req.headers['x-line-signature'], req.body)) {
@@ -165,10 +166,10 @@ function resultList(data) {
 }
 
 function handlePostBackEvent(event, suitTest) {
-
+    
     var eventPostback = event.postback != undefined ? event.postback.data.split("&") : undefined; 
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
-    var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : _.last(suitTest.resultTest).question + 1;
+    var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : currentQuestion;
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
 
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
@@ -200,6 +201,7 @@ function handlePostBackEvent(event, suitTest) {
                 "text": question[eventPostBackItem].question
             }
         }
+        currentQuestion = eventPostBackItem
         return client.replyMessage(event.replyToken, msg);
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
         let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem, eventPostBackItemValue) : undefined
