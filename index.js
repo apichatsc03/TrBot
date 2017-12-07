@@ -172,8 +172,8 @@ function handlePostBackEvent(event, suitTest) {
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
 
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
-        let result = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem, eventPostBackItemValue) : undefined
-        suitTest = result != undefined ? _.assign({}, suitTest, result) : undefined
+        let result = eventPostBackItem != 0 ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
+        suitTest = result != undefined ? _.merge(suitTest, result) : undefined
         console.log("resultTest >>", suitTest)
         console.log(eventPostBackItem);
         let msg
@@ -203,7 +203,7 @@ function handlePostBackEvent(event, suitTest) {
         return client.replyMessage(event.replyToken, msg);
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
         let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem, eventPostBackItemValue) : undefined
-        suitTest = resultInput != undefined ? _.assign({}, suitTest, resultInput) : undefined
+        suitTest = resultInput != undefined ? _.merge(suitTest, resultInput) : undefined
         var linkURL = doSubmitQuiz(suitTest)
         console.log("linkURL >>", linkURL)
         let msg = {
