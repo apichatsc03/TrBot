@@ -219,7 +219,8 @@ function doSubmitQuiz(resultTest) {
     console.log("data >> ", data)
     axios.post("http://treasurist.com/api/quizzes", data)
         .then(resp => {
-            console.log("resp >>" , resp)
+            console.log("resp >>" , resp.config.data)
+            var quiz = resp.config.data
             let msg = {
                 "type": "template",
                 "altText": "Test Complte",
@@ -231,7 +232,7 @@ function doSubmitQuiz(resultTest) {
                         {
                             "type": "uri",
                             "label": "View",
-                            "uri": `https://www.treasurist.com/testResult/${resp.data.id}`
+                            "uri": `https://www.treasurist.com/testResult`
                         }
                     ]
                 }
