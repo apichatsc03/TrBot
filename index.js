@@ -204,7 +204,7 @@ function handlePostBackEvent(event, suitTest) {
         currentQuestion = eventPostBackItem
         return client.replyMessage(event.replyToken, msg);
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
-        let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem, eventPostBackItemValue) : undefined
+        let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem - 1, eventPostBackItemValue) : undefined
         suitTest = resultInput != undefined ? _.merge(suitTest, resultInput) : undefined
         var linkURL = doSubmitQuiz(suitTest)
         console.log("linkURL >>", linkURL)
