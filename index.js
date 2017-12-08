@@ -161,9 +161,7 @@ function handleMessageEvent(event) {
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
-            "text": `'about you' => for show our info.
-                    'test' => Start Treasurist Test.
-                    'search 'some keyword' => Search Fund in Treasurist ex. 'search scb'.`
+            "text": `'about you' => for show our info. 'test' => Start Treasurist Test. 'search 'some keyword' => Search Fund in Treasurist ex. 'search scb'.`
         }
         return client.replyMessage(event.replyToken, msg);
     } else {
