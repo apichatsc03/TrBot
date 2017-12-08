@@ -165,6 +165,7 @@ function handleMessageEvent(event) {
                     'test' => Start Treasurist Test.
                     'search 'some keyword' => Search Fund in Treasurist ex. 'search scb'.`
         }
+        return client.replyMessage(event.replyToken, msg);
     } else {
         let msg = {
             "type": "text",
