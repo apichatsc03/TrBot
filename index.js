@@ -270,6 +270,7 @@ function doSubmitQuiz(resultTest, event) {
                     ]
                 }
             }
+            testResult = []
             return client.replyMessage(event.replyToken, msg);
         })
         .catch(error => {
