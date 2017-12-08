@@ -158,6 +158,19 @@ function handleMessageEvent(event) {
             .catch(error => {
                 console.log(error);
             });
+    } else if (eventText === "help"){
+        let msg = {
+            "type": "text",
+            "text": `'about you' => for show our info.
+                    'test' => Start Treasurist Test.
+                    'search 'some keyword' => Search Fund in Treasurist ex. 'search scb'.`
+        }
+    } else {
+        let msg = {
+            "type": "text",
+            "text": `Please Try Again or type 'help'`
+        }
+        return client.replyMessage(event.replyToken, msg);
     }
 }
 
