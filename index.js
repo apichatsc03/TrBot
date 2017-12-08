@@ -248,7 +248,9 @@ function getAnswerObj(currentQuestion, selectedValue) {
 function doSubmitQuiz(resultTest, event) {
     var data = _.assign({} ,resultTest, {isOpenPortfolio: "N", isNextBuy: "Y"})
     delete data.userId
-    axios.post("http://103.86.49.87:8080/quizzes", data)
+    axios.post("http://103.86.49.87:8080/quizzes", data, {
+        headers: {'Content-Type': 'application/json;charset=UTF-8'}
+    })
         .then(resp => {
             console.log("data >> ", resp.data) 
             var quiz = resp.data
