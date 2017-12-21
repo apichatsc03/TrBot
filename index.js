@@ -260,7 +260,7 @@ function getAnswerObj(currentQuestion, selectedValue) {
 function doSubmitQuiz(resultTest, event) {
     var data = _.assign({} ,resultTest, {isOpenPortfolio: "N", isNextBuy: "Y"})
     delete data.userId
-    axios.post("http://103.86.49.87:8080/quizzes", data, {
+    axios.post("http://treasurist.com/api/quizzes", data, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
     })
         .then(resp => {
@@ -277,7 +277,7 @@ function doSubmitQuiz(resultTest, event) {
                         {
                             "type": "uri",
                             "label": "View",
-                            "uri": `http://103.86.49.87/chatBotTestResult/${quiz.id}`
+                            "uri": `https://www.treasurist.com/chatBotTestResult/${quiz.id}`
                         }
                     ]
                 }
