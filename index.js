@@ -132,7 +132,7 @@ function handleMessageEvent(event) {
                 "type": "buttons",
                 "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                 "title": "Welcome to Treasurist Test",
-                "text": "เริ่มวงแผนการลงทุนที่เหมาะกับคุณ",
+                "text": "เริ่มวางแผนการลงทุนที่เหมาะกับคุณ",
                 "actions": [
                     {
                         "type": "postback",
@@ -213,7 +213,7 @@ function handlePostBackEvent(event, suitTest) {
         if (question[eventPostBackItem].choices != undefined) {
             msg = {
                 "type": "template",
-                "altText": question[eventPostBackItem].altQuestion,
+                "altText": `${eventPostBackItem}. ${question[eventPostBackItem].altQuestion}`,
                 "template": {
                     "type": "buttons",
                     "text": question[eventPostBackItem].question,
