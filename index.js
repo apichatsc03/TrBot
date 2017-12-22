@@ -20,15 +20,15 @@ const client = new line.Client(config);
 
 const getTitle = (score) => {
     if (score >= 36) {
-        return ("เสี่ยงสูง เพิ่มโอกาสได้ผลตอบแทนสูงมากในระยะยาว")
+        return ("เสี่ยงสูง ")
     } else if (score >= 30) {
-        return ("เสี่ยงปานกลางถึงสูง สร้างโอกาสได้ผลตอบแทนสูง")
+        return ("เสี่ยงปานกลางถึงสูง")
     } else if (score >= 23) {
-        return ("เสี่ยงปานกลาง เน้นสร้างกระแสรายได้ที่เติบโต")
+        return ("เสี่ยงปานกลาง")
     } else if (score >= 17) {
-        return ("เสี่ยงต่ำถึงปานกลาง เน้นสร้างกระแสรายได้ที่สม่ำเสมอ")
+        return ("เสี่ยงต่ำถึงปานกลาง ")
     } else if (score <= 16) {
-        return ("เสี่ยงต่ำ เน้นเอาชนะเงินเฟ้อ")
+        return ("เสี่ยงต่ำ")
     } else {
         return
     }
@@ -216,7 +216,7 @@ function handlePostBackEvent(event, suitTest) {
                 "altText": `${eventPostBackItem + 1}. ${question[eventPostBackItem].altQuestion}`,
                 "template": {
                     "type": "buttons",
-                    "text": `${eventPostBackItem + 1}. ${question[eventPostBackItem].altQuestion}`,
+                    "text": `${eventPostBackItem + 1}. ${question[eventPostBackItem].question}`,
                     "actions": question[eventPostBackItem].choices.map(c => {
                         return {
                             "type": "postback",
@@ -229,7 +229,7 @@ function handlePostBackEvent(event, suitTest) {
         } else {
             msg = {
                 "type": "text",
-                "text": `${eventPostBackItem}. ${question[eventPostBackItem].altQuestion}`
+                "text": `${eventPostBackItem + 1}. ${question[eventPostBackItem].question}`
             }
         }
         currentQuestion = eventPostBackItem
@@ -264,14 +264,13 @@ function doSubmitQuiz(resultTest, event) {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
     })
         .then(resp => {
-            console.log("data >> ", resp.data) 
             var quiz = resp.data
             let msg = {
                 "type": "template",
                 "altText": "Test Complte",
                 "template": {
                     "type": "buttons",
-                    "title": `รูปแบบการลงทุนที่เหมาะกับคุณ`,
+                    "title": `รูปแบบการลงทุนที่เหมาะกับคุณ ${getTitle(quiz.score)}`,
                     "text":  `See Result Test Click 'View'`,
                     "actions": [
                         {
