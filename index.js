@@ -216,7 +216,7 @@ function handlePostBackEvent(event, suitTest) {
                 "altText": `${eventPostBackItem}. ${question[eventPostBackItem].altQuestion}`,
                 "template": {
                     "type": "buttons",
-                    "text": question[eventPostBackItem].question,
+                    "text": `${eventPostBackItem}. ${question[eventPostBackItem].altQuestion}`,
                     "actions": question[eventPostBackItem].choices.map(c => {
                         return {
                             "type": "postback",
@@ -229,7 +229,7 @@ function handlePostBackEvent(event, suitTest) {
         } else {
             msg = {
                 "type": "text",
-                "text": question[eventPostBackItem].question
+                "text": `${eventPostBackItem}. ${question[eventPostBackItem].altQuestion}`
             }
         }
         currentQuestion = eventPostBackItem
@@ -260,7 +260,7 @@ function getAnswerObj(currentQuestion, selectedValue) {
 function doSubmitQuiz(resultTest, event) {
     var data = _.assign({} ,resultTest, {isOpenPortfolio: "N", isNextBuy: "Y"})
     delete data.userId
-    axios.post("http://treasurist.com/api/quizzes", data, {
+    axios.post("http://treasurist.com:8080/quizzes", data, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
     })
         .then(resp => {
