@@ -213,10 +213,10 @@ function handlePostBackEvent(event, suitTest) {
         if (question[eventPostBackItem].choices != undefined) {
             msg = {
                 "type": "template",
-                "altText": `${eventPostBackItem}. ${question[eventPostBackItem].altQuestion}`,
+                "altText": `${eventPostBackItem + 1}. ${question[eventPostBackItem].altQuestion}`,
                 "template": {
                     "type": "buttons",
-                    "text": `${eventPostBackItem}. ${question[eventPostBackItem].altQuestion}`,
+                    "text": `${eventPostBackItem + 1}. ${question[eventPostBackItem].altQuestion}`,
                     "actions": question[eventPostBackItem].choices.map(c => {
                         return {
                             "type": "postback",
