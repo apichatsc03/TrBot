@@ -38,19 +38,19 @@ const getDescPhoto = (score) => {
     let imageSuittest = { original: undefined, preview: undefined}
     if (score >= 36) {
         imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk5.png"
-        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk5_preview.png"
+        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk5.png"
     } else if (score >= 30) {
         imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk4.png"
-        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk4_preview.png"
+        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk4.png"
     } else if (score >= 23) {
         imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk3.png"
-        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk3_preview.png"
+        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk3.png"
     } else if (score >= 17) {
         imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk2.png"
-        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk2_preview.png"
+        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk2.png"
     } else if (score <= 16) {
         imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk1.png"
-        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk1_preview.png"
+        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk1.png"
     } 
     return imageSuittest
 }
@@ -294,8 +294,8 @@ function suitabilityTestResult(quiz, imgUrl, event) {
     [
         {
             "type": "image",
-            "originalContentUrl": "https://www.treasurist.com/assets/images/line_risk3.png",
-            "previewImageUrl": "https://www.treasurist.com/assets/images/line_risk3_preview.png"
+            "originalContentUrl": imgUrl.original,
+            "previewImageUrl":  imgUrl.preview
         },
         {
             "type": "template",
