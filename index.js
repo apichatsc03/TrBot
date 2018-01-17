@@ -228,7 +228,7 @@ function handlePostBackEvent(event, suitTest) {
     let isValid = false
     if (currentQuestion === 4 ||  currentQuestion === 5) {
         console.log("quizNo > ", currentQuestion)
-        isValid = numberOnly
+        isValid = numberOnly(eventPostBackItemValue)
     }
    
     var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? currentQuestion + 1 : currentQuestion;
