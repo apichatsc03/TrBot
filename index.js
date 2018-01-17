@@ -227,12 +227,9 @@ function handlePostBackEvent(event, suitTest) {
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     let isValid = false
-    console.log("currentQuestion > ", currentQuestion)
     if (currentQuestion === 4 ||  currentQuestion === 5) {
-        console.log("quizNo > ", currentQuestion)
         isValid = numberOnly(eventPostBackItemValue)
     }
-    console.log("isValid > ", isValid)
    
     var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? currentQuestion + 1 : currentQuestion;
    
@@ -258,13 +255,18 @@ function handlePostBackEvent(event, suitTest) {
                 }
             }
         } else {
-            console.log("quizNo > ", quizNo)
-            console.log("eventPostBackItem > ", eventPostBackItem)
-            
-            msg = {
-                "type": "text",
-                "text": `${quizNo}. ${question[eventPostBackItem].question}`
+            if (isValid) {
+                msg = {
+                    "type": "text",
+                    "text": "กรุณากรอกจำนวนเงินเป็นตัวเลข"
+                }
+            } else {
+                msg = {
+                    "type": "text",
+                    "text": `${quizNo}. ${question[eventPostBackItem].question}`
+                }
             }
+            
         }
         currentQuestion = eventPostBackItem
         return client.replyMessage(event.replyToken, msg);
