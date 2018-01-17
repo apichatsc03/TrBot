@@ -227,6 +227,7 @@ function handlePostBackEvent(event, suitTest) {
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     let isValid = false
     if (currentQuestion === 4 ||  currentQuestion === 5) {
+        console.log("quizNo > ", currentQuestion)
         isValid = numberOnly
     }
    
@@ -254,6 +255,7 @@ function handlePostBackEvent(event, suitTest) {
                 }
             }
         } else {
+            console.log("quizNo > ", quizNo)
             msg = {
                 "type": "text",
                 "text": `${quizNo}. ${question[eventPostBackItem].question}`
