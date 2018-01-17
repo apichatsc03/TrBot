@@ -293,7 +293,7 @@ function suitabilityTestResult(quiz, imgUrl, event) {
     [
         {
             "type": "image",
-            "originalContentUrl": imgUrl.original,
+            "originalContentUrl": imgUrl.preview,
             "previewImageUrl":  imgUrl.preview
         },
         {
