@@ -256,7 +256,7 @@ function handlePostBackEvent(event, suitTest) {
         } else {
             msg = {
                 "type": "text",
-                "text": `${choicesNo}. ${question[eventPostBackItem].question}`
+                "text": `${quizNo}. ${question[eventPostBackItem].question}`
             }
         }
         currentQuestion = eventPostBackItem
