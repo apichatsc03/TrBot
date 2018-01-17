@@ -35,7 +35,7 @@ const getTitle = (score) => {
 }
 
 const getDescPhoto = (score) => {
-    let imageSuittest = { original: "", preview:"" }
+    let imageSuittest = { original: undefined, preview: undefined}
     if (score >= 36) {
         imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk5.png"
         imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk5_preview.png"
@@ -279,8 +279,8 @@ function doSubmitQuiz(resultTest, event) {
                 }
                 return client.replyMessage(event.replyToken, msg);
             } else {
-                suitabilityTestResultImg(imgUrl)
-                suitabilityTestResult(quiz)
+                suitabilityTestResultImg(imgUrl, event)
+                suitabilityTestResult(quiz, event)
             }        
            
         })
@@ -289,7 +289,7 @@ function doSubmitQuiz(resultTest, event) {
         })
 }
 
-function suitabilityTestResultImg(imgUrl) {
+function suitabilityTestResultImg(imgUrl, event) {
     let msg =  {
         "type": "image",
         "originalContentUrl": imgUrl.original,
@@ -298,7 +298,7 @@ function suitabilityTestResultImg(imgUrl) {
     return client.replyMessage(event.replyToken, msg);
 }
 
-function suitabilityTestResult(quiz) {
+function suitabilityTestResult(quiz, event) {
     let msg = {
         "type": "template",
         "altText": "Test Complte",
