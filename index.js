@@ -30,24 +30,29 @@ const getTitle = (score) => {
     } else if (score <= 16) {
         return ("เสี่ยงต่ำ")
     } else {
-        return
+        return ("ผลการทดสอบไม่สมบูรณ์")
     }
 }
 
-const getDesc = (score) => {
+const getDescPhoto = (score) => {
+    let imageSuittest = { original: "", preview:"" }
     if (score >= 36) {
-        return ("เน้นลงทุน 7 ปีขึ้นไป เหมาะกับคนรุ่นใหม่ที่มีระยะเวลาการลงทุนยาว รวมถึงการลงทุนเพื่อเกษียณ โดยในบางช่วงของการลงทุนอาจพบความผันผวนในระดับสูงเนื่องจากมีสินทรัพย์เสี่ยงสูง เช่นกองทุนหุ้น ในสัดส่วนประมาณ 65% ของการลงทุนโดยรวม")
+        imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk5.png"
+        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk5_preview.png"
     } else if (score >= 30) {
-        return ("เน้นลงทุนระยะยาว 5-7 ปีขึ้นไป เพื่อให้การลงทุนเติบโตในอัตราที่ดี หรือใช้เป็นการลงทุนเพื่อการเกษียณ โดยจะมีสินทรัพย์เสี่ยงสูง เช่นกองทุนหุ้นซึ่งมีโอกาสให้ผลตอบแทนสูง ในสัดส่วนประมาณ 50% ของการลงทุนโดยรวม")
+        imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk4.png"
+        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk4_preview.png"
     } else if (score >= 23) {
-        return ("เป้าหมายหลักคือเน้นสร้างรายได้ที่สม่ำเสมอและมีแนวโน้มเติบโต หรือเพื่อเก็บเงินในระยะกลางซึ่งมีระยะเวลาลงทุน 3-5 ปีขึ้นไป สามารถรับความผันผวนจากการลงทุนในกองทุนหุ้น ซึ่งมีโอกาสให้ผลตอบแทนสูงได้ในสัดส่วนประมาณ 30% ของการลงทุนโดยรวม")
+        imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk3.png"
+        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk3_preview.png"
     } else if (score >= 17) {
-        return ("มีระยะเวลาลงทุน 2-3 ปีขึ้นไป หรืออาจใช้เป็นรูปแบบการลงทุนหลังเกษียณที่สามารถรับความผันผวนจากการลงทุนในกองทุนหุ้น ซึ่งมีโอกาสให้ผลตอบแทนสูงได้ในสัดส่วนประมาณ 15% ของการลงทุนทั้งหมด แต่ในภาพรวมยังมีความแน่นอนพอสมควร")
+        imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk2.png"
+        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk2_preview.png"
     } else if (score <= 16) {
-        return ("มีระยะเวลาลงทุน 1-2 ปีขึ้นไป หรืออาจใช้เป็นรูปแบบการลงทุนหลังเกษียณที่เน้นลงทุนในสินทรัพย์ที่มีความแน่นอนสูงมาก")
-    } else {
-        return
-    }
+        imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk1.png"
+        imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk1_preview.png"
+    } 
+    return imageSuittest
 }
 
 let testResult;
@@ -264,29 +269,54 @@ function doSubmitQuiz(resultTest, event) {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
     })
         .then(resp => {
+
             var quiz = resp.data
-            let msg = {
-                "type": "template",
-                "altText": "Test Complte",
-                "template": {
-                    "type": "buttons",
-                    "title": `รูปแบบการลงทุนที่เหมาะกับคุณ ${getTitle(quiz.score)}`,
-                    "text":  `See Result Test Click 'View'`,
-                    "actions": [
-                        {
-                            "type": "uri",
-                            "label": "View",
-                            "uri": `https://www.treasurist.com/chatBotTestResult/${quiz.id}`
-                        }
-                    ]
+            var imgUrl = getDescPhoto(quiz.score)
+            if (imgUrl.original == undefined) {
+                msg = {
+                    "type": "text",
+                    "text": "ขออภัย! เกิดข้อผิดพลาด"
                 }
-            }
-            testResult = []
-            return client.replyMessage(event.replyToken, msg);
+                return client.replyMessage(event.replyToken, msg);
+            } else {
+                suitabilityTestResultImg(imgUrl)
+                suitabilityTestResult(quiz)
+            }        
+           
         })
         .catch(error => {
             console.error(error)
         })
+}
+
+function suitabilityTestResultImg(imgUrl) {
+    let msg =  {
+        "type": "image",
+        "originalContentUrl": imgUrl.original,
+        "previewImageUrl":  imgUrl.preview
+    }
+    return client.replyMessage(event.replyToken, msg);
+}
+
+function suitabilityTestResult(quiz) {
+    let msg = {
+        "type": "template",
+        "altText": "Test Complte",
+        "template": {
+            "type": "buttons",
+            "title": `รูปแบบการลงทุนที่เหมาะกับคุณ ${getTitle(quiz.score)}`,
+            "text":  `See Result Test Click 'View'`,
+            "actions": [
+                {
+                    "type": "uri",
+                    "label": "View",
+                    "uri": `https://www.treasurist.com/chatBotTestResult/${quiz.id}`
+                }
+            ]
+        }
+    }
+    testResult = []
+    return client.replyMessage(event.replyToken, msg);
 }
 
 
