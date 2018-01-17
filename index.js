@@ -1,5 +1,3 @@
-import { fail } from 'assert';
-
 const request = require('http');
 const express = require('express');
 const line = require('@line/bot-sdk');
