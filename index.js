@@ -1,3 +1,5 @@
+import { fail } from 'assert';
+
 const request = require('http');
 const express = require('express');
 const line = require('@line/bot-sdk');
@@ -205,29 +207,50 @@ function resultList(data) {
     return resultList
 }
 
+function numberOnly(value) {
+    if (value) {
+        let numVal = parseInt((value + "").replace(/[^0-9]/g, ''))
+        if(numVal > 0){
+            return false
+        }else{
+            return false
+        }
+    } else {
+        return false
+    }
+    
+}
+
+
 function handlePostBackEvent(event, suitTest) {
 
     var eventPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
-    var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : currentQuestion + 1;
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
-
+    let isValid = false
+    if (currentQuestion === 4 ||  currentQuestion === 5) {
+        isValid = numberOnly
+    }
+   
+    var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? currentQuestion + 1 : currentQuestion;
+   
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
         let result = eventPostBackItem != 0 ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
         suitTest = result != undefined ? _.merge(suitTest, result) : undefined
         let msg = undefined
-        if (question[eventPostBackItem].choices != undefined) {
+        var quizNo = !isValid ? eventPostBackItem + 1 : eventPostBackItem
+        if (question[eventPostBackItem].choices != undefined && !isValid) {
             msg = {
                 "type": "template",
-                "altText": `${eventPostBackItem + 1}. ${question[eventPostBackItem].altQuestion}`,
+                "altText": `${quizNo}. ${question[eventPostBackItem].altQuestion}`,
                 "template": {
                     "type": "buttons",
-                    "text": `${eventPostBackItem + 1}. ${question[eventPostBackItem].question}`,
+                    "text": `${quizNo}. ${question[eventPostBackItem].question}`,
                     "actions": question[eventPostBackItem].choices.map(c => {
                         return {
                             "type": "postback",
                             "label": c.text,
-                            "data": `action=test&itemid=${eventPostBackItem + 1}&value=${c.value}`
+                            "data": `action=test&itemid=${quizNo}&value=${c.value}`
                         }
                     })
                 }
@@ -235,7 +258,7 @@ function handlePostBackEvent(event, suitTest) {
         } else {
             msg = {
                 "type": "text",
-                "text": `${eventPostBackItem + 1}. ${question[eventPostBackItem].question}`
+                "text": `${choicesNo}. ${question[eventPostBackItem].question}`
             }
         }
         currentQuestion = eventPostBackItem
