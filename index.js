@@ -279,8 +279,7 @@ function doSubmitQuiz(resultTest, event) {
                 }
                 return client.replyMessage(event.replyToken, msg);
             } else {
-                suitabilityTestResultImg(imgUrl, event)
-                suitabilityTestResult(quiz, event)
+                suitabilityTestResult(quiz, imgUrl,event)
             }        
            
         })
@@ -288,33 +287,32 @@ function doSubmitQuiz(resultTest, event) {
             console.error(error)
         })
 }
+function suitabilityTestResult(quiz, imgUrl, event) {
 
-function suitabilityTestResultImg(imgUrl, event) {
-    let msg =  {
-        "type": "image",
-        "originalContentUrl": imgUrl.original,
-        "previewImageUrl":  imgUrl.preview
-    }
-    return client.replyMessage(event.replyToken, msg);
-}
-
-function suitabilityTestResult(quiz, event) {
-    let msg = {
-        "type": "template",
-        "altText": "Test Complte",
-        "template": {
-            "type": "buttons",
-            "title": `รูปแบบการลงทุนที่เหมาะกับคุณ ${getTitle(quiz.score)}`,
-            "text":  `See Result Test Click 'View'`,
-            "actions": [
-                {
-                    "type": "uri",
-                    "label": "View",
-                    "uri": `https://www.treasurist.com/chatBotTestResult/${quiz.id}`
-                }
-            ]
+    let msg = 
+    [
+        {
+            "type": "image",
+            "originalContentUrl": imgUrl.original,
+            "previewImageUrl":  imgUrl.preview
+        },
+        {
+            "type": "template",
+            "altText": "Test Complte",
+            "template": {
+                "type": "buttons",
+                "title": `รูปแบบการลงทุนที่เหมาะกับคุณ ${getTitle(quiz.score)}`,
+                "text":  `See Result Test Click 'View'`,
+                "actions": [
+                    {
+                        "type": "uri",
+                        "label": "View",
+                        "uri": `https://www.treasurist.com/chatBotTestResult/${quiz.id}`
+                    }
+                ]
+            }
         }
-    }
+    ]
     testResult = []
     return client.replyMessage(event.replyToken, msg);
 }
