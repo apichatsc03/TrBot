@@ -206,6 +206,7 @@ function resultList(data) {
 }
 
 function numberOnly(value) {
+    console.log("isValid > ", value)
     if (value) {
         let numVal = parseInt((value + "").replace(/[^0-9]/g, ''))
         if(numVal > 0){
@@ -235,11 +236,11 @@ function handlePostBackEvent(event, suitTest) {
    
     var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? currentQuestion + 1 : currentQuestion;
    
-    if (eventPostbackAction === "test" && eventPostBackItem < 16) {
+    if (eventPostbackAction === "test" && eventPostBackItem < 16 && !isValid) {
         let result = eventPostBackItem != 0 ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
         suitTest = result != undefined ? _.merge(suitTest, result) : undefined
         let msg = undefined
-        var quizNo = !isValid ? eventPostBackItem + 1 : eventPostBackItem
+        var quizNo = eventPostBackItem + 1
         if (question[eventPostBackItem].choices != undefined && !isValid) {
             msg = {
                 "type": "template",
