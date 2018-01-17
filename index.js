@@ -57,6 +57,7 @@ const getDescPhoto = (score) => {
 
 let testResult;
 let currentQuestion;
+let searchResult;
 
 app.post('/webhook', line.middleware(config), (req, res) => {
     if (!validate_signature(req.headers['x-line-signature'], req.body)) {
@@ -293,8 +294,8 @@ function suitabilityTestResult(quiz, imgUrl, event) {
     [
         {
             "type": "image",
-            "originalContentUrl": imgUrl.preview,
-            "previewImageUrl":  imgUrl.preview
+            "originalContentUrl": "https://www.treasurist.com/assets/images/line_risk3.png",
+            "previewImageUrl": "https://www.treasurist.com/assets/images/line_risk3_preview.png"
         },
         {
             "type": "template",
