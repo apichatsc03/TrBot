@@ -211,10 +211,10 @@ function numberOnly(value) {
         if(numVal > 0){
             return false
         }else{
-            return false
+            return true
         }
     } else {
-        return false
+        return true
     }
     
 }
@@ -226,8 +226,8 @@ function handlePostBackEvent(event, suitTest) {
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     let isValid = false
-    if (currentQuestion === 4 ||  currentQuestion === 5) {
-        console.log("quizNo > ", currentQuestion)
+    if (currentQuestion-1 === 4 ||  currentQuestion-1 === 5) {
+        console.log("quizNo > ", eventPostBackItemValue-1)
         isValid = numberOnly(eventPostBackItemValue)
     }
    
@@ -255,7 +255,10 @@ function handlePostBackEvent(event, suitTest) {
                 }
             }
         } else {
+            console.log("isValid > ", isValid)
             console.log("quizNo > ", quizNo)
+            console.log("eventPostBackItemValue > ", eventPostBackItemValue)
+            
             msg = {
                 "type": "text",
                 "text": `${quizNo}. ${question[eventPostBackItem].question}`
