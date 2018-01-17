@@ -288,7 +288,7 @@ function doSubmitQuiz(resultTest, event) {
         })
 }
 function suitabilityTestResult(quiz, imgUrl, event) {
-
+    console.log("img" ,imgUr)
     let msg = 
     [
         {
