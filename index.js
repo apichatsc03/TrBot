@@ -234,11 +234,12 @@ function handlePostBackEvent(event, suitTest) {
     var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? currentQuestion + 1 : currentQuestion;
    
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
-        let result = eventPostBackItem != 0 ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
-        suitTest = result != undefined ? _.merge(suitTest, result) : undefined
         let msg = undefined
         var quizNo = eventPostBackItem + 1
         if (question[eventPostBackItem].choices != undefined && !isValid) {
+            let result = eventPostBackItem != 0 ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
+            suitTest = result != undefined ? _.merge(suitTest, result) : undefined
+
             msg = {
                 "type": "template",
                 "altText": `${quizNo}. ${question[eventPostBackItem].altQuestion}`,
@@ -255,18 +256,10 @@ function handlePostBackEvent(event, suitTest) {
                 }
             }
         } else {
-            if (isValid) {
-                msg = {
-                    "type": "text",
-                    "text": "กรุณากรอกจำนวนเงินเป็นตัวเลข"
-                }
-            } else {
-                msg = {
-                    "type": "text",
-                    "text": `${quizNo}. ${question[eventPostBackItem].question}`
-                }
+            msg = {
+                "type": "text",
+                "text": `${!isValid ? `${quizNo}. ${question[eventPostBackItem].question}` : "กรุณากรอกจำนวนเงินเป็นตัวเลข"}`
             }
-            
         }
         console.log("msg", msg)
         currentQuestion = eventPostBackItem
