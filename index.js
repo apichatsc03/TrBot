@@ -233,7 +233,7 @@ function handlePostBackEvent(event, suitTest) {
    
     var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? currentQuestion + 1 : currentQuestion;
    
-    if (eventPostbackAction === "test" && eventPostBackItem < 16 && !isValid) {
+    if (eventPostbackAction === "test" && eventPostBackItem < 16) {
         let result = eventPostBackItem != 0 ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
         suitTest = result != undefined ? _.merge(suitTest, result) : undefined
         let msg = undefined
@@ -268,6 +268,7 @@ function handlePostBackEvent(event, suitTest) {
             }
             
         }
+        console.log("msg", msg)
         currentQuestion = eventPostBackItem
         return client.replyMessage(event.replyToken, msg);
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
