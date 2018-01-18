@@ -245,24 +245,14 @@ function handlePostBackEvent(event, suitTest) {
                     "type": "carousel",
                     "columns": [
                         {
-                            "text": "choice",
-                            "actions": [
-                                {
-                                    "type": "uri",
-                                    "label": "View detail",
-                                    "uri": `http://www.google.com/`
-                                },
-                                {
-                                    "type": "uri",
-                                    "label": "View detail",
-                                    "uri": `http://www.google.com/`
-                                },
-                                {
-                                    "type": "uri",
-                                    "label": "View detail",
-                                    "uri": `http://www.google.com/`
+                            "text": `${quizNo}. ${question[eventPostBackItem].question}`,
+                            "actions": question[eventPostBackItem].choices.map(c => {
+                                return {
+                                    "type": "postback",
+                                    "label": c.text,
+                                    "data": `action=test&itemid=${quizNo}&value=${c.value}`
                                 }
-                            ]
+                            })
                         }
                     ]
                 }
