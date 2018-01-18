@@ -245,15 +245,14 @@ function handlePostBackEvent(event, suitTest) {
                     "type": "carousel",
                     "columns": [
                         {
-                            "actions": [
-                                question[eventPostBackItem].choices.map(c => {
+                            "text": "choice",
+                            "actions": question[eventPostBackItem].choices.map(c => {
                                     return {
                                         "type": "postback",
                                         "label": c.text,
                                         "data": `action=test&itemid=${quizNo}&value=${c.value}`
-                                    }
-                                })
-                            ]
+                                }
+                            })
                         },
                     ]
                 }
