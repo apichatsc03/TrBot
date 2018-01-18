@@ -233,22 +233,28 @@ function handlePostBackEvent(event, suitTest) {
     var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? currentQuestion + 1 : currentQuestion;
    
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
-        let msg = undefined
+        
         var quizNo = eventPostBackItem + 1
         let result = eventPostBackItem != 0 && !isValid ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
         suitTest = result != undefined ? _.merge(suitTest, result) : undefined
+          console.log("eventPostBackItem", eventPostBackItem)
+        currentQuestion = !isValid ? eventPostBackItem : currentQuestion
         if (question[eventPostBackItem].choices != undefined && !isValid) {
-            msg =  quizResult(question[eventPostBackItem], quizNo)
+            let msg =  quizResult(question[eventPostBackItem], quizNo)
             console.log("msg columns", msg.template.columns[0].actions)
+            console.log("eventPostBackItem", eventPostBackItem)
+            currentQuestion = !isValid ? eventPostBackItem : currentQuestion
+            return client.replyMessage(event.replyToken, msg);
         } else {
-            msg = {
+            let msg = {
                 "type": "text",
                 "text": `${!isValid ? `${quizNo}. ${question[eventPostBackItem].question}` : "กรุณากรอกจำนวนเงินเป็นตัวเลข"}`
             }
+            console.log("eventPostBackItem", eventPostBackItem)
+            currentQuestion = !isValid ? eventPostBackItem : currentQuestion
+            return client.replyMessage(event.replyToken, msg);
         }
-        console.log("eventPostBackItem", eventPostBackItem)
-        currentQuestion = !isValid ? eventPostBackItem : currentQuestion
-        return client.replyMessage(event.replyToken, msg);
+      
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
         let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem - 1, eventPostBackItemValue) : undefined
         suitTest = resultInput != undefined ? _.merge(suitTest, resultInput) : undefined
@@ -258,7 +264,7 @@ function handlePostBackEvent(event, suitTest) {
 
 function quizResult(data, quizNo) {
     // let quizText = `${quizNo}. ${question[eventPostBackItem].question}`
-    let quizText = `${quizNo}.`
+    let quizText = `${quizNo}. ${question[eventPostBackItem].question}`
     let result = (data !== null || data !== undefined) && {
         "type": "template",
         "altText": "this is a carousel template",
