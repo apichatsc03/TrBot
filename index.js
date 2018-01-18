@@ -238,6 +238,14 @@ function handlePostBackEvent(event, suitTest) {
         let result = eventPostBackItem != 0 && !isValid ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
         suitTest = result != undefined ? _.merge(suitTest, result) : undefined
         if (question[eventPostBackItem].choices != undefined && !isValid) {
+            let quizText = `${quizNo}. ${question[eventPostBackItem].question}`
+            let choiceAction = question[eventPostBackItem].choices.map(c => {
+                return {
+                    "type": "postback",
+                    "label": c.text,
+                    "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                }
+            })
             msg =  {
                 "type": "template",
                 "altText": "this is a carousel template",
@@ -245,14 +253,8 @@ function handlePostBackEvent(event, suitTest) {
                     "type": "carousel",
                     "columns": [
                         {
-                            "text": `${quizNo}. ${question[eventPostBackItem].question}`,
-                            "actions": question[eventPostBackItem].choices.map(c => {
-                                return {
-                                    "type": "postback",
-                                    "label": c.text,
-                                    "data": `action=test&itemid=${quizNo}&value=${c.value}`
-                                }
-                            })
+                            "text": quizText,
+                            "actions": choiceAction
                         }
                     ]
                 }
