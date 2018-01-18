@@ -317,8 +317,8 @@ function suitabilityTestResult(quiz, imgUrl, event) {
     [
         {
             "type": "image",
-            "originalContentUrl": imgUrl.original,
-            "previewImageUrl":  imgUrl.preview
+            "originalContentUrl": "https://www.treasurist.com/assets/images/line_risk1_large.png",
+            "previewImageUrl":  "https://www.treasurist.com/assets/images/line_risk1_large.png"
         },
         {
             "type": "template",
