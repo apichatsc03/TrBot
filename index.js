@@ -222,7 +222,7 @@ function numberOnly(value) {
 
 
 function handlePostBackEvent(event, suitTest) {
-    console.log(" eventmessagetext",  event.message.text)
+    console.log(" event",  event)
     var eventPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
