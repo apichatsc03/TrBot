@@ -240,40 +240,34 @@ function handlePostBackEvent(event, suitTest) {
         if (question[eventPostBackItem].choices != undefined && !isValid) {
             msg =  {
                 "type": "template",
-                "altText": `${quizNo}.`,
+                "altText": "this is a carousel template",
                 "template": {
                     "type": "carousel",
                     "columns": [
                         {
                             "text": "choice",
-                            "actions": question[eventPostBackItem].choices.map(c => {
-                                    return {
-                                        "type": "postback",
-                                        "label": c.text,
-                                        "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                            "actions": [
+                                {
+                                    "type": "uri",
+                                    "label": "View detail",
+                                    "uri": `http://www.google.com/`
+                                },
+                                {
+                                    "type": "uri",
+                                    "label": "View detail",
+                                    "uri": `http://www.google.com/`
+                                },
+                                {
+                                    "type": "uri",
+                                    "label": "View detail",
+                                    "uri": `http://www.google.com/`
                                 }
-                            })
+                            ]
                         }
                     ]
                 }
             }
-
-            // "altText": `${quizNo}. ${question[eventPostBackItem].altQuestion}`,
-            // {
-            //     "type": "template",
-            //     "altText": `${quizNo}. ${question[eventPostBackItem].altQuestion}`,
-            //     "template": {
-            //         "type": "buttons",
-            //         "text": `${quizNo}. ${question[eventPostBackItem].question}`,
-            //         "actions": question[eventPostBackItem].choices.map(c => {
-            //             return {
-            //                 "type": "postback",
-            //                 "label": c.text,
-            //                 "data": `action=test&itemid=${quizNo}&value=${c.value}`
-            //             }
-            //         })
-            //     }
-            // }
+            console.log("msg", msg)
         } else {
             msg = {
                 "type": "text",
