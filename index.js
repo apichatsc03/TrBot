@@ -242,7 +242,7 @@ function handlePostBackEvent(event, suitTest) {
             let choiceAction = question[eventPostBackItem].choices.map(c => {
                 return {
                     "type": "postback",
-                    "label": c.text,
+                    "label": "ข้อที่",
                     "data": `action=test&itemid=${quizNo}&value=${c.value}`
                 }
             })
@@ -259,7 +259,7 @@ function handlePostBackEvent(event, suitTest) {
                     ]
                 }
             }
-            console.log("msg columns", msg.template.columns)
+            console.log("msg columns", msg.template.columns.actions)
         } else {
             msg = {
                 "type": "text",
