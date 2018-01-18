@@ -238,28 +238,8 @@ function handlePostBackEvent(event, suitTest) {
         let result = eventPostBackItem != 0 && !isValid ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
         suitTest = result != undefined ? _.merge(suitTest, result) : undefined
         if (question[eventPostBackItem].choices != undefined && !isValid) {
-            let quizText = `${quizNo}. ${question[eventPostBackItem].question}`
-            let choiceAction = question[eventPostBackItem].choices.map(c => {
-                return {
-                    "type": "postback",
-                    "label": "ข้อที่",
-                    "data": `action=test&itemid=${quizNo}&value=${c.value}`
-                }
-            })
-            msg =  {
-                "type": "template",
-                "altText": "this is a carousel template",
-                "template": {
-                    "type": "carousel",
-                    "columns": [
-                        {
-                            "text": quizText,
-                            "actions": choiceAction
-                        }
-                    ]
-                }
-            }
-            console.log("msg columns", msg.template.columns.actions)
+            msg =  quizResult(question[eventPostBackItem], quizNo)
+            console.log("msg columns", msg.template.columns[0].actions)
         } else {
             msg = {
                 "type": "text",
@@ -275,6 +255,33 @@ function handlePostBackEvent(event, suitTest) {
         doSubmitQuiz(suitTest, event)
     }
 }
+
+function quizResult(data, quizNo) {
+    // let quizText = `${quizNo}. ${question[eventPostBackItem].question}`
+    let quizText = `${quizNo}.`
+    let result = (data !== null || data !== undefined) && {
+        "type": "template",
+        "altText": "this is a carousel template",
+        "template": {
+            "type": "carousel",
+            "columns": [
+                {
+                    "text": quizText,
+                    "actions": data.choices.map(c => {
+                        return {
+                            "type": "postback",
+                            "label": "ข้อที่",
+                            "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                        }
+                    })
+                }
+            ]
+        }
+    }
+
+    return result
+}
+
 
 function getAnswerObj(currentQuestion, selectedValue) {
     let q = question[currentQuestion]
