@@ -259,7 +259,7 @@ function handlePostBackEvent(event, suitTest) {
                     ]
                 }
             }
-            console.log("msg", msg)
+            console.log("msg columns", msg.template.columns)
         } else {
             msg = {
                 "type": "text",
