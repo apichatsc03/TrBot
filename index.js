@@ -222,7 +222,7 @@ function numberOnly(value) {
 
 
 function handlePostBackEvent(event, suitTest) {
-
+    console.log(" eventmessagetext",  event.message.text)
     var eventPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
@@ -261,8 +261,8 @@ function handlePostBackEvent(event, suitTest) {
                 "text": `${!isValid ? `${quizNo}. ${question[eventPostBackItem].question}` : "กรุณากรอกจำนวนเงินเป็นตัวเลข"}`
             }
         }
-        console.log("msg", msg)
-        currentQuestion = eventPostBackItem
+        console.log("eventPostBackItem", eventPostBackItem)
+        currentQuestion = !isValid ? eventPostBackItem : currentQuestion
         return client.replyMessage(event.replyToken, msg);
     } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
         let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem - 1, eventPostBackItemValue) : undefined
