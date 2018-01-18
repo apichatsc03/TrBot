@@ -253,7 +253,7 @@ function handlePostBackEvent(event, suitTest) {
                                         "data": `action=test&itemid=${quizNo}&value=${c.value}`
                                 }
                             })
-                        },
+                        }
                     ]
                 }
             }
