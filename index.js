@@ -264,7 +264,7 @@ function handlePostBackEvent(event, suitTest) {
 
 function quizResult(data, quizNo) {
     // let quizText = `${quizNo}. ${question[eventPostBackItem].question}`
-    let quizText = `${quizNo}. ${question[eventPostBackItem].question}`
+    let quizText = `${quizNo}. ${data.question}`
     let result = (data !== null || data !== undefined) && {
         "type": "template",
         "altText": "this is a carousel template",
