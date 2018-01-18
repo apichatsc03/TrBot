@@ -240,7 +240,7 @@ function handlePostBackEvent(event, suitTest) {
         if (question[eventPostBackItem].choices != undefined && !isValid) {
             msg =  {
                 "type": "template",
-                "altText": `${quizNo}. ${question[eventPostBackItem].altQuestion}`,
+                "altText": `${quizNo}.`,
                 "template": {
                     "type": "carousel",
                     "columns": [
@@ -257,6 +257,8 @@ function handlePostBackEvent(event, suitTest) {
                     ]
                 }
             }
+
+            // "altText": `${quizNo}. ${question[eventPostBackItem].altQuestion}`,
             // {
             //     "type": "template",
             //     "altText": `${quizNo}. ${question[eventPostBackItem].altQuestion}`,
