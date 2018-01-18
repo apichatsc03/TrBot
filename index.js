@@ -236,10 +236,9 @@ function handlePostBackEvent(event, suitTest) {
     if (eventPostbackAction === "test" && eventPostBackItem < 16) {
         let msg = undefined
         var quizNo = eventPostBackItem + 1
+        let result = eventPostBackItem != 0 && !isValid ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
+        suitTest = result != undefined ? _.merge(suitTest, result) : undefined
         if (question[eventPostBackItem].choices != undefined && !isValid) {
-            let result = eventPostBackItem != 0 ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
-            suitTest = result != undefined ? _.merge(suitTest, result) : undefined
-
             msg = {
                 "type": "template",
                 "altText": `${quizNo}. ${question[eventPostBackItem].altQuestion}`,
