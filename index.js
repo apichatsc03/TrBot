@@ -248,9 +248,8 @@ function handlePostBackEvent(event, suitTest) {
                     "actions": question[eventPostBackItem].choices.map(c => {
                         return {
                             "type": "postback",
-                            "label": c.label ? c.label : c.text,
-                            "data": `action=test&itemid=${quizNo}&value=${c.value}`,
-                            "text": c.text,
+                            "label": c.text,
+                            "data": `action=test&itemid=${quizNo}&value=${c.value}`
                         }
                     })
                 }
