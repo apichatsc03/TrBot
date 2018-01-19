@@ -237,12 +237,9 @@ function handlePostBackEvent(event, suitTest) {
         var quizNo = eventPostBackItem + 1
         let result = eventPostBackItem != 0 && !isValid ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
         suitTest = result != undefined ? _.merge(suitTest, result) : undefined
-          console.log("eventPostBackItem", eventPostBackItem)
         currentQuestion = !isValid ? eventPostBackItem : currentQuestion
         if (question[eventPostBackItem].choices != undefined && !isValid) {
             let msg =  quizResult(question[eventPostBackItem], quizNo)
-            console.log("msg columns", msg.template.columns[0].actions)
-            console.log("eventPostBackItem", eventPostBackItem)
             currentQuestion = !isValid ? eventPostBackItem : currentQuestion
             return client.replyMessage(event.replyToken, msg);
         } else {
