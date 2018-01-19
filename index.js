@@ -265,32 +265,22 @@ function handlePostBackEvent(event, suitTest) {
 function quizResult(data, quizNo) {
     // let quizText = `${quizNo}. ${question[eventPostBackItem].question}`
     let quizText = `${quizNo}. ${data.question}`
-    let result = (data !== null || data !== undefined) && {
+    let result = (data !== null || data !== undefined) &&
+    {
         "type": "template",
-        "altText": "this is a carousel template",
+        "altText": `${quizNo}. ${question[eventPostBackItem].altQuestion}`,
         "template": {
-            "type": "carousel",
-            "columns": [
-                {
-                    "text": quizText,
-                    "actions": [
-                        {
-                            "type": "postback",
-                            "label": `${data.choices[0].text}`,
-                            "data": `action=test&itemid=${quizNo}&value=${data.choices[0].value}`
-                        }
-                    ]
+            "type": "buttons",
+            "text": `${quizNo}. ${question[eventPostBackItem].question}`,
+            "actions": question[eventPostBackItem].choices.map(c => {
+                return {
+                    "type": "postback",
+                    "label": c.text,
+                    "data": `action=test&itemid=${quizNo}&value=${c.value}`
                 }
-            ]
+            })
         }
     }
-                    // "actions": data.choices.map(c => {
-                    //     return {
-                    //         "type": "postback",
-                    //         "label": "ข้อที่",
-                    //         "data": `action=test&itemid=${quizNo}&value=${c.value}`
-                    //     }
-                    // })
     return result
 }
 
