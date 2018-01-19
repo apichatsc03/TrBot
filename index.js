@@ -277,6 +277,7 @@ function quizResult(data, quizNo) {
                         {
                             "type": "postback",
                             "label": `${quizNo}`,
+                            "data": `action=test&itemid=${quizNo}&value=1`
                         }
                     ]
                 }
