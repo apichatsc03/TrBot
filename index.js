@@ -265,14 +265,15 @@ function handlePostBackEvent(event, suitTest) {
 function quizResult(data, quizNo) {
     // let quizText = `${quizNo}. ${question[eventPostBackItem].question}`
     let quizText = `${quizNo}. ${data.question}`
+    
     let result = (data !== null || data !== undefined) &&
     {
         "type": "template",
-        "altText": `${quizNo}. ${question[eventPostBackItem].altQuestion}`,
+        "altText": quizText,
         "template": {
             "type": "buttons",
-            "text": `${quizNo}. ${question[eventPostBackItem].question}`,
-            "actions": question[eventPostBackItem].choices.map(c => {
+            "text": quizText,
+            "actions": data.choices.map(c => {
                 return {
                     "type": "postback",
                     "label": c.text,
