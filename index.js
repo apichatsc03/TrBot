@@ -273,18 +273,23 @@ function quizResult(data, quizNo) {
             "columns": [
                 {
                     "text": quizText,
-                    "actions": data.choices.map(c => {
-                        return {
+                    "actions": [
+                        {
                             "type": "postback",
-                            "label": "ข้อที่",
-                            "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                            "label": `${quizNo}`,
                         }
-                    })
+                    ]
                 }
             ]
         }
     }
-
+                    // "actions": data.choices.map(c => {
+                    //     return {
+                    //         "type": "postback",
+                    //         "label": "ข้อที่",
+                    //         "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                    //     }
+                    // })
     return result
 }
 
