@@ -100,8 +100,13 @@ function handleEvent(event) {
             handleMessageEvent(event);
         }
     } else if (event.type === 'postback') {
-        testResult && testResult.filter(tr => tr.userId = event.source.userId).map(tr => {return handlePostBackEvent(event, tr);})
-        searchResult && handleSearchEvent(event);
+
+        if(event.postback.data.split("&")[0].split("=")[1] === "search") {
+            searchResult && handleSearchEvent(event);
+        } else {
+            testResult && testResult.filter(tr => tr.userId = event.source.userId).map(tr => {return handlePostBackEvent(event, tr);})
+        }
+        
     } else {
         return Promise.resolve(null);
     }
@@ -387,7 +392,8 @@ function handleSearchEvent(event) {
     var searchPostbackAction = searchPostback ? searchPostback[0] != undefined && searchPostback[0].split("=")[1] : "search"
     var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) : 0 ): currentStep + 1 ;
-   
+    console.log("searchPostBackItem", searchPostBackItem)
+    console.log("currentStep", currentStep)
     if (searchPostbackAction === "search" && searchPostBackItem < 2) {
         console.log("here")
         let newResult = getSearchObj((searchPostBackItem - 1), searchPostBackItemValue)
