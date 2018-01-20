@@ -168,7 +168,7 @@ function handleMessageEvent(event) {
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
-            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า 'About you'\nอยากเริ่มลงทุนให้พิมพ์คำว่า 'Test'\nอยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
+            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า 'About you'\n\nอยากเริ่มลงทุนให้พิมพ์คำว่า 'Test'\n\nอยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
         }
         return client.replyMessage(event.replyToken, msg);
     } else {
@@ -266,9 +266,7 @@ function quizResult(data, quizNo) {
         result =  (data !== null || data !== undefined) && [
             {
                 "type": "text",
-                "text": `${quizText}
-
-                ${data.altQuestion}`
+                "text": `${quizText}\n\n${data.altQuestion}`
             },
             {
                 "type": "template",
