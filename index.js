@@ -169,7 +169,9 @@ function handleMessageEvent(event) {
         let msg = {
             "type": "text",
             "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า 'About you'
+            
             อยากเริ่มลงทุนให้พิมพ์คำว่า 'Test'
+                        
             อยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
         }
         return client.replyMessage(event.replyToken, msg);
@@ -268,14 +270,16 @@ function quizResult(data, quizNo) {
         result =  (data !== null || data !== undefined) && [
             {
                 "type": "text",
-                "text": quizText
+                "text": `${quizText}
+
+                ${data.altQuestion}`
             },
             {
                 "type": "template",
-                "altText": data.altQuestion,
+                "altText": "เลือก ตอบตามเลขข้อ",
                 "template": {
                     "type": "buttons",
-                    "text": data.altQuestion,
+                    "text": "เลือก ตอบตามเลขข้อ",
                     "actions": data.choices.map(c => {
                         return {
                             "type": "postback",
