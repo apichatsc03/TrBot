@@ -167,7 +167,7 @@ function handleMessageEvent(event) {
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
-            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า  'About you' อยากเริ่มลงทุนให้พิมพ์คำว่า 'Test' อยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
+            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า 'About you'<br />อยากเริ่มลงทุนให้พิมพ์คำว่า 'Test'<br />อยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
         }
         return client.replyMessage(event.replyToken, msg);
     } else {
@@ -259,22 +259,50 @@ function handlePostBackEvent(event, suitTest) {
 
 function quizResult(data, quizNo) {
     let quizText = `${quizNo}. ${data.question}`
-    let result = (data !== null || data !== undefined) &&
-    {
-        "type": "template",
-        "altText": quizText,
-        "template": {
-            "type": "buttons",
-            "text": quizText,
-            "actions": data.choices.map(c => {
-                return {
-                    "type": "postback",
-                    "label": c.text,
-                    "data": `action=test&itemid=${quizNo}&value=${c.value}`
+    let result
+
+    if (quizNo === 11 || quizNo === 12) {
+        result =  (data !== null || data !== undefined) && [
+            {
+                "type": "text",
+                "text": quizText
+            },
+            {
+                "type": "template",
+                "altText": data.altQuestion,
+                "template": {
+                    "type": "buttons",
+                    "text": data.altQuestion,
+                    "actions": data.choices.map(c => {
+                        return {
+                            "type": "postback",
+                            "label": c.text,
+                            "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                        }
+                    })
                 }
-            })
+            }
+        ]
+    } else {
+        result =   (data !== null || data !== undefined) &&
+        {
+            "type": "template",
+            "altText": quizText,
+            "template": {
+                "type": "buttons",
+                "text": quizText,
+                "actions": data.choices.map(c => {
+                    return {
+                        "type": "postback",
+                        "label": c.text,
+                        "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                    }
+                })
+            }
         }
     }
+    
+  
     return result
 }
 
