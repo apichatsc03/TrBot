@@ -431,21 +431,21 @@ function searchFilterOption(data, step) {
                 "type": "text",
                 "text": `${data.filterTypeText}`
             },
-            {
-                "type": "template",
-                "altText": `${data.altFilter}`,
-                "template": {
-                    "type": "buttons",
-                    "text": `${data.altFilter}`,
-                    "actions": data.choices.map(c => {
-                        return {
-                            "type": "postback",
-                            "label": c.text,
-                            "data": `action=test&itemid=${step}&value=${c.value}`
-                        }
-                    })
-                }
-            }
+            // {
+            //     "type": "template",
+            //     "altText": `${data.altFilter}`,
+            //     "template": {
+            //         "type": "buttons",
+            //         "text": `${data.altFilter}`,
+            //         "actions": data.choices.map(c => {
+            //             return {
+            //                 "type": "postback",
+            //                 "label": c.text,
+            //                 "data": `action=test&itemid=${step}&value=${c.value}`
+            //             }
+            //         })
+            //     }
+            // }
         ]
     } else {
         result =  (data !== null || data !== undefined) &&

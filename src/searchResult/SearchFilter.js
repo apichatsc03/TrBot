@@ -4,7 +4,7 @@ module.exports = [
         altFilter: "เลือก ตอบประเภทกองทุน ตามข้อ",
         key: 0,
         choices: [
-            { text: "1", value: `1,2,3,4,5,6,7,8` },
+            { text: "1", value: "1,2,3,4,5,6,7,8" },
             { text: "2", value: 1 },
             { text: "3", value: 2 },
             { text: "4", value: 3 },
@@ -20,7 +20,7 @@ module.exports = [
         altFilter: "ลดหย่อนภาษี",
         key: 1,
         choices: [
-            { text: "ทั้งหมด", value: `0,1` },
+            { text: "ทั้งหมด", value: "0,1" },
             { text: "ลดหย่อนภาษีได้", value: 0 },
             { text: "ลดหย่อนภาษีไม่ได้", value: 1 }
         ]
@@ -30,7 +30,7 @@ module.exports = [
         altFilter: "ลงทุนใน/ต่างประเทศ",
         key: 2,
         choices: [
-            { text: "ทั้งหมด", value: `1,2` },
+            { text: "ทั้งหมด", value: "1,2" },
             { text: "ลงทุนในประเทศ", value: 1 },
             { text: "ลงทุนต่างประเทศ", value: 2 }
         ]
