@@ -167,13 +167,16 @@ function handleMessageEvent(event) {
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
-            "text": `'about you' => for show our info. 'test' => Start Treasurist Test. 'search 'some keyword' => Search Fund in Treasurist ex. 'search scb'.`
+            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า  'About you' 
+            อยากเริ่มลงทุนให้พิมพ์คำว่า 'Test' 
+            อยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
         }
         return client.replyMessage(event.replyToken, msg);
     } else {
         let msg = {
             "type": "text",
-            "text": `Please Try Again or type 'help'`
+            "text": `สวัสดีค่ะ ที่พิมพ์มาก็น่าสนใจนะคะ แต่เรายังตอบไม่ได้ ถ้าอยากจะได้แผนลงทุนใน 3 นาที 
+                    ให้พิมพ์ 'Test' หรือถ้าต้องการความช่วยเหลือให้พิมพ์ว่า 'Help' ค่ะ`
         }
         return client.replyMessage(event.replyToken, msg);
     }
@@ -206,7 +209,6 @@ function resultList(data) {
 }
 
 function numberOnly(value) {
-    console.log("isValid > ", value)
     if (value) {
         let numVal = parseInt((value + "").replace(/[^0-9]/g, ''))
         if(numVal > 0){
@@ -247,7 +249,6 @@ function handlePostBackEvent(event, suitTest) {
                 "type": "text",
                 "text": `${!isValid ? `${quizNo}. ${question[eventPostBackItem].question}` : "กรุณากรอกจำนวนเงินเป็นตัวเลข"}`
             }
-            console.log("eventPostBackItem", eventPostBackItem)
             currentQuestion = !isValid ? eventPostBackItem : currentQuestion
             return client.replyMessage(event.replyToken, msg);
         }
@@ -260,9 +261,7 @@ function handlePostBackEvent(event, suitTest) {
 }
 
 function quizResult(data, quizNo) {
-    // let quizText = `${quizNo}. ${question[eventPostBackItem].question}`
     let quizText = `${quizNo}. ${data.question}`
-    
     let result = (data !== null || data !== undefined) &&
     {
         "type": "template",
@@ -325,13 +324,12 @@ function doSubmitQuiz(resultTest, event) {
         })
 }
 function suitabilityTestResult(quiz, imgUrl, event) {
-    console.log("img" ,imgUrl)
     let msg = 
     [
         {
             "type": "image",
-            "originalContentUrl": "https://www.treasurist.com/assets/images/line_risk1_large.png",
-            "previewImageUrl":  "https://www.treasurist.com/assets/images/line_risk1_large.png"
+            "originalContentUrl": imgUrl.original,
+            "previewImageUrl":  imgUrl.original
         },
         {
             "type": "template",
@@ -339,11 +337,11 @@ function suitabilityTestResult(quiz, imgUrl, event) {
             "template": {
                 "type": "buttons",
                 "title": `รูปแบบการลงทุนที่เหมาะกับคุณ ${getTitle(quiz.score)}`,
-                "text":  `See Result Test Click 'View'`,
+                "text":  "กดเพื่อดูแผนการลงทุนที่เหมาะกับคุณ คลิก!",
                 "actions": [
                     {
                         "type": "uri",
-                        "label": "View",
+                        "label": "คลิก!",
                         "uri": `https://www.treasurist.com/chatBotTestResult/${quiz.id}`
                     }
                 ]
