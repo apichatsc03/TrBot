@@ -416,7 +416,7 @@ function getSearchObj(currentStep, selectedValue) {
     } else if (currentStep === 2) {
         obj = `location=${selected.value}`
     } else {
-        obj = `keyword=%25${keyword}%25`
+        obj = `keyword=%25${selectedValue}%25`
     }
    
     return obj
