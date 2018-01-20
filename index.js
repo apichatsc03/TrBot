@@ -100,7 +100,7 @@ function handleEvent(event) {
             handleMessageEvent(event);
         }
     } else if (event.type === 'postback') {
-
+        
         if(event.postback.data.split("&")[0].split("=")[1] === "search") {
             searchResult && handleSearchEvent(event);
         } else {
@@ -448,7 +448,7 @@ function searchFilterOption(data, step) {
                     return {
                         "type": "postback",
                         "label": c.text,
-                        "data": `action=test&itemid=${step}&value=${c.value}`
+                        "data": `action=search&itemid=${step}&value=${c.value}`
                     }
                 })
             }
