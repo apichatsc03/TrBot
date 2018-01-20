@@ -424,7 +424,6 @@ function getSearchObj(currentStep, selectedValue) {
 
 function searchFilterOption(data, step) {
     console.log("step" , step)
-    console.log("data" , data)
     let result
     if (step === 0) {
         result =  (data !== null || data !== undefined) && [
@@ -466,7 +465,7 @@ function searchFilterOption(data, step) {
             }
         }
     }
-    
+    console.log("data" , result)
     return result
 }
 
