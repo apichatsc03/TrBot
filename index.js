@@ -403,7 +403,7 @@ function handleSearchEvent(event) {
         
     } else if (searchPostbackAction === "search" && searchPostBackItem === 2) {
         let resultInput = searchPostBackItem != 0 ? getSearchObj((searchPostBackItem - 1), searchPostBackItemValue) : undefined
-        searchResult = resultInput != undefined ? `${searchResult}&${result}` : undefined
+        searchResult = resultInput != undefined ? `${searchResult}&${resultInput}` : undefined
         doSubmitSearch(searchResult, event)
     }
 }
