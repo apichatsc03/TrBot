@@ -100,11 +100,8 @@ function handleEvent(event) {
             handleMessageEvent(event);
         }
     } else if (event.type === 'postback') {
-        testResult
-            .filter(tr => tr.userId = event.source.userId)
-            .map(tr => {
-                return handlePostBackEvent(event, tr);
-            })
+        testResult && testResult.filter(tr => tr.userId = event.source.userId).map(tr => {return handlePostBackEvent(event, tr);})
+        searchResult && handleSearchEvent(event);
     } else {
         return Promise.resolve(null);
     }
