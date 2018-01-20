@@ -167,16 +167,13 @@ function handleMessageEvent(event) {
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
-            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า  'About you' 
-            อยากเริ่มลงทุนให้พิมพ์คำว่า 'Test' 
-            อยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
+            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า  'About you' อยากเริ่มลงทุนให้พิมพ์คำว่า 'Test' อยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
         }
         return client.replyMessage(event.replyToken, msg);
     } else {
         let msg = {
             "type": "text",
-            "text": `สวัสดีค่ะ ที่พิมพ์มาก็น่าสนใจนะคะ แต่เรายังตอบไม่ได้ ถ้าอยากจะได้แผนลงทุนใน 3 นาที 
-                    ให้พิมพ์ 'Test' หรือถ้าต้องการความช่วยเหลือให้พิมพ์ว่า 'Help' ค่ะ`
+            "text": `สวัสดีค่ะ ที่พิมพ์มาก็น่าสนใจนะคะ แต่เรายังตอบไม่ได้ ถ้าอยากจะได้แผนลงทุนใน 3 นาที ให้พิมพ์ 'Test' หรือถ้าต้องการความช่วยเหลือให้พิมพ์ว่า 'Help' ค่ะ`
         }
         return client.replyMessage(event.replyToken, msg);
     }
