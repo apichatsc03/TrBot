@@ -4,6 +4,7 @@ const line = require('@line/bot-sdk');
 const axios = require('axios');
 const moment = require('moment');
 const question = require('./src/testResult/Questionair');
+const searchFilter = require('./src/searchResult/SearchFilter');
 const crypto = require('crypto');
 const _ = require('lodash');
 
@@ -58,6 +59,7 @@ const getDescPhoto = (score) => {
 let testResult;
 let currentQuestion;
 let searchResult;
+let currentStep;
 
 app.post('/webhook', line.middleware(config), (req, res) => {
     if (!validate_signature(req.headers['x-line-signature'], req.body)) {
@@ -76,15 +78,25 @@ function handleEvent(event) {
     console.log("event", event)
     if (event.type === 'message' && event.message.type === 'text') {
         var isTesting = _.find(testResult, ['userId', event.source.userId]);
-        if (!isTesting) {
-            handleMessageEvent(event);
-        } else {
+        var isSearch = searchResult !== undefined ? true : false;
+        if (isTesting) {
             testResult.filter(tr => tr.userId = event.source.userId)
                 .map(tr => {
                     return handlePostBackEvent(event, tr);
                 })
+        } else if (isSearch) {
+            if (currentStep != undefined) {
+                handleSearchEvent(event);
+            } else {
+                let newResult = getSearchObj(undefined, event.message.text.toLowerCase())
+                searchResult = newResult != undefined ? `${searchResult}&${newResult}` : undefined
+                currentStep = 0
+                let msg =  searchFilterOption(searchFilter[currentStep], currentStep)
+                return client.replyMessage(event.replyToken, msg);
+            }
+        } else {
+            handleMessageEvent(event);
         }
-
     } else if (event.type === 'postback') {
         testResult
             .filter(tr => tr.userId = event.source.userId)
@@ -99,8 +111,6 @@ function handleEvent(event) {
 function handleMessageEvent(event) {
     var eventText = event.message.text.toLowerCase()
     var eventType = event.source.type
-
-    var re = /(\bsearch\b)/;
     if (eventText === "about you") {
         let msg = {
             "type": "template",
@@ -151,20 +161,13 @@ function handleMessageEvent(event) {
         }
         testResult = _.concat([], [{ "userId": event.source.userId }])
         return client.replyMessage(event.replyToken, msg);
-    } else if (re.test(eventText)) {
-        var keyword = eventText.split("search ")[1]
-        axios.get(`http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`)
-            .then(response => {
-                let data = response.data._embedded.funds
-                let msg = data != undefined ? resultList(data) : {
-                    "type": "text",
-                    "text": "Search Not Found!, Please Try Again."
-                }
-                return client.replyMessage(event.replyToken, msg);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+    } else if (eventText === "search") {
+        let msg = {
+            "type": "text",
+            "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
+        }
+        searchResult = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&`
+        return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
@@ -349,6 +352,7 @@ function doSubmitQuiz(resultTest, event) {
             console.error(error)
         })
 }
+
 function suitabilityTestResult(quiz, imgUrl, event) {
     let msg = 
     [
@@ -376,6 +380,108 @@ function suitabilityTestResult(quiz, imgUrl, event) {
     ]
     testResult = []
     return client.replyMessage(event.replyToken, msg);
+}
+
+
+function handleSearchEvent(event) {
+    var searchPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
+    var searchPostbackAction = searchPostback ? searchPostback[0] != undefined && searchPostback[0].split("=")[1] : "search"
+    var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
+    var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) : 0 ): currentQuestion + 1 ;
+   
+    if (searchPostbackAction === "search" && searchPostBackItem < 2) {
+        var step = searchPostBackItem + 1
+        let newResult = getSearchObj((searchPostBackItem - 1), searchPostBackItemValue)
+        searchResult = newResult != undefined ? `${searchResult}&${newResult}` : undefined
+        let msg =  searchFilterOption(searchFilter[searchPostBackItem], step)
+        currentQuestion =  searchPostBackItem
+        return client.replyMessage(event.replyToken, msg);
+        
+    } else if (searchPostbackAction === "search" && searchPostBackItem === 2) {
+        let resultInput = searchPostBackItem != 0 ? getSearchObj((searchPostBackItem - 1), searchPostBackItemValue) : undefined
+        searchResult = resultInput != undefined ? `${searchResult}&${result}` : undefined
+        doSubmitSearch(searchResult, event)
+    }
+}
+
+function getSearchObj(currentStep, selectedValue) {
+    let sf = currentStep ? searchFilter[currentStep] : undefined
+    let selected = sf ? _.find(sf.choices, c => c.value == selectedValue) : undefined
+    let obj = undefined
+
+    if (currentStep === 0) {
+        obj = `riskLevel=${selected.value}`
+    } else if (currentStep === 1) {
+        obj = `taxBenefit=${selected.value}`
+    } else if (currentStep === 2) {
+        obj = `location=${selected.value}`
+    } else {
+        obj = `keyword=%25${keyword}%25`
+    }
+   
+    return obj
+}
+
+function searchFilterOption(data, step) {
+
+    let result
+    if (step === 0) {
+        result =  (data !== null || data !== undefined) && [
+            {
+                "type": "text",
+                "text": `${data.filterTypeText}`
+            },
+            {
+                "type": "template",
+                "altText": `${data.altFilter}`,
+                "template": {
+                    "type": "buttons",
+                    "text": `${data.altFilter}`,
+                    "actions": data.choices.map(c => {
+                        return {
+                            "type": "postback",
+                            "label": c.text,
+                            "data": `action=test&itemid=${step}&value=${c.value}`
+                        }
+                    })
+                }
+            }
+        ]
+    } else {
+        result =  (data !== null || data !== undefined) &&
+        {
+            "type": "template",
+            "altText": `${data.filterTypeText}`,
+            "template": {
+                "type": "buttons",
+                "text": `${data.filterTypeText}`,
+                "actions": data.choices.map(c => {
+                    return {
+                        "type": "postback",
+                        "label": c.text,
+                        "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                    }
+                })
+            }
+        }
+    }
+    
+    return result
+}
+
+function doSubmitSearch(data, event) {
+    axios.get(data)
+        .then(response => {
+            let data = response.data._embedded.funds
+            let msg = data != undefined ? resultList(data) : {
+                "type": "text",
+                "text": "Search Not Found!, Please Try Again."
+            }
+            return client.replyMessage(event.replyToken, msg);
+        })
+        .catch(error => {
+            console.log(error);
+        });
 }
 
 
