@@ -85,7 +85,9 @@ function handleEvent(event) {
                     return handlePostBackEvent(event, tr);
                 })
         } else if (isSearch) {
+            console.log("search")
             if (currentStep != undefined) {
+                console.log("currentStep", currentStep)
                 handleSearchEvent(event);
             } else {
                 let newResult = getSearchObj(undefined, event.message.text.toLowerCase())
@@ -423,7 +425,6 @@ function getSearchObj(currentStep, selectedValue) {
 }
 
 function searchFilterOption(data, step) {
-    console.log("step" , step)
     let result
     if (step === 0) {
         result =  (data !== null || data !== undefined) && [
@@ -450,7 +451,6 @@ function searchFilterOption(data, step) {
             }
         }
     }
-    console.log("data" , result)
     return result
 }
 
