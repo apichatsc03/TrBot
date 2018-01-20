@@ -73,6 +73,7 @@ function validate_signature(signature, body) {
 }
 
 function handleEvent(event) {
+    console.log("event", event)
     if (event.type === 'message' && event.message.type === 'text') {
         var isTesting = _.find(testResult, ['userId', event.source.userId]);
         if (!isTesting) {
@@ -167,7 +168,9 @@ function handleMessageEvent(event) {
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
-            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า 'About you'<br />อยากเริ่มลงทุนให้พิมพ์คำว่า 'Test'<br />อยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
+            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า 'About you'
+            อยากเริ่มลงทุนให้พิมพ์คำว่า 'Test'
+            อยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
         }
         return client.replyMessage(event.replyToken, msg);
     } else {
