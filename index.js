@@ -389,14 +389,15 @@ function handleSearchEvent(event) {
     var searchPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var searchPostbackAction = searchPostback ? searchPostback[0] != undefined && searchPostback[0].split("=")[1] : "search"
     var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
-    var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) : 0 ): currentQuestion + 1 ;
+    var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) : 0 ): currentStep + 1 ;
    
     if (searchPostbackAction === "search" && searchPostBackItem < 2) {
+        console.log("here")
         var step = searchPostBackItem + 1
         let newResult = getSearchObj((searchPostBackItem - 1), searchPostBackItemValue)
         searchResult = newResult != undefined ? `${searchResult}&${newResult}` : undefined
         let msg =  searchFilterOption(searchFilter[searchPostBackItem], step)
-        currentQuestion =  searchPostBackItem
+        currentStep =  searchPostBackItem
         return client.replyMessage(event.replyToken, msg);
         
     } else if (searchPostbackAction === "search" && searchPostBackItem === 2) {
@@ -420,7 +421,7 @@ function getSearchObj(currentStep, selectedValue) {
     } else {
         obj = `keyword=%25${selectedValue}%25`
     }
-   
+    console.log("Obj", obj)
     return obj
 }
 
