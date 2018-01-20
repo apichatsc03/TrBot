@@ -446,7 +446,7 @@ function searchFilterOption(data, step) {
                     return {
                         "type": "postback",
                         "label": c.text,
-                        "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                        "data": `action=test&itemid=${step}&value=${c.value}`
                     }
                 })
             }
