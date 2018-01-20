@@ -168,11 +168,7 @@ function handleMessageEvent(event) {
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
-            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า 'About you'
-            
-            อยากเริ่มลงทุนให้พิมพ์คำว่า 'Test'
-                        
-            อยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
+            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า 'About you'\nอยากเริ่มลงทุนให้พิมพ์คำว่า 'Test'\nอยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
         }
         return client.replyMessage(event.replyToken, msg);
     } else {
@@ -368,8 +364,8 @@ function suitabilityTestResult(quiz, imgUrl, event) {
             "altText": "Test Complte",
             "template": {
                 "type": "buttons",
-                "title": `รูปแบบการลงทุนที่เหมาะกับคุณ ${getTitle(quiz.score)}`,
-                "text":  "กดเพื่อดูแผนการลงทุนที่เหมาะกับคุณ คลิก!",
+                "title": `รูปแบบการลงทุนที่เหมาะกับคุณ '${getTitle(quiz.score)}'`,
+                "text":  "กดเพื่อดูแผนการลงทุนที่เหมาะกับคุณ",
                 "actions": [
                     {
                         "type": "uri",
