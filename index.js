@@ -392,10 +392,9 @@ function handleSearchEvent(event) {
     var searchPostbackAction = searchPostback ? searchPostback[0] != undefined && searchPostback[0].split("=")[1] : "search"
     var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) : 0 ): currentStep + 1 ;
-    console.log("searchPostBackItem", searchPostBackItem)
-    console.log("currentStep", currentStep)
     if (searchPostbackAction === "search" && searchPostBackItem < 2) {
         console.log("here")
+        let step = searchPostBackItem + 1
         let newResult = getSearchObj((searchPostBackItem - 1), searchPostBackItemValue)
         searchResult = newResult != undefined ? `${searchResult}&${newResult}` : undefined
         let msg =  searchFilterOption(searchFilter[searchPostBackItem], searchPostBackItem)
