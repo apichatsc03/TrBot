@@ -401,6 +401,7 @@ function handleSearchEvent(event) {
         return client.replyMessage(event.replyToken, msg);
         
     } else if (searchPostbackAction === "search" && searchPostBackItem === 2) {
+        console.log("here", searchPostBackItem)
         let resultInput = searchPostBackItem != 0 ? getSearchObj((searchPostBackItem - 1), searchPostBackItemValue) : undefined
         searchResult = resultInput != undefined ? `${searchResult}&${resultInput}` : undefined
         doSubmitSearch(searchResult, event)
