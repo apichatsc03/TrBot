@@ -409,6 +409,7 @@ function handleSearchEvent(event) {
 }
 
 function getSearchObj(currentStep, selectedValue) {
+    console.log("getSearchObj", searchFilter[currentStep], selectedValue)
     let sf = currentStep ? searchFilter[currentStep] : undefined
     let selected = sf && sf.choices ? _.find(sf.choices, c => c.value == selectedValue) : undefined
     let obj = undefined
