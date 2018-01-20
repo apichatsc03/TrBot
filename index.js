@@ -393,10 +393,9 @@ function handleSearchEvent(event) {
    
     if (searchPostbackAction === "search" && searchPostBackItem < 2) {
         console.log("here")
-        var step = searchPostBackItem + 1
         let newResult = getSearchObj((searchPostBackItem - 1), searchPostBackItemValue)
         searchResult = newResult != undefined ? `${searchResult}&${newResult}` : undefined
-        let msg =  searchFilterOption(searchFilter[searchPostBackItem], step)
+        let msg =  searchFilterOption(searchFilter[searchPostBackItem], searchPostBackItem)
         currentStep =  searchPostBackItem
         return client.replyMessage(event.replyToken, msg);
         
