@@ -400,6 +400,7 @@ function suitabilityTestResult(quiz, imgUrl, event) {
 
 
 function handleSearchEvent(event) {
+    console.log( event.message.text.toLowerCase())
     var searchPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var searchPostbackAction = searchPostback ? searchPostback[0] != undefined && searchPostback[0].split("=")[1] : "search"
     var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
@@ -422,7 +423,7 @@ function getSearchObj(currentStep, selectedValue) {
     let sf = currentStep ? searchFilter[currentStep] : undefined
     let selected = sf && sf.choices ? _.find(sf.choices, c => c.value === selectedValue) : undefined
     let obj = undefined
-    console.log(selectedValue)
+    
     console.log((sf && sf.choices) && sf.choices[0], selectedValue)
     if (currentStep === 0) {
         obj = `riskLevel=${selectedValue === "1" ? "1,2,3,4,5,6,7,8" :selectedValue}`
