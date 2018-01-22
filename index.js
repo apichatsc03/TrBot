@@ -209,8 +209,8 @@ function resultList(data) {
             "type": "carousel",
             "columns": data.length > 0 ? data.map(s => {
                 var fundName = s.fundNameTh.length > textMaxChar ? `${s.fundNameTh.substring(0, textMaxChar - 3)}...` : s.fundNameTh
-                var fundCodeTitle = `${s.fundCode} :: ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`
-                var fundCode = fundCodeTitle.length > titleMaxChar ? `${s.fundCode.substring(0, titleMaxChar - 4)}...` : fundCodeTitle
+                var fundCodeTitle = `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`
+                var fundCode = fundCodeTitle.length > titleMaxChar ? fundCodeTitle.substring(0, titleMaxChar - 4)+"..." : fundCodeTitle
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
                 console.log(fundName, fundCode, fundCodeURL) 
                 return {
