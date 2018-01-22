@@ -235,7 +235,7 @@ function resultList(data) {
                         }
                     ]
             }
-            
+
         }
     }
 
@@ -486,7 +486,7 @@ function searchFilterOption(data, step) {
 
 function doSubmitSearch(data, event) {
     console.log("Date URL", data)
-    axios.get(data)
+    axios.get(`https://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25ltf%25`)
         .then(response => {
             let data = response.data._embedded.funds
             let msg = data != undefined ? resultList(data) : {
