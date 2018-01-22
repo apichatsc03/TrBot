@@ -420,12 +420,11 @@ function handleSearchEvent(event) {
 
 function getSearchObj(currentStep, selectedValue) {
     let sf = currentStep ? searchFilter[currentStep] : undefined
-    let selected = sf && sf.choices ? _.find(sf.choices, c => c.value == selectedValue) : undefined
+    let selected = sf && sf.choices ? _.find(sf.choices, c => c.value === selectedValue) : undefined
     let obj = undefined
 
     if (currentStep === 0) {
-        selectedValue = ""
-        obj = `riskLevel=${selectedValue}`
+        obj = `riskLevel=${selectedValue === "1" ? "1,2,3,4,5,6,7,8" :selectedValue}`
     } else if (currentStep === 1) {
         obj = `taxBenefit=${selected.value}`
     } else if (currentStep === 2) {
