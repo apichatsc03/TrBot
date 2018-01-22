@@ -115,29 +115,30 @@ function handleEvent(event) {
 function handleMessageEvent(event) {
     var eventText = event.message.text.toLowerCase()
     var eventType = event.source.type
-    if (eventText === "about you") {
+    if (eventText === "menu") {
         let msg = {
             "type": "template",
-            "altText": "Welcome to Treasurist",
+            "altText": "ยินดีต้อนรับสู่ Treasuirst.com",
             "template": {
                 "type": "buttons",
                 "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                "title": "Welcome to Treasurist Menu",
-                "text": "Please select",
+                "title": "ยินดีต้อนรับสู่ Treasuirst.com",
+                "text": "กรุณาเลือกหัวข้อเพื่อเริ่มใช้งาน",
                 "actions": [
                     {
-                        "type": "uri",
-                        "label": "Test",
-                        "uri": "https://www.treasurist.com/suitabilityTest"
+                        "type": "postback",
+                        "label": "เริ่มลงทุน",
+                        "data": "action=quiz"
+                    },
+                    {
+                        "type": "postback",
+                        "label": "ค้นหากองทุน",
+                        "data": "search",
+                        "text":  "search"
                     },
                     {
                         "type": "uri",
-                        "label": "Search",
-                        "uri": "https://www.treasurist.com/search?riskLevel=&taxBenefit=-1&location=-1&keyword=&sort=fundResult.sweightTotal,DESC"
-                    },
-                    {
-                        "type": "uri",
-                        "label": "View detail",
+                        "label": "ศึกษาข้อมูลเพิ่มเติม",
                         "uri": "https://www.treasurist.com/howItWork"
                     }
                 ]
@@ -145,7 +146,7 @@ function handleMessageEvent(event) {
             }
         }
         return client.replyMessage(event.replyToken, msg);
-    } else if (eventText === "test" && eventType === "user") {
+    } else if (eventText === "quiz" && eventType === "user") {
         let msg = {
             "type": "template",
             "altText": "Welcome to Treasurist",
@@ -158,7 +159,7 @@ function handleMessageEvent(event) {
                     {
                         "type": "postback",
                         "label": "Start",
-                        "data": "action=test"
+                        "data": "action=quiz"
                     }
                 ]
             }
@@ -175,13 +176,27 @@ function handleMessageEvent(event) {
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
-            "text": `อยากรู้เรื่อง Treasurist ให้พิมพ์ว่า 'About you'\n\nอยากเริ่มลงทุนให้พิมพ์คำว่า 'Test'\n\nอยากค้นหาข้อมูลการลงทุนให้พิมพ์ว่า 'search' ตามด้วยคำค้นหา เช่น 'search SCB' ค่ะ`
+            "text": `• รู้จัก Treasurist (เทรเชอริสต์) เพิ่มขึ้น พิมพ์ 'About'\n• ทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'\n• ค้นหาข้อมูลกองทุน พิมพ์ 'search' ตามด้วยคำค้นหา เช่น 'Search LTF' ค่ะ\n• พิมพ์ 'r' เพื่อกลับไปจุดเริ่มต้น`
         }
         return client.replyMessage(event.replyToken, msg);
-    } else {
+    } else if ("about") { 
         let msg = {
             "type": "text",
-            "text": `สวัสดีค่ะ ที่พิมพ์มาก็น่าสนใจนะคะ แต่เรายังตอบไม่ได้ ถ้าอยากจะได้แผนลงทุนใน 3 นาที ให้พิมพ์ 'Test' หรือถ้าต้องการความช่วยเหลือให้พิมพ์ว่า 'Help' ค่ะ`
+            "text": `เทรเชอริสต์ช่วยให้คุณเริ่มลงทุนได้ง่าย ๆ ทั้งการจัดสัดส่วนที่เหมาะสม และการเลือกกองทุนที่โดดเด่น พร้อมทั้งพาไปเปิดบัญชีและเริ่มลงทุนจริง ได้ครบทั้งหมดใน 3 นาที\n\nรู้จักบริการและจุดเด่นของเทรเชอริสต์เพิ่มเติมได้ที่ >> https://www.treasurist.com/howItWork?fix=true\nเริ่มทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'`
+        }
+        return client.replyMessage(event.replyToken, msg);
+    } else if ("r") {
+        testResult = []
+        searchResult = undefined
+        let msg = {
+            "type": "text",
+            "text": `ออกจาก quiz/search เรียบร้อยแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือ ค้นหากองทุนได้อีกครั้งด้วยการพิมพ์ 'Search' ตามด้วยคำค้นหา`
+        }
+    } else {
+
+        let msg = {
+            "type": "text",
+            "text": `สวัสดีค่ะ ที่พิมพ์มาก็น่าสนใจนะคะ แต่เรายังตอบไม่ได้ ถ้าอยากจะได้แผนลงทุนใน 3 นาที ให้พิมพ์ 'Quiz' หรือถ้าต้องการความช่วยเหลือให้พิมพ์ว่า "Help" ค่ะ`
         }
         return client.replyMessage(event.replyToken, msg);
     }
@@ -230,7 +245,7 @@ function numberOnly(value) {
 
 function handlePostBackEvent(event, suitTest) {
     var eventPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
-    var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "test"
+    var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "quiz"
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     let isValid = false
     if (currentQuestion === 4 ||  currentQuestion === 5) {
@@ -239,7 +254,7 @@ function handlePostBackEvent(event, suitTest) {
    
     var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? currentQuestion + 1 : currentQuestion;
    
-    if (eventPostbackAction === "test" && eventPostBackItem < 16) {
+    if (eventPostbackAction === "quiz" && eventPostBackItem < 16) {
         
         var quizNo = eventPostBackItem + 1
         let result = eventPostBackItem != 0 && !isValid ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
@@ -258,7 +273,7 @@ function handlePostBackEvent(event, suitTest) {
             return client.replyMessage(event.replyToken, msg);
         }
       
-    } else if (eventPostbackAction === "test" && eventPostBackItem === 16) {
+    } else if (eventPostbackAction === "quiz" && eventPostBackItem === 16) {
         let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem - 1, eventPostBackItemValue) : undefined
         suitTest = resultInput != undefined ? _.merge(suitTest, resultInput) : undefined
         doSubmitQuiz(suitTest, event)
@@ -285,7 +300,7 @@ function quizResult(data, quizNo) {
                         return {
                             "type": "postback",
                             "label": c.text,
-                            "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                            "data": `action=quiz&itemid=${quizNo}&value=${c.value}`
                         }
                     })
                 }
@@ -303,7 +318,7 @@ function quizResult(data, quizNo) {
                     return {
                         "type": "postback",
                         "label": c.text,
-                        "data": `action=test&itemid=${quizNo}&value=${c.value}`
+                        "data": `action=quiz&itemid=${quizNo}&value=${c.value}`
                     }
                 })
             }
@@ -367,7 +382,7 @@ function suitabilityTestResult(quiz, imgUrl, event) {
         },
         {
             "type": "template",
-            "altText": "Test Complte",
+            "altText": "Quiz Complte",
             "template": {
                 "type": "buttons",
                 "title": `รูปแบบการลงทุนที่เหมาะกับคุณ '${getTitle(quiz.score)}'`,
