@@ -422,7 +422,8 @@ function getSearchObj(currentStep, selectedValue) {
     let sf = currentStep ? searchFilter[currentStep] : undefined
     let selected = sf && sf.choices ? _.find(sf.choices, c => c.value === selectedValue) : undefined
     let obj = undefined
-
+    console.log(selectedValue)
+    console.log(sf.choices, selectedValue)
     if (currentStep === 0) {
         obj = `riskLevel=${selectedValue === "1" ? "1,2,3,4,5,6,7,8" :selectedValue}`
     } else if (currentStep === 1) {
