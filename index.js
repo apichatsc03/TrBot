@@ -208,8 +208,8 @@ function resultList(data) {
         "template": {
             "type": "carousel",
             "columns": data.map(s => {
-                var fundName = s.fundNameTh.length > textMaxChar ? `${string.substring(0, textMaxChar - 3)}...` : s.fundNameTh
-                var fundCode = s.fundCode.length > titleMaxChar ? `${string.substring(0, titleMaxChar - 3)}...` : s.fundCode
+                var fundName = s.fundNameTh.length > textMaxChar ? `${s.fundNameTh.substring(0, textMaxChar - 3)}...` : s.fundNameTh
+                var fundCode = s.fundCode.length > titleMaxChar ? `${s.fundCode.substring(0, titleMaxChar - 3)}...` : s.fundCode
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
