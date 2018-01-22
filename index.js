@@ -462,8 +462,9 @@ function searchFilterOption(data, step) {
                 })
             }
         }
+        console.log(result.actions[0])
     }
-    console.log(result)
+    
     return result
 }
 
