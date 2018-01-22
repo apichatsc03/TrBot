@@ -215,7 +215,7 @@ function resultList(data) {
                 console.log(fundName, fundCode, fundCodeURL) 
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": `${fundCodeTitle}`,
+                    "title": `${s.fundCode.substring(0, titleMaxChar - 4)}`,
                     "text": `${fundName}`,
                     "actions": [
                         {
