@@ -427,9 +427,9 @@ function getSearchObj(currentStep, selectedValue) {
     if (currentStep === 0) {
         obj = `riskLevel=${selectedValue === "1" ? "1,2,3,4,5,6,7,8" :selectedValue}`
     } else if (currentStep === 1) {
-        obj = `taxBenefit=${selected.value}`
+        obj = `taxBenefit=${selected.value === 99 ? "0,1" : selected.value}`
     } else if (currentStep === 2) {
-        obj = `location=${selected.value}`
+        obj = `location=${selected.value === 99 ? "1,2" : selected.value}`
     } else {
         obj = `keyword=%25${selectedValue}%25`
     }
