@@ -211,9 +211,11 @@ function resultList(data) {
                 var fundName = s.fundNameTh.length > textMaxChar ? `${s.fundNameTh.substring(0, textMaxChar - 3)}...` : s.fundNameTh
                 var fundCode = s.fundCode.length > titleMaxChar ? `${s.fundCode.substring(0, titleMaxChar - 3)}...` : s.fundCode
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
+                console.log(fundName, fundCode, fundCodeURL) 
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": `${fundCode} :: ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`,
+                    // "title": `${fundCode} :: ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`,
+                    "title": `0.0000 (Baht/Unit)`,
                     "text": `${fundName}`,
                     "actions": [
                         {
@@ -440,7 +442,6 @@ function getSearchObj(currentStep, selectedValue) {
     let selected = sf && sf.choices ? _.find(sf.choices, c => c.value === selectedValue) : undefined
     let obj = undefined
     
-    console.log((sf && sf.choices) && sf.choices[0], selectedValue)
     if (currentStep === 0) {
         obj = `riskLevel=${selectedValue === "1" ? "1,2,3,4,5,6,7,8" :selectedValue}`
     } else if (currentStep === 1) {
@@ -488,6 +489,7 @@ function doSubmitSearch(data, event) {
     console.log("Date URL", data)
     axios.get(data)
         .then(response => {
+            console.log("Date URL", response)
             let data = response.data._embedded.funds
             let msg = data != undefined ? resultList(data) : {
                 "type": "text",
@@ -499,8 +501,14 @@ function doSubmitSearch(data, event) {
         })
         .catch(error => {
             console.error(error);
+            let msg = {
+                "type": "text",
+                "text": "ไม่พบกองทุนที่คุณค้า กรุณาลองอีกครั้ง"
+            }
             searchResult = undefined
             currentStep = undefined
+            return client.replyMessage(event.replyToken, msg);
+
         });
 }
 
