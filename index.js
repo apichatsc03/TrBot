@@ -173,7 +173,7 @@ function handleMessageEvent(event) {
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
-            "text": `• รู้จัก Treasurist (เทรเชอริสต์) เพิ่มขึ้น พิมพ์ 'About'\n• ทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'\n• ค้นหาข้อมูลกองทุน พิมพ์ 'search' ตามด้วยคำค้นหา เช่น 'Search LTF' ค่ะ\n• พิมพ์ 'r' เพื่อกลับไปจุดเริ่มต้น`
+            "text": `• รู้จัก Treasurist (เทรเชอริสต์) เพิ่มขึ้น พิมพ์ 'About'\n• ทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'\n• ค้นหาข้อมูลกองทุน พิมพ์ 'search' ค่ะ\n• พิมพ์ 'r' เพื่อกลับไปจุดเริ่มต้น`
         }
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText ===  "about") { 
@@ -187,7 +187,7 @@ function handleMessageEvent(event) {
         searchResult = undefined
         let msg = {
             "type": "text",
-            "text": `ออกจาก quiz/search เรียบร้อยแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือ ค้นหากองทุนได้อีกครั้งด้วยการพิมพ์ 'Search' ตามด้วยคำค้นหา`
+            "text": `ออกจาก quiz/search เรียบร้อยแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือ ค้นหากองทุนได้อีกครั้งด้วยการพิมพ์ 'Search'`
         }
         return client.replyMessage(event.replyToken, msg);
     } else {
