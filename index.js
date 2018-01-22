@@ -168,7 +168,7 @@ function handleMessageEvent(event) {
             "type": "text",
             "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
         }
-        searchResult = `https://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
+        searchResult = `http://treasurist.com:8080/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help"){
         let msg = {
