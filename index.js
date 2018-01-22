@@ -168,7 +168,7 @@ function handleMessageEvent(event) {
             "type": "text",
             "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
         }
-        searchResult = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&`
+        searchResult = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help"){
         let msg = {
@@ -424,6 +424,7 @@ function getSearchObj(currentStep, selectedValue) {
     let obj = undefined
 
     if (currentStep === 0) {
+        selectedValue = ""
         obj = `riskLevel=${selectedValue}`
     } else if (currentStep === 1) {
         obj = `taxBenefit=${selected.value}`
@@ -472,13 +473,14 @@ function doSubmitSearch(data, event) {
             let data = response.data._embedded.funds
             let msg = data != undefined ? resultList(data) : {
                 "type": "text",
-                "text": "Search Not Found!, Please Try Again."
+                "text": "ไม่พบกองทุนที่คุณค้า กรุณาลองอีกครั้ง"
             }
             searchResult = undefined
             return client.replyMessage(event.replyToken, msg);
         })
         .catch(error => {
             console.error(error);
+            searchResult = undefined
         });
 }
 
