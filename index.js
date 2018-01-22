@@ -476,11 +476,13 @@ function doSubmitSearch(data, event) {
                 "text": "ไม่พบกองทุนที่คุณค้า กรุณาลองอีกครั้ง"
             }
             searchResult = undefined
+            currentStep = undefined
             return client.replyMessage(event.replyToken, msg);
         })
         .catch(error => {
             console.error(error);
             searchResult = undefined
+            currentStep = undefined
         });
 }
 
