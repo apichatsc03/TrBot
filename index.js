@@ -168,7 +168,7 @@ function handleMessageEvent(event) {
             "type": "text",
             "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
         }
-        searchResult = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
+        searchResult = `https://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help"){
         let msg = {
@@ -214,7 +214,7 @@ function resultList(data) {
                         {
                             "type": "uri",
                             "label": "View detail",
-                            "uri": `http://www.treasurist.com/funds/${s.fundId}/${s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()}`
+                            "uri": `https://www.treasurist.com/funds/${s.fundId}/${s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()}`
                         }
                     ]
                 }
@@ -346,7 +346,7 @@ function getAnswerObj(currentQuestion, selectedValue) {
 function doSubmitQuiz(resultTest, event) {
     var data = _.assign({} ,resultTest, {isOpenPortfolio: "N", isNextBuy: "Y"})
     delete data.userId
-    axios.post("http://treasurist.com:8080/quizzes", data, {
+    axios.post("https://treasurist.com:8080/quizzes", data, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
     })
         .then(resp => {
