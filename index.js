@@ -170,7 +170,7 @@ function handleMessageEvent(event) {
             "type": "text",
             "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
         }
-        searchResult = `http://treasurist.com:8080/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
+        searchResult = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help"){
         let msg = {
@@ -207,7 +207,7 @@ function resultList(data) {
         "altText": "this is a carousel template",
         "template": {
             "type": "carousel",
-            "columns": data.map(s => {
+            "columns": data.length > 0 ? data.map(s => {
                 var fundName = s.fundNameTh.length > textMaxChar ? `${s.fundNameTh.substring(0, textMaxChar - 3)}...` : s.fundNameTh
                 var fundCode = s.fundCode.length > titleMaxChar ? `${s.fundCode.substring(0, titleMaxChar - 3)}...` : s.fundCode
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
@@ -223,7 +223,19 @@ function resultList(data) {
                         }
                     ]
                 }
-            })
+            }) : {
+                "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
+                    "title": `ไม่พบข้อมูล!`,
+                    "text": `คุณสามารถค้นหาได้อีกช่องทางเพียง`,
+                    "actions": [
+                        {
+                            "type": "uri",
+                            "label": "คลิก!",
+                            "uri": "https://www.treasurist.com/"
+                        }
+                    ]
+            }
+            
         }
     }
 
