@@ -454,7 +454,6 @@ function searchFilterOption(data, step) {
                 "type": "buttons",
                 "text": `${data.filterTypeText}`,
                 "actions": data.choices.map(c => {
-                    console.log(c.value)
                     return {
                         "type": "postback",
                         "label": c.text,

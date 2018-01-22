@@ -9,7 +9,7 @@ module.exports = [
         altFilter: "ลดหย่อนภาษี",
         key: 1,
         choices: [
-            { text: "ทั้งหมด", value: "0,1" },
+            { text: "ทั้งหมด", value: "ทั้งหมด" },
             { text: "ลดหย่อนภาษีได้", value: 0 },
             { text: "ลดหย่อนภาษีไม่ได้", value: 1 }
         ]
@@ -19,7 +19,7 @@ module.exports = [
         altFilter: "ลงทุนใน/ต่างประเทศ",
         key: 2,
         choices: [
-            { text: "ทั้งหมด", value: "1,2" },
+            { text: "ทั้งหมด", value: "ทั้งหมด" },
             { text: "ลงทุนในประเทศ", value: 1 },
             { text: "ลงทุนต่างประเทศ", value: 2 }
         ]
