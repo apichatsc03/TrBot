@@ -212,7 +212,6 @@ function resultList(data) {
                 var fundCodeTitle = `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`
                 var fundCode = fundCodeTitle.length > titleMaxChar ? s.fundCode : fundCodeTitle
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
-                console.log(fundName, fundCode, fundCodeURL) 
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                     "title": `${fundCode.length > titleMaxChar ? fundCode.substring(0, titleMaxChar - 3) : fundCode}`,
@@ -486,10 +485,8 @@ function searchFilterOption(data, step) {
 }
 
 function doSubmitSearch(data, event) {
-    console.log("Date URL", data)
     axios.get(data)
         .then(response => {
-            console.log("Date URL", response)
             let data = response.data._embedded.funds
             let msg = data != undefined ? resultList(data) : {
                 "type": "text",
