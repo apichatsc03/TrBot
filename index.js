@@ -463,6 +463,7 @@ function searchFilterOption(data, step) {
             }
         }
     }
+    console.log(result)
     return result
 }
 
