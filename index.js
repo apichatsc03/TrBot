@@ -75,7 +75,6 @@ function validate_signature(signature, body) {
 }
 
 function handleEvent(event) {
-    console.log("event", event)
     if (event.type === 'message' && event.message.type === 'text') {
         var isTesting = _.find(testResult, ['userId', event.source.userId]);
         var isSearch = searchResult !== undefined ? true : false;
@@ -85,9 +84,7 @@ function handleEvent(event) {
                     return handlePostBackEvent(event, tr);
                 })
         } else if (isSearch) {
-            console.log("search")
             if (currentStep != undefined) {
-                console.log("currentStep", currentStep)
                 handleSearchEvent(event);
             } else {
                 let newResult = getSearchObj(undefined, event.message.text.toLowerCase())
@@ -408,7 +405,6 @@ function handleSearchEvent(event) {
     var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) + 1 : 0 ): currentStep + 1 ;
     if (searchPostbackAction === "search" && searchPostBackItem <= 2) {
-        console.log("here")
         let newResult = getSearchObj((searchPostBackItem - 1), searchPostBackItemValue)
         searchResult = newResult != undefined ? `${searchResult}&${newResult}` : undefined
         let msg =  searchFilterOption(searchFilter[searchPostBackItem], searchPostBackItem)
@@ -416,7 +412,6 @@ function handleSearchEvent(event) {
         return client.replyMessage(event.replyToken, msg);
         
     } else {
-        console.log("here", searchPostBackItem)
         let resultInput = searchPostBackItem != 0 ? getSearchObj((searchPostBackItem - 1), searchPostBackItemValue) : undefined
         searchResult = resultInput != undefined ? `${searchResult}&${resultInput}` : undefined
         doSubmitSearch(searchResult, event)
@@ -424,7 +419,6 @@ function handleSearchEvent(event) {
 }
 
 function getSearchObj(currentStep, selectedValue) {
-    console.log("getSearchObj", searchFilter[currentStep], selectedValue)
     let sf = currentStep ? searchFilter[currentStep] : undefined
     let selected = sf && sf.choices ? _.find(sf.choices, c => c.value == selectedValue) : undefined
     let obj = undefined
@@ -438,7 +432,6 @@ function getSearchObj(currentStep, selectedValue) {
     } else {
         obj = `keyword=%25${selectedValue}%25`
     }
-    console.log("Obj", obj)
     return obj
 }
 
@@ -473,6 +466,7 @@ function searchFilterOption(data, step) {
 }
 
 function doSubmitSearch(data, event) {
+    console.log("Date URL", data)
     axios.get(data)
         .then(response => {
             let data = response.data._embedded.funds
@@ -480,10 +474,11 @@ function doSubmitSearch(data, event) {
                 "type": "text",
                 "text": "Search Not Found!, Please Try Again."
             }
+            searchResult = undefined
             return client.replyMessage(event.replyToken, msg);
         })
         .catch(error => {
-            console.log(error);
+            console.error(error);
         });
 }
 
