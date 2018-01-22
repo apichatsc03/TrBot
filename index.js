@@ -400,7 +400,6 @@ function suitabilityTestResult(quiz, imgUrl, event) {
 
 
 function handleSearchEvent(event) {
-    console.log( event.message.text.toLowerCase())
     var searchPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var searchPostbackAction = searchPostback ? searchPostback[0] != undefined && searchPostback[0].split("=")[1] : "search"
     var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
