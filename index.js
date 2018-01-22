@@ -60,7 +60,7 @@ let testResult;
 let currentQuestion;
 let searchResult;
 let currentStep;
-let titleMaxChar = 20;
+let titleMaxChar = 40;
 let textMaxChar	= 60;
  
 app.post('/webhook', line.middleware(config), (req, res) => {
@@ -209,13 +209,13 @@ function resultList(data) {
             "type": "carousel",
             "columns": data.length > 0 ? data.map(s => {
                 var fundName = s.fundNameTh.length > textMaxChar ? `${s.fundNameTh.substring(0, textMaxChar - 3)}...` : s.fundNameTh
-                var fundCode = s.fundCode.length > titleMaxChar ? `${s.fundCode.substring(0, titleMaxChar - 3)}...` : s.fundCode
+                var fundCodeTitle = `${s.fundCode} :: ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`
+                var fundCode = fundCodeTitle.length > titleMaxChar ? `${s.fundCode.substring(0, titleMaxChar - 4)}...` : fundCodeTitle
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
                 console.log(fundName, fundCode, fundCodeURL) 
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    // "title": `${fundCode} :: ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`,
-                    "title": `0.0000 (Baht/Unit)`,
+                    "title": `${fundCodeTitle}`,
                     "text": `${fundName}`,
                     "actions": [
                         {
