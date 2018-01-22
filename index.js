@@ -210,12 +210,12 @@ function resultList(data) {
             "columns": data.length > 0 ? data.map(s => {
                 var fundName = s.fundNameTh.length > textMaxChar ? `${s.fundNameTh.substring(0, textMaxChar - 3)}...` : s.fundNameTh
                 var fundCodeTitle = `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`
-                var fundCode = fundCodeTitle.length > titleMaxChar ? fundCodeTitle.substring(0, titleMaxChar - 4)+"..." : fundCodeTitle
+                var fundCode = fundCodeTitle.length > titleMaxChar ? s.fundCode : fundCodeTitle
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
                 console.log(fundName, fundCode, fundCodeURL) 
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": `${s.fundCode.substring(0, titleMaxChar - 4)}`,
+                    "title": `${fundCode.length > titleMaxChar ? fundCode.substring(0, titleMaxChar - 3) : fundCode}`,
                     "text": `${fundName}`,
                     "actions": [
                         {
