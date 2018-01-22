@@ -60,7 +60,9 @@ let testResult;
 let currentQuestion;
 let searchResult;
 let currentStep;
-
+let titleMaxChar = 40;
+let textMaxChar	= 60;
+ 
 app.post('/webhook', line.middleware(config), (req, res) => {
     if (!validate_signature(req.headers['x-line-signature'], req.body)) {
         return;
@@ -206,15 +208,18 @@ function resultList(data) {
         "template": {
             "type": "carousel",
             "columns": data.map(s => {
+                var fundName = s.fundNameTh.length > textMaxChar ? `${string.substring(0, textMaxChar - 3)}...` : s.fundNameTh
+                var fundCode = s.fundCode.length > titleMaxChar ? `${string.substring(0, titleMaxChar - 3)}...` : s.fundCode
+                var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
                 return {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": `${s.fundCode} :: ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`,
-                    "text": `${s.fundNameTh}`,
+                    "title": `${fundCode} :: ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`,
+                    "text": `${fundName}`,
                     "actions": [
                         {
                             "type": "uri",
                             "label": "View detail",
-                            "uri": `https://www.treasurist.com/funds/${s.fundId}/${s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()}`
+                            "uri": `https://www.treasurist.com/funds/${s.fundId}/${fundCodeURL}`
                         }
                     ]
                 }
