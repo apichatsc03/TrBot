@@ -75,7 +75,7 @@ function validate_signature(signature, body) {
 }
 
 function handleEvent(event) {
-    if (event.type === 'message' && event.message.type === 'text') {
+    if (event.type === 'message' && event.message.type === 'text' && (event.message.text.toLowerCase() === "quiz" || event.message.text.toLowerCase() === "search")) {
         var isTesting = _.find(testResult, ['userId', event.source.userId]);
         var isSearch = searchResult !== undefined ? true : false;
         if (isTesting) {
