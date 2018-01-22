@@ -179,21 +179,21 @@ function handleMessageEvent(event) {
             "text": `• รู้จัก Treasurist (เทรเชอริสต์) เพิ่มขึ้น พิมพ์ 'About'\n• ทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'\n• ค้นหาข้อมูลกองทุน พิมพ์ 'search' ตามด้วยคำค้นหา เช่น 'Search LTF' ค่ะ\n• พิมพ์ 'r' เพื่อกลับไปจุดเริ่มต้น`
         }
         return client.replyMessage(event.replyToken, msg);
-    } else if ("about") { 
+    } else if (eventText ===  "about") { 
         let msg = {
             "type": "text",
             "text": `เทรเชอริสต์ช่วยให้คุณเริ่มลงทุนได้ง่าย ๆ ทั้งการจัดสัดส่วนที่เหมาะสม และการเลือกกองทุนที่โดดเด่น พร้อมทั้งพาไปเปิดบัญชีและเริ่มลงทุนจริง ได้ครบทั้งหมดใน 3 นาที\n\nรู้จักบริการและจุดเด่นของเทรเชอริสต์เพิ่มเติมได้ที่ >> https://www.treasurist.com/howItWork?fix=true\nเริ่มทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'`
         }
         return client.replyMessage(event.replyToken, msg);
-    } else if ("r") {
+    } else if (eventText ===  "r") {
         testResult = []
         searchResult = undefined
         let msg = {
             "type": "text",
             "text": `ออกจาก quiz/search เรียบร้อยแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือ ค้นหากองทุนได้อีกครั้งด้วยการพิมพ์ 'Search' ตามด้วยคำค้นหา`
         }
+        return client.replyMessage(event.replyToken, msg);
     } else {
-
         let msg = {
             "type": "text",
             "text": `สวัสดีค่ะ ที่พิมพ์มาก็น่าสนใจนะคะ แต่เรายังตอบไม่ได้ ถ้าอยากจะได้แผนลงทุนใน 3 นาที ให้พิมพ์ 'Quiz' หรือถ้าต้องการความช่วยเหลือให้พิมพ์ว่า "Help" ค่ะ`
