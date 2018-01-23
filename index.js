@@ -81,7 +81,6 @@ function handleEvent(event) {
     if (event.type === 'message' && event.message.type === 'text' && event.message.text.toLowerCase() ===  "r") {
         testResult =  _.remove(testResult, tr => {return tr.userId !== event.source.userId;});
         searchResult =  _.remove(searchResult, sr => {return sr.userId !== event.source.userId;});
-        console.log("R type", searchResult, testResult)
         let msg = {
             "type": "text",
             "text": `ออกจาก quiz/search เรียบร้อยแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือ ค้นหากองทุนได้อีกครั้งด้วยการพิมพ์ 'Search'`
@@ -91,7 +90,6 @@ function handleEvent(event) {
 
 
     if (event.type === 'message' && event.message.type === 'text') {
-        console.log(searchResult, testResult)
         var isTesting = _.find(testResult, ['userId', event.source.userId]);
         var isSearch = _.find(searchResult, ['userId', event.source.userId]); 
         if (isTesting) {
@@ -376,6 +374,7 @@ function getAnswerObj(currentQuestion, selectedValue) {
 
 function doSubmitQuiz(resultTest, event) {
     var data = _.assign({} ,resultTest, {isOpenPortfolio: "N", isNextBuy: "Y"})
+    console.log(data);
     axios.post("https://treasurist.com:8080/quizzes", data, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
     })
@@ -497,7 +496,7 @@ function searchFilterOption(data, step) {
 }
 
 function doSubmitSearch(data, event) {
-
+    console.log(data);
     axios.get(data)
         .then(response => {
             searchResult = _.remove(searchResult, function(n) {return n.userId !== event.source.userId;});
