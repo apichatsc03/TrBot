@@ -145,7 +145,8 @@ function handleMessageEvent(event) {
                     {
                         "type": "postback",
                         "label": "เริ่มลงทุน",
-                        "data": "action=quiz"
+                        "data": "quiz",
+                        "text": "quiz"
                     },
                     {
                         "type": "postback",
