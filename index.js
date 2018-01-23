@@ -548,12 +548,12 @@ function doSubmitSearch(data, event) {
                 let data = response.data._embedded.funds
                 setRecommend(data)
                 let fundDataList = data.map( d => { 
-                        let isRecommend = _.find(fundRecommend, fund => fund.fundId === fundId)
+                        let isRecommend = _.find(fundRecommendList, fund => fund.fundId === d.fundId)
                             if (isRecommend) {
                                 return d
                             }
                         })
-                        console.log(fundDataList)
+                console.log(fundDataList)
                 let msg = data != undefined ? resultList(fundDataList) : {
                     "type": "text",
                     "text": "ไม่พบกองทุนที่คุณค้นหา กรุณาลองอีกครั้ง"
