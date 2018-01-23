@@ -101,7 +101,7 @@ function handleEvent(event) {
             if (currentStep != undefined) {
                 searchResult.filter(sr => sr.userId = event.source.userId)
                 .map(sr => {
-                    return handleSearchEvent(event, sr.text);
+                    return handleSearchEvent(event, sr);
                 })
             } else {
                 searchResult.filter(sr => sr.userId = event.source.userId)
@@ -119,7 +119,7 @@ function handleEvent(event) {
     } else if (event.type === 'postback') {
         
         if(event.postback.data.split("&")[0].split("=")[1] === "search") {
-            searchResult && searchResult.filter(sr => sr.userId === event.source.userId).map(sr => {return handleSearchEvent(event, sr.text);})
+            searchResult && searchResult.filter(sr => sr.userId === event.source.userId).map(sr => {return handleSearchEvent(event, sr);})
         } else {
             testResult && testResult.filter(tr => tr.userId === event.source.userId).map(tr => {return handlePostBackEvent(event, tr);})
         }
@@ -181,7 +181,7 @@ function handleMessageEvent(event) {
                 ]
             }
         }
-        testResult = _.concat([], [{ "userId": event.source.userId }])
+        testResult = _.concat([], [{ "userId": event.source.userId, "data": {} }])
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "search") {
         let msg = {
@@ -284,7 +284,7 @@ function handlePostBackEvent(event, suitTest) {
         
         var quizNo = eventPostBackItem + 1
         let result = eventPostBackItem != 0 && !isValid ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
-        suitTest = result != undefined ? _.merge(suitTest, result) : undefined
+        suitTest.data = result != undefined ? _.merge(suitTest.data, result) : undefined
         currentQuestion = !isValid ? eventPostBackItem : currentQuestion
         if (question[eventPostBackItem].choices != undefined && !isValid) {
             let msg =  quizResult(question[eventPostBackItem], quizNo)
@@ -301,7 +301,7 @@ function handlePostBackEvent(event, suitTest) {
       
     } else if (eventPostbackAction === "quiz" && eventPostBackItem === 16) {
         let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem - 1, eventPostBackItemValue) : undefined
-        suitTest = resultInput != undefined ? _.merge(suitTest, resultInput) : undefined
+        suitTest.data = resultInput != undefined ? _.merge(suitTest.data, resultInput) : undefined
         doSubmitQuiz(suitTest, event)
     }
 }
@@ -373,7 +373,7 @@ function getAnswerObj(currentQuestion, selectedValue) {
 
 
 function doSubmitQuiz(resultTest, event) {
-    var data = _.assign({} ,resultTest, {isOpenPortfolio: "N", isNextBuy: "Y"})
+    var data = _.assign({} ,resultTest.data, {isOpenPortfolio: "N", isNextBuy: "Y"})
     console.log(data);
     axios.post("https://treasurist.com:8080/quizzes", data, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
@@ -428,22 +428,22 @@ function suitabilityTestResult(quiz, imgUrl, event) {
 }
 
 
-function handleSearchEvent(event, searchText) {
+function handleSearchEvent(event, search) {
     var searchPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var searchPostbackAction = searchPostback ? searchPostback[0] != undefined && searchPostback[0].split("=")[1] : "search"
     var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) + 1 : 0 ): currentStep + 1 ;
     if (searchPostbackAction === "search" && searchPostBackItem <= 2) {
         let newResult = getSearchObj((searchPostBackItem - 1), searchPostBackItemValue)
-        searchText = newResult != undefined ? `${searchText}&${newResult}` : undefined
+        search.text = newResult != undefined ? `${search.text}&${newResult}` : undefined
         let msg =  searchFilterOption(searchFilter[searchPostBackItem], searchPostBackItem)
         currentStep =  searchPostBackItem
         return client.replyMessage(event.replyToken, msg);
         
     } else {
         let resultInput = searchPostBackItem != 0 ? getSearchObj((searchPostBackItem - 1), searchPostBackItemValue) : undefined
-        searchText = resultInput != undefined ? `${searchText}&${resultInput}` : undefined
-        doSubmitSearch(searchText, event)
+        search.text = resultInput != undefined ? `${search.text}&${resultInput}` : undefined
+        doSubmitSearch(search, event)
     }
 }
 
@@ -453,7 +453,7 @@ function getSearchObj(currentStep, selectedValue) {
     let obj = undefined
     
     if (currentStep === 0) {
-        obj = `riskLevel=${selectedValue === "1" ? "1,2,3,4,5,6,7,8" :selectedValue}`
+        obj = `riskLevel=${selectedValue === "0" ? "1,2,3,4,5,6,7,8" :selectedValue}`
     } else if (currentStep === 1) {
         obj = `taxBenefit=${selected.value === 99 ? "0,1" : selected.value}`
     } else if (currentStep === 2) {
@@ -497,7 +497,7 @@ function searchFilterOption(data, step) {
 
 function doSubmitSearch(data, event) {
     console.log(data);
-    axios.get(data)
+    axios.get(data.text)
         .then(response => {
             searchResult = _.remove(searchResult, function(n) {return n.userId !== event.source.userId;});
             currentStep = undefined
