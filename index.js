@@ -95,13 +95,11 @@ function handleEvent(event) {
         var isSearch = _.find(searchResult, ['userId', event.source.userId]);
 
         if (isTesting) {
-            console.log("testResult", testResult)
             testResult.filter(tr => tr.userId === event.source.userId)
                 .map(tr => {
                     return handlePostBackEvent(event, tr);
                 })
         } else if (isSearch) {
-            console.log("searchResult", searchResult)
             searchResult.filter(sr => sr.userId === event.source.userId)
                 .map(sr => {
 
@@ -201,7 +199,7 @@ function handleMessageEvent(event) {
             return client.replyMessage(event.replyToken, msg);
         }
     } else if (eventText === "rec fund") {
-        textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&keyword=%%`
+        textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&keyword=%25%25`
         searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": 0 }])
         searchResult.filter(sr => sr.userId === event.source.userId)
         .map(sr => {
@@ -552,7 +550,6 @@ function doSubmitSearch(data, event) {
                                 return d
                             }
                         }).filter(d => d)
-                console.log(fundDataList)
                 let msg = data != undefined ? resultList(fundDataList) : {
                     "type": "text",
                     "text": "ไม่พบกองทุนที่คุณค้นหา กรุณาลองอีกครั้ง"
