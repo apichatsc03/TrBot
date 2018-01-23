@@ -230,6 +230,7 @@ function handleMessageEvent(event) {
 }
 
 function resultList(data) {
+    console.log(fundRecommendList)
     let resultList = (data !== null || data !== undefined) && {
         "type": "template",
         "altText": "this is a carousel template",
@@ -548,9 +549,7 @@ function doSubmitSearch(data, event) {
             .then(response => {
                 searchResult = _.remove(searchResult, function (n) { return n.userId !== event.source.userId; });
                 let data = response.data._embedded.funds
-
-                let fundList = setRecommend(data)
-
+                setRecommend(data)
                 let msg = data != undefined ? resultList(data) : {
                     "type": "text",
                     "text": "ไม่พบกองทุนที่คุณค้นหา กรุณาลองอีกครั้ง"
