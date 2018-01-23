@@ -241,7 +241,7 @@ function resultList(data) {
                 var fundCode = fundCodeTitle.length > titleMaxChar ? s.fundCode : fundCodeTitle
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
                 console.log(s.fundId, _.find(fundRecommendList, ['fundId', s.fundId]))
-                if (_.find(fundRecommendList, ['fundId', s.fundId])) {
+                if (_.find(fundRecommendList, ['fundId', s.fundId]) != undefined) {
                     return {
                         "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                         "title": `${fundCode.length > titleMaxChar ? fundCode.substring(0, titleMaxChar - 3) : fundCode}`,
