@@ -78,9 +78,10 @@ function validate_signature(signature, body) {
 
 function handleEvent(event) {
 
-    if (event.type === 'message' && event.message.type === 'text' && event.message.text ===  "r") {
+    if (event.type === 'message' && event.message.type === 'text' && event.message.text.toLowerCase() ===  "r") {
         testResult =  _.remove(testResult, tr => {return tr.userId === event.source.userId;});
         searchResult =  _.remove(searchResult, sr => {return sr.userId === event.source.userId;});
+        console.log("R type")
         let msg = {
             "type": "text",
             "text": `ออกจาก quiz/search เรียบร้อยแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือ ค้นหากองทุนได้อีกครั้งด้วยการพิมพ์ 'Search'`
