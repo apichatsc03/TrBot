@@ -92,11 +92,13 @@ function handleEvent(event) {
         var isSearch = _.find(searchResult, ['userId', event.source.userId]); 
         
         if (isTesting) {
+            console.log("testResult", testResult)
             testResult.filter(tr => tr.userId = event.source.userId)
                 .map(tr => {
                     return handlePostBackEvent(event, tr);
                 })
         } else if (isSearch) {
+            console.log("searchResult", searchResult)
             searchResult.filter(sr => sr.userId = event.source.userId)
                 .map(sr => {
 
@@ -114,7 +116,7 @@ function handleEvent(event) {
             handleMessageEvent(event);
         }
     } else if (event.type === 'postback') {
-        
+        console.log(searchResult, testResult)
         if(event.postback.data.split("&")[0].split("=")[1] === "search") {
             searchResult && searchResult.filter(sr => sr.userId === event.source.userId).map(sr => {return handleSearchEvent(event, sr);})
         } else {
@@ -178,7 +180,7 @@ function handleMessageEvent(event) {
                 ]
             }
         }
-        testResult = _.concat([], [{ "userId": event.source.userId, "data": {} , "currentQuestion": undefined}])
+        testResult = _.concat([], testResult, [{ "userId": event.source.userId, "data": {} , "currentQuestion": undefined}])
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "search") {
         let msg = {
@@ -186,7 +188,7 @@ function handleMessageEvent(event) {
             "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
         }
         textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
-        searchResult = _.concat([], [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
+        searchResult = _.concat([], searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help"){
         let msg = {
