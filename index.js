@@ -552,7 +552,7 @@ function doSubmitSearch(data, event) {
                             if (isRecommend) {
                                 return d
                             }
-                        })
+                        }).filter(d => d)
                 console.log(fundDataList)
                 let msg = data != undefined ? resultList(fundDataList) : {
                     "type": "text",
