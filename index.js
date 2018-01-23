@@ -77,9 +77,21 @@ function validate_signature(signature, body) {
 }
 
 function handleEvent(event) {
+
+    if (vent.type === 'message' && event.message.type === 'text' && event.message.text ===  "r") {
+        testResult = []
+        searchResult = []
+        let msg = {
+            "type": "text",
+            "text": `ออกจาก quiz/search เรียบร้อยแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือ ค้นหากองทุนได้อีกครั้งด้วยการพิมพ์ 'Search'`
+        }
+        return client.replyMessage(event.replyToken, msg);
+    } 
+
+
     if (event.type === 'message' && event.message.type === 'text') {
         var isTesting = _.find(testResult, ['userId', event.source.userId]);
-        var isSearch = searchResult !== undefined ? true : false;
+        var isSearch = _.find(searchResult, ['userId', event.source.userId]); 
         if (isTesting) {
             testResult.filter(tr => tr.userId = event.source.userId)
                 .map(tr => {
@@ -87,10 +99,16 @@ function handleEvent(event) {
                 })
         } else if (isSearch) {
             if (currentStep != undefined) {
-                handleSearchEvent(event);
+                searchResult.filter(sr => sr.userId = event.source.userId)
+                .map(sr => {
+                    return handleSearchEvent(event, sr.text);
+                })
             } else {
-                let newResult = getSearchObj(undefined, event.message.text.toLowerCase())
-                searchResult = newResult != undefined ? `${searchResult}&${newResult}` : undefined
+                searchResult.filter(sr => sr.userId = event.source.userId)
+                .map(sr => {
+                    let newResult = getSearchObj(undefined, event.message.text.toLowerCase())
+                    sr.text = newResult != undefined ? `${sr.text}&${newResult}` : undefined
+                })
                 currentStep = 0
                 let msg =  searchFilterOption(searchFilter[currentStep], currentStep)
                 return client.replyMessage(event.replyToken, msg);
@@ -101,7 +119,7 @@ function handleEvent(event) {
     } else if (event.type === 'postback') {
         
         if(event.postback.data.split("&")[0].split("=")[1] === "search") {
-            searchResult && handleSearchEvent(event);
+            searchResult && searchResult.filter(sr => sr.userId = event.source.userId).map(sr => {return handleSearchEvent(event, sr.text);})
         } else {
             testResult && testResult.filter(tr => tr.userId = event.source.userId).map(tr => {return handlePostBackEvent(event, tr);})
         }
@@ -170,7 +188,8 @@ function handleMessageEvent(event) {
             "type": "text",
             "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
         }
-        searchResult = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
+        textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
+        searchResult = _.concat([], [{ "userId": event.source.userId, "text": textURL }])
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help"){
         let msg = {
@@ -182,14 +201,6 @@ function handleMessageEvent(event) {
         let msg = {
             "type": "text",
             "text": `เทรเชอริสต์ช่วยให้คุณเริ่มลงทุนได้ง่าย ๆ ทั้งการจัดสัดส่วนที่เหมาะสม และการเลือกกองทุนที่โดดเด่น พร้อมทั้งพาไปเปิดบัญชีและเริ่มลงทุนจริง ได้ครบทั้งหมดใน 3 นาที\n\nรู้จักบริการและจุดเด่นของเทรเชอริสต์เพิ่มเติมได้ที่ >> https://www.treasurist.com/howItWork?fix=true\nเริ่มทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'`
-        }
-        return client.replyMessage(event.replyToken, msg);
-    } else if (eventText ===  "r") {
-        testResult = []
-        searchResult = undefined
-        let msg = {
-            "type": "text",
-            "text": `ออกจาก quiz/search เรียบร้อยแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือ ค้นหากองทุนได้อีกครั้งด้วยการพิมพ์ 'Search'`
         }
         return client.replyMessage(event.replyToken, msg);
     } else {
@@ -363,12 +374,11 @@ function getAnswerObj(currentQuestion, selectedValue) {
 
 function doSubmitQuiz(resultTest, event) {
     var data = _.assign({} ,resultTest, {isOpenPortfolio: "N", isNextBuy: "Y"})
-    delete data.userId
     axios.post("https://treasurist.com:8080/quizzes", data, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
     })
         .then(resp => {
-
+            resultTest = _.remove(resultTest, function(n) {return n.userId === event.source.userId;});
             var quiz = resp.data
             var imgUrl = getDescPhoto(quiz.score)
             if (imgUrl.original == undefined) {
@@ -417,22 +427,22 @@ function suitabilityTestResult(quiz, imgUrl, event) {
 }
 
 
-function handleSearchEvent(event) {
+function handleSearchEvent(event, searchText) {
     var searchPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var searchPostbackAction = searchPostback ? searchPostback[0] != undefined && searchPostback[0].split("=")[1] : "search"
     var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) + 1 : 0 ): currentStep + 1 ;
     if (searchPostbackAction === "search" && searchPostBackItem <= 2) {
         let newResult = getSearchObj((searchPostBackItem - 1), searchPostBackItemValue)
-        searchResult = newResult != undefined ? `${searchResult}&${newResult}` : undefined
+        searchText = newResult != undefined ? `${searchText}&${newResult}` : undefined
         let msg =  searchFilterOption(searchFilter[searchPostBackItem], searchPostBackItem)
         currentStep =  searchPostBackItem
         return client.replyMessage(event.replyToken, msg);
         
     } else {
         let resultInput = searchPostBackItem != 0 ? getSearchObj((searchPostBackItem - 1), searchPostBackItemValue) : undefined
-        searchResult = resultInput != undefined ? `${searchResult}&${resultInput}` : undefined
-        doSubmitSearch(searchResult, event)
+        searchText = resultInput != undefined ? `${searchText}&${newResult}` : undefined
+        doSubmitSearch(searchText, event)
     }
 }
 
@@ -485,25 +495,26 @@ function searchFilterOption(data, step) {
 }
 
 function doSubmitSearch(data, event) {
+
     axios.get(data)
         .then(response => {
+            searchResult = _.remove(searchResult, function(n) {return n.userId === event.source.userId;});
+            currentStep = undefined
             let data = response.data._embedded.funds
             let msg = data != undefined ? resultList(data) : {
                 "type": "text",
                 "text": "ไม่พบกองทุนที่คุณค้า กรุณาลองอีกครั้ง"
             }
-            searchResult = undefined
-            currentStep = undefined
             return client.replyMessage(event.replyToken, msg);
         })
         .catch(error => {
             console.error(error);
+            searchResult = _.remove(searchResult, function(n) {return n.userId === event.source.userId;});
+            currentStep = undefined
             let msg = {
                 "type": "text",
                 "text": "ไม่พบกองทุนที่คุณค้า กรุณาลองอีกครั้ง"
             }
-            searchResult = undefined
-            currentStep = undefined
             return client.replyMessage(event.replyToken, msg);
 
         });
