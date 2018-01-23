@@ -60,6 +60,8 @@ let testResult = [];
 let searchResult = [];
 let titleMaxChar = 40;
 let textMaxChar	= 60;
+var textRegex = /(\bsearch\b)/;
+
  
 app.post('/webhook', line.middleware(config), (req, res) => {
     if (!validate_signature(req.headers['x-line-signature'], req.body)) {
@@ -181,14 +183,21 @@ function handleMessageEvent(event) {
         }
         testResult = _.concat(testResult, [{ "userId": event.source.userId, "data": {} , "currentQuestion": undefined}])
         return client.replyMessage(event.replyToken, msg);
-    } else if (eventText === "search") {
-        let msg = {
-            "type": "text",
-            "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
+    } else if (re.test(eventText)) {
+        var keyword = eventText.split("search ") ? eventText.split("search ")[1] : undefined
+        if (keyword) {
+            textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`
+            searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
+            searchResult.filter(sr => sr.userId === event.source.userId).map(sr => {doSubmitSearch (sr, event)})
+        } else {
+            let msg = {
+                "type": "text",
+                "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
+            }
+            textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
+            searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
+            return client.replyMessage(event.replyToken, msg);
         }
-        textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
-        searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
-        return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help"){
         let msg = {
             "type": "text",
