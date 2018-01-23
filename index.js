@@ -382,27 +382,48 @@ function getAnswerObj(currentQuestion, selectedValue) {
 function doSubmitQuiz(resultTest, event) {
     var data = _.assign({} ,resultTest.data, {isOpenPortfolio: "N", isNextBuy: "Y"})
     console.log(data);
-    axios.post("http://treasurist.com:8080/quizzes", data, {
-        headers: {'Content-Type': 'application/json;charset=UTF-8'}
-    })
-        .then(resp => {
-            resultTest = _.remove(resultTest, function(n) {return n.userId !== event.source.userId;});
-            var quiz = resp.data
-            var imgUrl = getDescPhoto(quiz.score)
-            if (imgUrl.original == undefined) {
+
+    const message = {
+        type: 'text',
+        text: 'กำลังประมวลผล...'
+    };
+      
+    client.pushMessage(event.source.userId, message)
+        .then(() => {
+            axios.post("http://treasurist.com:8080/quizzes", data, {
+                headers: {'Content-Type': 'application/json;charset=UTF-8'}
+            })
+            .then(resp => {
+                resultTest = _.remove(resultTest, function(n) {return n.userId !== event.source.userId;});
+                var quiz = resp.data
+                var imgUrl = getDescPhoto(quiz.score)
+                if (imgUrl.original == undefined) {
+                    msg = {
+                        "type": "text",
+                        "text": "ขออภัย! เกิดข้อผิดพลาด"
+                    }
+                    return client.replyMessage(event.replyToken, msg);
+                } else {
+                    suitabilityTestResult(quiz, imgUrl,event)
+                }        
+            })
+            .catch(error => {
+                console.error(error)
+                resultTest = _.remove(resultTest, function(n) {return n.userId !== event.source.userId;});
                 msg = {
                     "type": "text",
                     "text": "ขออภัย! เกิดข้อผิดพลาด"
                 }
                 return client.replyMessage(event.replyToken, msg);
-            } else {
-                suitabilityTestResult(quiz, imgUrl,event)
-            }        
-           
-        })
-        .catch(error => {
-            console.error(error)
-        })
+            })
+    })
+    .catch((err) => {
+        msg = {
+            "type": "text",
+            "text": "ขออภัย! เกิดข้อผิดพลาด"
+        }
+        return client.replyMessage(event.replyToken, msg);
+    });
 }
 
 function suitabilityTestResult(quiz, imgUrl, event) {
