@@ -240,9 +240,7 @@ function resultList(data) {
                 var fundCodeTitle = `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`
                 var fundCode = fundCodeTitle.length > titleMaxChar ? s.fundCode : fundCodeTitle
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
-                console.log(s.fundId, _.find(fundRecommendList, ['fundId', s.fundId]))
-                if (_.find(fundRecommendList, ['fundId', s.fundId]) != undefined) {
-                    return {
+                return {
                         "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                         "title": `${fundCode.length > titleMaxChar ? fundCode.substring(0, titleMaxChar - 3) : fundCode}`,
                         "text": `${fundName}`,
@@ -254,7 +252,6 @@ function resultList(data) {
                             }
                         ]
                     }
-                }
             }) : {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                     "title": `ไม่พบข้อมูล!`,
@@ -550,7 +547,14 @@ function doSubmitSearch(data, event) {
                 searchResult = _.remove(searchResult, function (n) { return n.userId !== event.source.userId; });
                 let data = response.data._embedded.funds
                 setRecommend(data)
-                let msg = data != undefined ? resultList(data) : {
+                let fundDataList = data.map( d => { 
+                        let isRecommend = _.find(fundRecommend, fund => fund.fundId === fundId)
+                            if (isRecommend) {
+                                return d
+                            }
+                        })
+                        console.log(fundDataList)
+                let msg = data != undefined ? resultList(fundDataList) : {
                     "type": "text",
                     "text": "ไม่พบกองทุนที่คุณค้นหา กรุณาลองอีกครั้ง"
                 }
