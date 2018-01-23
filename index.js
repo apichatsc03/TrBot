@@ -36,7 +36,7 @@ const getTitle = (score) => {
 }
 
 const getDescPhoto = (score) => {
-    let imageSuittest = { original: undefined, preview: undefined}
+    let imageSuittest = { original: undefined, preview: undefined }
     if (score >= 36) {
         imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk5.png"
         imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk5.png"
@@ -52,17 +52,17 @@ const getDescPhoto = (score) => {
     } else if (score <= 16) {
         imageSuittest.original = "https://www.treasurist.com/assets/images/line_risk1.png"
         imageSuittest.preview = "https://www.treasurist.com/assets/images/line_risk1.png"
-    } 
+    }
     return imageSuittest
 }
 
 let testResult = [];
 let searchResult = [];
 let titleMaxChar = 40;
-let textMaxChar	= 60;
+let textMaxChar = 60;
 var textRegex = /(\bsearch\b)/;
 
- 
+
 app.post('/webhook', line.middleware(config), (req, res) => {
     if (!validate_signature(req.headers['x-line-signature'], req.body)) {
         return;
@@ -78,21 +78,21 @@ function validate_signature(signature, body) {
 
 function handleEvent(event) {
 
-    if (event.type === 'message' && event.message.type === 'text' && event.message.text.toLowerCase() ===  "r") {
-        testResult =  _.remove(testResult, tr => {return tr.userId !== event.source.userId;});
-        searchResult =  _.remove(searchResult, sr => {return sr.userId !== event.source.userId;});
+    if (event.type === 'message' && event.message.type === 'text' && event.message.text.toLowerCase() === "r") {
+        testResult = _.remove(testResult, tr => { return tr.userId !== event.source.userId; });
+        searchResult = _.remove(searchResult, sr => { return sr.userId !== event.source.userId; });
         let msg = {
             "type": "text",
             "text": `ออกจาก quiz/search เรียบร้อยแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือ ค้นหากองทุนได้อีกครั้งด้วยการพิมพ์ 'Search'`
         };
         return client.replyMessage(event.replyToken, msg);
-    } 
+    }
 
 
     if (event.type === 'message' && event.message.type === 'text') {
         var isTesting = _.find(testResult, ['userId', event.source.userId]);
-        var isSearch = _.find(searchResult, ['userId', event.source.userId]); 
-        
+        var isSearch = _.find(searchResult, ['userId', event.source.userId]);
+
         if (isTesting) {
             console.log("testResult", testResult)
             testResult.filter(tr => tr.userId === event.source.userId)
@@ -104,13 +104,13 @@ function handleEvent(event) {
             searchResult.filter(sr => sr.userId === event.source.userId)
                 .map(sr => {
 
-                    if (sr.currentStep != undefined ) {
+                    if (sr.currentStep != undefined) {
                         return handleSearchEvent(event, sr);
                     } else {
                         sr.currentStep = 0
                         let newResult = getSearchObj(undefined, event.message.text.toLowerCase())
                         sr.text = newResult != undefined ? `${sr.text}&${newResult}` : undefined
-                        let msg =  searchFilterOption(searchFilter[sr.currentStep], sr.currentStep)
+                        let msg = searchFilterOption(searchFilter[sr.currentStep], sr.currentStep)
                         return client.replyMessage(event.replyToken, msg);
                     }
                 })
@@ -118,12 +118,12 @@ function handleEvent(event) {
             handleMessageEvent(event);
         }
     } else if (event.type === 'postback') {
-        if(event.postback.data.split("&")[0].split("=")[1] === "search") {
-            searchResult && searchResult.filter(sr => sr.userId === event.source.userId).map(sr => {return handleSearchEvent(event, sr);})
+        if (event.postback.data.split("&")[0].split("=")[1] === "search") {
+            searchResult && searchResult.filter(sr => sr.userId === event.source.userId).map(sr => { return handleSearchEvent(event, sr); })
         } else {
-            testResult && testResult.filter(tr => tr.userId === event.source.userId).map(tr => {return handlePostBackEvent(event, tr);})
+            testResult && testResult.filter(tr => tr.userId === event.source.userId).map(tr => { return handlePostBackEvent(event, tr); })
         }
-        
+
     } else {
         return Promise.resolve(null);
     }
@@ -151,7 +151,7 @@ function handleMessageEvent(event) {
                         "type": "postback",
                         "label": "ค้นหากองทุน",
                         "data": "search",
-                        "text":  "search"
+                        "text": "search"
                     },
                     {
                         "type": "uri",
@@ -181,14 +181,14 @@ function handleMessageEvent(event) {
                 ]
             }
         }
-        testResult = _.concat(testResult, [{ "userId": event.source.userId, "data": {} , "currentQuestion": undefined}])
+        testResult = _.concat(testResult, [{ "userId": event.source.userId, "data": {}, "currentQuestion": undefined }])
         return client.replyMessage(event.replyToken, msg);
-    } else if (re.test(eventText)) {
-        var keyword = eventText.split("search ") ? eventText.split("search ")[1] : undefined
+    } else if (textRegex.test(eventText)) {
+        var keyword = eventText.split("search ")[1] ? eventText.split("search ")[1] : undefined
         if (keyword) {
             textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`
             searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
-            searchResult.filter(sr => sr.userId === event.source.userId).map(sr => {doSubmitSearch (sr, event)})
+            searchResult.filter(sr => sr.userId === event.source.userId).map(sr => { doSubmitSearch(sr, event) })
         } else {
             let msg = {
                 "type": "text",
@@ -198,13 +198,13 @@ function handleMessageEvent(event) {
             searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
             return client.replyMessage(event.replyToken, msg);
         }
-    } else if (eventText === "help"){
+    } else if (eventText === "help") {
         let msg = {
             "type": "text",
             "text": `• รู้จัก Treasurist (เทรเชอริสต์) เพิ่มขึ้น พิมพ์ 'About'\n• ทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'\n• ค้นหาข้อมูลกองทุน พิมพ์ 'search' ค่ะ\n• พิมพ์ 'r' เพื่อกลับไปจุดเริ่มต้น`
         }
         return client.replyMessage(event.replyToken, msg);
-    } else if (eventText ===  "about") { 
+    } else if (eventText === "about") {
         let msg = {
             "type": "text",
             "text": `เทรเชอริสต์ช่วยให้คุณเริ่มลงทุนได้ง่าย ๆ ทั้งการจัดสัดส่วนที่เหมาะสม และการเลือกกองทุนที่โดดเด่น พร้อมทั้งพาไปเปิดบัญชีและเริ่มลงทุนจริง ได้ครบทั้งหมดใน 3 นาที\n\nรู้จักบริการและจุดเด่นของเทรเชอริสต์เพิ่มเติมได้ที่ >> https://www.treasurist.com/howItWork?fix=true\nเริ่มทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'`
@@ -243,7 +243,7 @@ function resultList(data) {
                     ]
                 }
             }) : {
-                "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
+                    "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                     "title": `ไม่พบข้อมูล!`,
                     "text": `คุณสามารถค้นหาได้อีกช่องทางเพียง`,
                     "actions": [
@@ -253,7 +253,7 @@ function resultList(data) {
                             "uri": "https://www.treasurist.com/"
                         }
                     ]
-            }
+                }
 
         }
     }
@@ -264,15 +264,15 @@ function resultList(data) {
 function numberOnly(value) {
     if (value) {
         let numVal = parseInt((value + "").replace(/[^0-9]/g, ''))
-        if(numVal > 0){
+        if (numVal > 0) {
             return false
-        }else{
+        } else {
             return true
         }
     } else {
         return true
     }
-    
+
 }
 
 
@@ -281,20 +281,20 @@ function handlePostBackEvent(event, suitTest) {
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "quiz"
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     let isValid = false
-    if (suitTest.currentQuestion === 4 ||  suitTest.currentQuestion === 5) {
+    if (suitTest.currentQuestion === 4 || suitTest.currentQuestion === 5) {
         isValid = numberOnly(eventPostBackItemValue)
     }
-   
+
     var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? suitTest.currentQuestion + 1 : suitTest.currentQuestion;
-   
+
     if (eventPostbackAction === "quiz" && eventPostBackItem < 16) {
-        
+
         var quizNo = eventPostBackItem + 1
         let result = eventPostBackItem != 0 && !isValid ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
         suitTest.data = result != undefined ? _.merge(suitTest.data, result) : undefined
         suitTest.currentQuestion = !isValid ? eventPostBackItem : suitTest.currentQuestion
         if (question[eventPostBackItem].choices != undefined && !isValid) {
-            let msg =  quizResult(question[eventPostBackItem], quizNo)
+            let msg = quizResult(question[eventPostBackItem], quizNo)
             suitTest.currentQuestion = !isValid ? eventPostBackItem : suitTest.currentQuestion
             return client.replyMessage(event.replyToken, msg);
         } else {
@@ -305,7 +305,7 @@ function handlePostBackEvent(event, suitTest) {
             suitTest.currentQuestion = !isValid ? eventPostBackItem : suitTest.currentQuestion
             return client.replyMessage(event.replyToken, msg);
         }
-      
+
     } else if (eventPostbackAction === "quiz" && eventPostBackItem === 16) {
         let resultInput = eventPostBackItem != 0 ? getAnswerObj(eventPostBackItem - 1, eventPostBackItemValue) : undefined
         suitTest.data = resultInput != undefined ? _.merge(suitTest.data, resultInput) : undefined
@@ -318,7 +318,7 @@ function quizResult(data, quizNo) {
     let result
 
     if (quizNo === 11 || quizNo === 12) {
-        result =  (data !== null || data !== undefined) && [
+        result = (data !== null || data !== undefined) && [
             {
                 "type": "text",
                 "text": `${quizText}\n\n${data.altQuestion}`
@@ -340,25 +340,25 @@ function quizResult(data, quizNo) {
             }
         ]
     } else {
-        result =   (data !== null || data !== undefined) &&
-        {
-            "type": "template",
-            "altText": quizText,
-            "template": {
-                "type": "buttons",
-                "text": quizText,
-                "actions": data.choices.map(c => {
-                    return {
-                        "type": "postback",
-                        "label": c.text,
-                        "data": `action=quiz&itemid=${quizNo}&value=${c.value}`
-                    }
-                })
+        result = (data !== null || data !== undefined) &&
+            {
+                "type": "template",
+                "altText": quizText,
+                "template": {
+                    "type": "buttons",
+                    "text": quizText,
+                    "actions": data.choices.map(c => {
+                        return {
+                            "type": "postback",
+                            "label": c.text,
+                            "data": `action=quiz&itemid=${quizNo}&value=${c.value}`
+                        }
+                    })
+                }
             }
-        }
     }
-    
-  
+
+
     return result
 }
 
@@ -380,77 +380,77 @@ function getAnswerObj(currentQuestion, selectedValue) {
 
 
 function doSubmitQuiz(resultTest, event) {
-    var data = _.assign({} ,resultTest.data, {isOpenPortfolio: "N", isNextBuy: "Y"})
+    var data = _.assign({}, resultTest.data, { isOpenPortfolio: "N", isNextBuy: "Y" })
     console.log(data);
 
-    const message = {
+    let message = {
         type: 'text',
-        text: 'กำลังประมวลผล...'
+        text: 'รอการประมวลผลสักครู่...'
     };
-      
-    client.pushMessage(event.source.userId, message)
+
+    client.pushMessage(resultTest.userId, message)
         .then(() => {
             axios.post("http://treasurist.com:8080/quizzes", data, {
-                headers: {'Content-Type': 'application/json;charset=UTF-8'}
+                headers: { 'Content-Type': 'application/json;charset=UTF-8' }
             })
-            .then(resp => {
-                resultTest = _.remove(resultTest, function(n) {return n.userId !== event.source.userId;});
-                var quiz = resp.data
-                var imgUrl = getDescPhoto(quiz.score)
-                if (imgUrl.original == undefined) {
+                .then(resp => {
+                    resultTest = _.remove(resultTest, function (n) { return n.userId !== event.source.userId; });
+                    var quiz = resp.data
+                    var imgUrl = getDescPhoto(quiz.score)
+                    if (imgUrl.original == undefined) {
+                        msg = {
+                            "type": "text",
+                            "text": "ขออภัย! เกิดข้อผิดพลาด"
+                        }
+                        return client.replyMessage(event.replyToken, msg);
+                    } else {
+                        suitabilityTestResult(quiz, imgUrl, event)
+                    }
+                })
+                .catch(error => {
+                    console.error(error)
+                    resultTest = _.remove(resultTest, function (n) { return n.userId !== event.source.userId; });
                     msg = {
                         "type": "text",
                         "text": "ขออภัย! เกิดข้อผิดพลาด"
                     }
                     return client.replyMessage(event.replyToken, msg);
-                } else {
-                    suitabilityTestResult(quiz, imgUrl,event)
-                }        
-            })
-            .catch(error => {
-                console.error(error)
-                resultTest = _.remove(resultTest, function(n) {return n.userId !== event.source.userId;});
-                msg = {
-                    "type": "text",
-                    "text": "ขออภัย! เกิดข้อผิดพลาด"
-                }
-                return client.replyMessage(event.replyToken, msg);
-            })
-    })
-    .catch((err) => {
-        msg = {
-            "type": "text",
-            "text": "ขออภัย! เกิดข้อผิดพลาด"
-        }
-        return client.replyMessage(event.replyToken, msg);
-    });
+                })
+        })
+        .catch((err) => {
+            msg = {
+                "type": "text",
+                "text": "ขออภัย! เกิดข้อผิดพลาด"
+            }
+            return client.replyMessage(event.replyToken, msg);
+        });
 }
 
 function suitabilityTestResult(quiz, imgUrl, event) {
-    let msg = 
-    [
-        {
-            "type": "image",
-            "originalContentUrl": imgUrl.original,
-            "previewImageUrl":  imgUrl.original
-        },
-        {
-            "type": "template",
-            "altText": "Quiz Complte",
-            "template": {
-                "type": "buttons",
-                "title": `รูปแบบการลงทุนที่เหมาะกับคุณ '${getTitle(quiz.score)}'`,
-                "text":  "กดเพื่อดูแผนการลงทุนที่เหมาะกับคุณ",
-                "actions": [
-                    {
-                        "type": "uri",
-                        "label": "คลิก!",
-                        "uri": `https://www.treasurist.com/chatBotTestResult/${quiz.id}`
-                    }
-                ]
+    let msg =
+        [
+            {
+                "type": "image",
+                "originalContentUrl": imgUrl.original,
+                "previewImageUrl": imgUrl.original
+            },
+            {
+                "type": "template",
+                "altText": "Quiz Complte",
+                "template": {
+                    "type": "buttons",
+                    "title": `รูปแบบการลงทุนที่เหมาะกับคุณ '${getTitle(quiz.score)}'`,
+                    "text": "กดเพื่อดูแผนการลงทุนที่เหมาะกับคุณ",
+                    "actions": [
+                        {
+                            "type": "uri",
+                            "label": "คลิก!",
+                            "uri": `https://www.treasurist.com/chatBotTestResult/${quiz.id}`
+                        }
+                    ]
+                }
             }
-        }
-    ]
+        ]
     testResult = []
     return client.replyMessage(event.replyToken, msg);
 }
@@ -460,14 +460,14 @@ function handleSearchEvent(event, search) {
     var searchPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var searchPostbackAction = searchPostback ? searchPostback[0] != undefined && searchPostback[0].split("=")[1] : "search"
     var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
-    var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) + 1 : 0 ): search.currentStep + 1 ;
+    var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) + 1 : 0) : search.currentStep + 1;
     if (searchPostbackAction === "search" && searchPostBackItem <= 2) {
         let newResult = getSearchObj((searchPostBackItem - 1), searchPostBackItemValue)
         search.text = newResult != undefined ? `${search.text}&${newResult}` : undefined
-        let msg =  searchFilterOption(searchFilter[searchPostBackItem], searchPostBackItem)
-        search.currentStep =  searchPostBackItem
+        let msg = searchFilterOption(searchFilter[searchPostBackItem], searchPostBackItem)
+        search.currentStep = searchPostBackItem
         return client.replyMessage(event.replyToken, msg);
-        
+
     } else {
         let resultInput = searchPostBackItem != 0 ? getSearchObj((searchPostBackItem - 1), searchPostBackItemValue) : undefined
         search.text = resultInput != undefined ? `${search.text}&${resultInput}` : undefined
@@ -479,9 +479,9 @@ function getSearchObj(currentStep, selectedValue) {
     let sf = currentStep ? searchFilter[currentStep] : undefined
     let selected = sf && sf.choices ? _.find(sf.choices, c => c.value === selectedValue) : undefined
     let obj = undefined
-    
+
     if (currentStep === 0) {
-        obj = `riskLevel=${selectedValue === "0" ? "1,2,3,4,5,6,7,8" :selectedValue}`
+        obj = `riskLevel=${selectedValue === "0" ? "1,2,3,4,5,6,7,8" : selectedValue}`
     } else if (currentStep === 1) {
         obj = `taxBenefit=${selected.value === 99 ? "0,1" : selected.value}`
     } else if (currentStep === 2) {
@@ -495,55 +495,70 @@ function getSearchObj(currentStep, selectedValue) {
 function searchFilterOption(data, step) {
     let result
     if (step === 0) {
-        result =  (data !== null || data !== undefined) && [
+        result = (data !== null || data !== undefined) && [
             {
                 "type": "text",
                 "text": `${data.filterTypeText}`
             },
         ]
     } else {
-        result =  (data !== null || data !== undefined) &&
-        {
-            "type": "template",
-            "altText": `${data.filterTypeText}`,
-            "template": {
-                "type": "buttons",
-                "text": `${data.filterTypeText}`,
-                "actions": data.choices.map(c => {
-                    return {
-                        "type": "postback",
-                        "label": c.text,
-                        "data": `action=search&itemid=${step}&value=${c.value}`
-                    }
-                })
+        result = (data !== null || data !== undefined) &&
+            {
+                "type": "template",
+                "altText": `${data.filterTypeText}`,
+                "template": {
+                    "type": "buttons",
+                    "text": `${data.filterTypeText}`,
+                    "actions": data.choices.map(c => {
+                        return {
+                            "type": "postback",
+                            "label": c.text,
+                            "data": `action=search&itemid=${step}&value=${c.value}`
+                        }
+                    })
+                }
             }
-        }
     }
-    
+
     return result
 }
 
 function doSubmitSearch(data, event) {
     console.log(data);
-    axios.get(data.text)
-        .then(response => {
-            searchResult = _.remove(searchResult, function(n) {return n.userId !== event.source.userId;});
-            let data = response.data._embedded.funds
-            let msg = data != undefined ? resultList(data) : {
-                "type": "text",
-                "text": "ไม่พบกองทุนที่คุณค้า กรุณาลองอีกครั้ง"
-            }
-            return client.replyMessage(event.replyToken, msg);
-        })
-        .catch(error => {
-            console.error(error);
-            searchResult = _.remove(searchResult, function(n) {return n.userId !== event.source.userId;});
-            let msg = {
-                "type": "text",
-                "text": "ไม่พบกองทุนที่คุณค้า กรุณาลองอีกครั้ง"
-            }
-            return client.replyMessage(event.replyToken, msg);
+    let message = {
+        type: 'text',
+        text: 'กำลังค้นหา...'
+    };
 
+    client.pushMessage(data.userId, message)
+        .then(() => {
+            axios.get(data.text)
+            .then(response => {
+                searchResult = _.remove(searchResult, function (n) { return n.userId !== event.source.userId; });
+                let data = response.data._embedded.funds
+                let msg = data != undefined ? resultList(data) : {
+                    "type": "text",
+                    "text": "ไม่พบกองทุนที่คุณค้นหา กรุณาลองอีกครั้ง"
+                }
+                return client.replyMessage(event.replyToken, msg);
+            })
+            .catch(error => {
+                console.error(error);
+                searchResult = _.remove(searchResult, function (n) { return n.userId !== event.source.userId; });
+                let msg = {
+                    "type": "text",
+                    "text": "ไม่พบกองทุนที่คุณค้นหา กรุณาลองอีกครั้ง"
+                }
+                return client.replyMessage(event.replyToken, msg);
+
+            });
+        })
+        .catch((err) => {
+            msg = {
+                "type": "text",
+                "text": "ไม่พบกองทุนที่คุณค้นหา กรุณาลองอีกครั้ง"
+            }
+            return client.replyMessage(event.replyToken, msg);
         });
 }
 
