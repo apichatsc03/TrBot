@@ -93,13 +93,13 @@ function handleEvent(event) {
         
         if (isTesting) {
             console.log("testResult", testResult)
-            testResult.filter(tr => tr.userId = event.source.userId)
+            testResult.filter(tr => tr.userId === event.source.userId)
                 .map(tr => {
                     return handlePostBackEvent(event, tr);
                 })
         } else if (isSearch) {
             console.log("searchResult", searchResult)
-            searchResult.filter(sr => sr.userId = event.source.userId)
+            searchResult.filter(sr => sr.userId === event.source.userId)
                 .map(sr => {
 
                     if (sr.currentStep != undefined ) {
@@ -116,7 +116,6 @@ function handleEvent(event) {
             handleMessageEvent(event);
         }
     } else if (event.type === 'postback') {
-        console.log(searchResult, testResult)
         if(event.postback.data.split("&")[0].split("=")[1] === "search") {
             searchResult && searchResult.filter(sr => sr.userId === event.source.userId).map(sr => {return handleSearchEvent(event, sr);})
         } else {
