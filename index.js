@@ -60,7 +60,8 @@ let testResult = [];
 let searchResult = [];
 let titleMaxChar = 40;
 let textMaxChar = 60;
-var textRegex = /(\bsearch\b)/;
+let textRegex = /(\bsearch\b)/;
+let fundRecommendList;
 
 
 app.post('/webhook', line.middleware(config), (req, res) => {
@@ -239,17 +240,19 @@ function resultList(data) {
                 var fundCodeTitle = `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`
                 var fundCode = fundCodeTitle.length > titleMaxChar ? s.fundCode : fundCodeTitle
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
-                return {
-                    "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                    "title": `${fundCode.length > titleMaxChar ? fundCode.substring(0, titleMaxChar - 3) : fundCode}`,
-                    "text": `${fundName}`,
-                    "actions": [
-                        {
-                            "type": "uri",
-                            "label": "View detail",
-                            "uri": `https://www.treasurist.com/funds/${s.fundId}/${fundCodeURL}`
-                        }
-                    ]
+                if (_.find(fundRecommendList, fund => fund.fundId === s.fundId)) {
+                    return {
+                        "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
+                        "title": `${fundCode.length > titleMaxChar ? fundCode.substring(0, titleMaxChar - 3) : fundCode}`,
+                        "text": `${fundName}`,
+                        "actions": [
+                            {
+                                "type": "uri",
+                                "label": "View detail",
+                                "uri": `https://www.treasurist.com/funds/${s.fundId}/${fundCodeURL}`
+                            }
+                        ]
+                    }
                 }
             }) : {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
@@ -545,6 +548,9 @@ function doSubmitSearch(data, event) {
             .then(response => {
                 searchResult = _.remove(searchResult, function (n) { return n.userId !== event.source.userId; });
                 let data = response.data._embedded.funds
+
+                let fundList = setRecommend(data)
+
                 let msg = data != undefined ? resultList(data) : {
                     "type": "text",
                     "text": "ไม่พบกองทุนที่คุณค้นหา กรุณาลองอีกครั้ง"
@@ -570,7 +576,37 @@ function doSubmitSearch(data, event) {
             return client.replyMessage(event.replyToken, msg);
         });
 }
-
+ 
+function setRecommend(data) {
+    let topThreeList = _.map(data, (d, i) => {
+        if (i <= 2) {
+          return {fundId: d.fundId, phillipAvailable: d.phillipAvailable}
+        }
+      }).filter( l => l)
+  
+      let count = 0
+      _.map(topThreeList, l => {
+        if (l.phillipAvailable == "Y") {
+          count = count + 1
+        }
+      })
+      let isTopThree = false
+       if (count > 0) {
+          isTopThree = true
+        } else {
+          isTopThree =  false
+        }
+  
+      let fundRecommend = []
+      if (!isTopThree) {
+        fundRecommend = _.map(data, (d, i) => {
+          if (i > 2 && d.phillipAvailable == "Y") {
+            return {fundId: d.fundId, phillipAvailable: d.phillipAvailable}
+          }
+        }).filter(fr => fr)
+      }
+    fundRecommendList = _.concat(topThreeList, _.dropRight(fundRecommend, fundRecommend.length - 1))
+}
 
 app.set('port', (process.env.PORT || 5000));
 
