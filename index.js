@@ -56,8 +56,8 @@ const getDescPhoto = (score) => {
     return imageSuittest
 }
 
-let testResult;
-let searchResult;
+let testResult = [];
+let searchResult = [];
 let titleMaxChar = 40;
 let textMaxChar	= 60;
  
@@ -180,7 +180,7 @@ function handleMessageEvent(event) {
                 ]
             }
         }
-        testResult = _.concat([], testResult, [{ "userId": event.source.userId, "data": {} , "currentQuestion": undefined}])
+        testResult = _.concat(testResult, [{ "userId": event.source.userId, "data": {} , "currentQuestion": undefined}])
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "search") {
         let msg = {
@@ -188,7 +188,7 @@ function handleMessageEvent(event) {
             "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
         }
         textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
-        searchResult = _.concat([], searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
+        searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help"){
         let msg = {
