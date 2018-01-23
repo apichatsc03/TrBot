@@ -57,9 +57,7 @@ const getDescPhoto = (score) => {
 }
 
 let testResult;
-let currentQuestion;
 let searchResult;
-let currentStep;
 let titleMaxChar = 40;
 let textMaxChar	= 60;
  
@@ -92,27 +90,26 @@ function handleEvent(event) {
     if (event.type === 'message' && event.message.type === 'text') {
         var isTesting = _.find(testResult, ['userId', event.source.userId]);
         var isSearch = _.find(searchResult, ['userId', event.source.userId]); 
+        
         if (isTesting) {
             testResult.filter(tr => tr.userId = event.source.userId)
                 .map(tr => {
                     return handlePostBackEvent(event, tr);
                 })
         } else if (isSearch) {
-            if (currentStep != undefined) {
-                searchResult.filter(sr => sr.userId = event.source.userId)
+            searchResult.filter(sr => sr.userId = event.source.userId)
                 .map(sr => {
-                    return handleSearchEvent(event, sr);
+
+                    if (sr.currentStep != undefined ) {
+                        return handleSearchEvent(event, sr);
+                    } else {
+                        sr.currentStep = 0
+                        let newResult = getSearchObj(undefined, event.message.text.toLowerCase())
+                        sr.text = newResult != undefined ? `${sr.text}&${newResult}` : undefined
+                        let msg =  searchFilterOption(searchFilter[sr.currentStep], sr.currentStep)
+                        return client.replyMessage(event.replyToken, msg);
+                    }
                 })
-            } else {
-                searchResult.filter(sr => sr.userId = event.source.userId)
-                .map(sr => {
-                    let newResult = getSearchObj(undefined, event.message.text.toLowerCase())
-                    sr.text = newResult != undefined ? `${sr.text}&${newResult}` : undefined
-                })
-                currentStep = 0
-                let msg =  searchFilterOption(searchFilter[currentStep], currentStep)
-                return client.replyMessage(event.replyToken, msg);
-            }
         } else {
             handleMessageEvent(event);
         }
@@ -181,7 +178,7 @@ function handleMessageEvent(event) {
                 ]
             }
         }
-        testResult = _.concat([], [{ "userId": event.source.userId, "data": {} }])
+        testResult = _.concat([], [{ "userId": event.source.userId, "data": {} , "currentQuestion": undefined}])
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "search") {
         let msg = {
@@ -189,7 +186,7 @@ function handleMessageEvent(event) {
             "text": "คุณอยากค้นหากองทุนแบบไหน ให้พิมพ์สิ่งที่อยากค้นหาต่อได้เลยค่ะ"
         }
         textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList`
-        searchResult = _.concat([], [{ "userId": event.source.userId, "text": textURL }])
+        searchResult = _.concat([], [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help"){
         let msg = {
@@ -274,28 +271,28 @@ function handlePostBackEvent(event, suitTest) {
     var eventPostbackAction = eventPostback ? eventPostback[0] != undefined && eventPostback[0].split("=")[1] : "quiz"
     var eventPostBackItemValue = eventPostback ? eventPostback[2] != undefined ? parseInt(eventPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
     let isValid = false
-    if (currentQuestion === 4 ||  currentQuestion === 5) {
+    if (suitTest.currentQuestion === 4 ||  suitTest.currentQuestion === 5) {
         isValid = numberOnly(eventPostBackItemValue)
     }
    
-    var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? currentQuestion + 1 : currentQuestion;
+    var eventPostBackItem = eventPostback ? eventPostback[1] != undefined ? parseInt(eventPostback[1].split("=")[1]) : 0 : !isValid ? suitTest.currentQuestion + 1 : suitTest.currentQuestion;
    
     if (eventPostbackAction === "quiz" && eventPostBackItem < 16) {
         
         var quizNo = eventPostBackItem + 1
         let result = eventPostBackItem != 0 && !isValid ? getAnswerObj((eventPostBackItem - 1), eventPostBackItemValue) : undefined
         suitTest.data = result != undefined ? _.merge(suitTest.data, result) : undefined
-        currentQuestion = !isValid ? eventPostBackItem : currentQuestion
+        suitTest.currentQuestion = !isValid ? eventPostBackItem : suitTest.currentQuestion
         if (question[eventPostBackItem].choices != undefined && !isValid) {
             let msg =  quizResult(question[eventPostBackItem], quizNo)
-            currentQuestion = !isValid ? eventPostBackItem : currentQuestion
+            suitTest.currentQuestion = !isValid ? eventPostBackItem : suitTest.currentQuestion
             return client.replyMessage(event.replyToken, msg);
         } else {
             let msg = {
                 "type": "text",
                 "text": `${!isValid ? `${quizNo}. ${question[eventPostBackItem].question}` : "กรุณากรอกจำนวนเงินเป็นตัวเลข"}`
             }
-            currentQuestion = !isValid ? eventPostBackItem : currentQuestion
+            suitTest.currentQuestion = !isValid ? eventPostBackItem : suitTest.currentQuestion
             return client.replyMessage(event.replyToken, msg);
         }
       
@@ -432,12 +429,12 @@ function handleSearchEvent(event, search) {
     var searchPostback = event.postback != undefined ? event.postback.data.split("&") : undefined;
     var searchPostbackAction = searchPostback ? searchPostback[0] != undefined && searchPostback[0].split("=")[1] : "search"
     var searchPostBackItemValue = searchPostback ? searchPostback[2] != undefined ? parseInt(searchPostback[2].split("=")[1]) : undefined : event.message.text.toLowerCase()
-    var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) + 1 : 0 ): currentStep + 1 ;
+    var searchPostBackItem = searchPostback ? (searchPostback[1] != undefined ? parseInt(searchPostback[1].split("=")[1]) + 1 : 0 ): search.currentStep + 1 ;
     if (searchPostbackAction === "search" && searchPostBackItem <= 2) {
         let newResult = getSearchObj((searchPostBackItem - 1), searchPostBackItemValue)
         search.text = newResult != undefined ? `${search.text}&${newResult}` : undefined
         let msg =  searchFilterOption(searchFilter[searchPostBackItem], searchPostBackItem)
-        currentStep =  searchPostBackItem
+        search.currentStep =  searchPostBackItem
         return client.replyMessage(event.replyToken, msg);
         
     } else {
@@ -500,7 +497,6 @@ function doSubmitSearch(data, event) {
     axios.get(data.text)
         .then(response => {
             searchResult = _.remove(searchResult, function(n) {return n.userId !== event.source.userId;});
-            currentStep = undefined
             let data = response.data._embedded.funds
             let msg = data != undefined ? resultList(data) : {
                 "type": "text",
@@ -511,7 +507,6 @@ function doSubmitSearch(data, event) {
         .catch(error => {
             console.error(error);
             searchResult = _.remove(searchResult, function(n) {return n.userId !== event.source.userId;});
-            currentStep = undefined
             let msg = {
                 "type": "text",
                 "text": "ไม่พบกองทุนที่คุณค้า กรุณาลองอีกครั้ง"
