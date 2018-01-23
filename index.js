@@ -121,9 +121,9 @@ function handleEvent(event) {
     } else if (event.type === 'postback') {
         
         if(event.postback.data.split("&")[0].split("=")[1] === "search") {
-            searchResult && searchResult.filter(sr => sr.userId = event.source.userId).map(sr => {return handleSearchEvent(event, sr.text);})
+            searchResult && searchResult.filter(sr => sr.userId === event.source.userId).map(sr => {return handleSearchEvent(event, sr.text);})
         } else {
-            testResult && testResult.filter(tr => tr.userId = event.source.userId).map(tr => {return handlePostBackEvent(event, tr);})
+            testResult && testResult.filter(tr => tr.userId === event.source.userId).map(tr => {return handlePostBackEvent(event, tr);})
         }
         
     } else {
@@ -443,7 +443,7 @@ function handleSearchEvent(event, searchText) {
         
     } else {
         let resultInput = searchPostBackItem != 0 ? getSearchObj((searchPostBackItem - 1), searchPostBackItemValue) : undefined
-        searchText = resultInput != undefined ? `${searchText}&${newResult}` : undefined
+        searchText = resultInput != undefined ? `${searchText}&${resultInput}` : undefined
         doSubmitSearch(searchText, event)
     }
 }
