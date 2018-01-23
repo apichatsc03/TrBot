@@ -78,7 +78,7 @@ function validate_signature(signature, body) {
 
 function handleEvent(event) {
 
-    if (vent.type === 'message' && event.message.type === 'text' && event.message.text ===  "r") {
+    if (event.type === 'message' && event.message.type === 'text' && event.message.text ===  "r") {
         testResult =  _.remove(testResult, tr => {return tr.userId === event.source.userId;});
         searchResult =  _.remove(searchResult, sr => {return sr.userId === event.source.userId;});
         let msg = {
