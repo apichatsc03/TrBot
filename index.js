@@ -241,8 +241,8 @@ function resultList(data) {
                 var fundCodeTitle = `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`
                 var fundCode = fundCodeTitle.length > titleMaxChar ? s.fundCode : fundCodeTitle
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
-                if (_.find(fundRecommendList, fund => fund.fundId === s.fundId)) {
-                    return {
+                
+                return _.find(fundRecommendList, fund => fund.fundId === s.fundId) && {
                         "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                         "title": `${fundCode.length > titleMaxChar ? fundCode.substring(0, titleMaxChar - 3) : fundCode}`,
                         "text": `${fundName}`,
@@ -254,7 +254,7 @@ function resultList(data) {
                             }
                         ]
                     }
-                }
+                
             }) : {
                     "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
                     "title": `ไม่พบข้อมูล!`,
