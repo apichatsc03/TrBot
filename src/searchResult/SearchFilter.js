@@ -10,8 +10,8 @@ module.exports = [
         key: 1,
         choices: [
             { text: "ทั้งหมด", value: 99 },
-            { text: "ลดหย่อนภาษีได้", value: 0 },
-            { text: "ลดหย่อนภาษีไม่ได้", value: 1 }
+            { text: "ลดหย่อนภาษีได้", value: 1 },
+            { text: "ลดหย่อนภาษีไม่ได้", value: 0 }
         ]
     },
     {
