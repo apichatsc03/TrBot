@@ -201,7 +201,7 @@ function handleMessageEvent(event) {
         }
     } else if (eventText === "rec fund") {
         textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&keyword=%25%25`
-        searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": 0 }])
+        searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
         searchResult.filter(sr => sr.userId === event.source.userId).map(sr => {return handleSearchEvent(event, sr);})
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "help") {
