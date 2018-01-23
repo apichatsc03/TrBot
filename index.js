@@ -375,7 +375,7 @@ function getAnswerObj(currentQuestion, selectedValue) {
 function doSubmitQuiz(resultTest, event) {
     var data = _.assign({} ,resultTest.data, {isOpenPortfolio: "N", isNextBuy: "Y"})
     console.log(data);
-    axios.post("https://treasurist.com:8080/quizzes", data, {
+    axios.post("http://treasurist.com:8080/quizzes", data, {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
     })
         .then(resp => {
