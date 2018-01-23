@@ -79,8 +79,8 @@ function validate_signature(signature, body) {
 function handleEvent(event) {
 
     if (event.type === 'message' && event.message.type === 'text' && event.message.text.toLowerCase() ===  "r") {
-        testResult =  _.remove(testResult, tr => {return tr.userId === event.source.userId;});
-        searchResult =  _.remove(searchResult, sr => {return sr.userId === event.source.userId;});
+        testResult =  _.remove(testResult, tr => {return tr.userId !== event.source.userId;});
+        searchResult =  _.remove(searchResult, sr => {return sr.userId !== event.source.userId;});
         console.log("R type", searchResult, testResult)
         let msg = {
             "type": "text",
@@ -380,7 +380,7 @@ function doSubmitQuiz(resultTest, event) {
         headers: {'Content-Type': 'application/json;charset=UTF-8'}
     })
         .then(resp => {
-            resultTest = _.remove(resultTest, function(n) {return n.userId === event.source.userId;});
+            resultTest = _.remove(resultTest, function(n) {return n.userId !== event.source.userId;});
             var quiz = resp.data
             var imgUrl = getDescPhoto(quiz.score)
             if (imgUrl.original == undefined) {
@@ -500,7 +500,7 @@ function doSubmitSearch(data, event) {
 
     axios.get(data)
         .then(response => {
-            searchResult = _.remove(searchResult, function(n) {return n.userId === event.source.userId;});
+            searchResult = _.remove(searchResult, function(n) {return n.userId !== event.source.userId;});
             currentStep = undefined
             let data = response.data._embedded.funds
             let msg = data != undefined ? resultList(data) : {
@@ -511,7 +511,7 @@ function doSubmitSearch(data, event) {
         })
         .catch(error => {
             console.error(error);
-            searchResult = _.remove(searchResult, function(n) {return n.userId === event.source.userId;});
+            searchResult = _.remove(searchResult, function(n) {return n.userId !== event.source.userId;});
             currentStep = undefined
             let msg = {
                 "type": "text",
