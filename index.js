@@ -79,12 +79,12 @@ function validate_signature(signature, body) {
 
 function handleEvent(event) {
 
-    if (event.type === 'message' && event.message.type === 'text' && event.message.text.toLowerCase() === "r") {
+    if (event.type === 'message' && event.message.type === 'text' && event.message.text.toLowerCase() === "เริ่มใหม่") {
         testResult = _.remove(testResult, tr => { return tr.userId !== event.source.userId; });
         searchResult = _.remove(searchResult, sr => { return sr.userId !== event.source.userId; });
         let msg = {
             "type": "text",
-            "text": `กลับมาที่จุดเริ่มต้นแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือค้นหากองทุนแนะนำด้วยการพิมพ์ 'Rec fund'`
+            "text": `กลับมาที่จุดเริ่มต้นแล้ว คุณสามารถทำแบบทดสอบอีกครั้งด้วยการพิมพ์ 'Quiz' หรือค้นหากองทุนแนะนำด้วยการพิมพ์ 'กองทุนแนะนำ'`
         };
         return client.replyMessage(event.replyToken, msg);
     }
@@ -150,8 +150,8 @@ function handleMessageEvent(event) {
                     {
                         "type": "postback",
                         "label": "ค้นหากองทุนแนะนำ",
-                        "data": "rec fund",
-                        "text": "rec fund"
+                        "data": "กองทุนแนะนำ",
+                        "text": "กองทุนแนะนำ"
                     },
                     {
                         "type": "uri",
@@ -184,7 +184,7 @@ function handleMessageEvent(event) {
         testResult = _.concat(testResult, [{ "userId": event.source.userId, "data": {}, "currentQuestion": undefined }])
         return client.replyMessage(event.replyToken, msg);
     } else if (textRegex.test(eventText)) {
-        var keyword = eventText.split("search ")[1] ? eventText.split("search ")[1] : undefined
+        var keyword = eventText.split("หากองทุน ")[1] ? eventText.split("หากองทุน ")[1] : undefined
         if (keyword) {
             textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${keyword}%25`
             searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
@@ -198,7 +198,7 @@ function handleMessageEvent(event) {
             searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
             return client.replyMessage(event.replyToken, msg);
         }
-    } else if (eventText === "rec fund") {
+    } else if (eventText === "กองทุนแนะนำ") {
         textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&keyword=%25%25`
         searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": 0 }])
         searchResult.filter(sr => sr.userId === event.source.userId)
@@ -209,7 +209,7 @@ function handleMessageEvent(event) {
     } else if (eventText === "help") {
         let msg = {
             "type": "text",
-            "text": `• รู้จัก Treasurist (เทรเชอริสต์) เพิ่มขึ้น พิมพ์ 'About'\n• ทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'\n• ค้นหากองทุนแนะนำประเภทต่าง ๆ พิมพ์ 'Rec fund'\n• ค้นหากองทุนตามใจ พิมพ์ search ตามด้วยคำค้นหา เช่น 'Search LTF'\n• กลับไปจุดเริ่มต้น พิมพ์ 'r'`
+            "text": `• รู้จัก Treasurist (เทรเชอริสต์) เพิ่มขึ้น พิมพ์ 'About'\n• ทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'\n• ค้นหากองทุนแนะนำประเภทต่าง ๆ พิมพ์ 'กองทุนแนะนำ'\n• ค้นหากองทุนตามใจ พิมพ์ หากองทุน ตามด้วยคำค้นหา เช่น 'หากองทุน LTF'\n• กลับไปจุดเริ่มต้น พิมพ์ 'เริ่มใหม่'`
         }
         return client.replyMessage(event.replyToken, msg);
     } else if (eventText === "about") {
@@ -233,14 +233,14 @@ function resultList(data) {
         "altText": "this is a carousel template",
         "template": {
             "type": "carousel",
+            "imageSize": "contain",
             "columns": data.length > 0 ? data.map(s => {
                 var fundName = s.fundNameTh.length > textMaxChar ? `${s.fundNameTh.substring(0, textMaxChar - 3)}...` : s.fundNameTh
-                var fundCodeTitle = `${s.fundCode} : ${s.lastestNavDateList[0].nav ? s.lastestNavDateList[0].nav : '0.0000'} (Baht/Unit)`
-                var fundCode = fundCodeTitle.length > titleMaxChar ? s.fundCode : fundCodeTitle
+                var fundCode = s.fundCode.length > titleMaxChar ?  s.fundCode.substring(0, titleMaxChar - 3) : s.fundCode
                 var fundCodeURL = s.fundNameEn.split(/[\s/@+.()%]/).join('-').toLowerCase()
                 return {
                         "thumbnailImageUrl": "https://www.treasurist.com/assets/images/logo-large.png",
-                        "title": `${fundCode.length > titleMaxChar ? fundCode.substring(0, titleMaxChar - 3) : fundCode}`,
+                        "title": `${fundCode}`,
                         "text": `${fundName}`,
                         "actions": [
                             {
