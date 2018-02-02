@@ -218,6 +218,10 @@ function handleMessageEvent(event) {
             "text": `เทรเชอริสต์ช่วยให้คุณเริ่มลงทุนได้ง่าย ๆ ทั้งการจัดสัดส่วนที่เหมาะสม และการเลือกกองทุนที่โดดเด่น พร้อมทั้งพาไปเปิดบัญชีและเริ่มลงทุนจริง ได้ครบทั้งหมดใน 3 นาที\n\nรู้จักบริการและจุดเด่นของเทรเชอริสต์เพิ่มเติมได้ที่ >> https://www.treasurist.com/howItWork?fix=true\nเริ่มทำแบบสดสอบเพื่อรับแผนลงทุน พิมพ์ 'Quiz'`
         }
         return client.replyMessage(event.replyToken, msg);
+    }  else if (eventText === "ltf") {
+        textURL = `http://treasurist.com/api/funds/search/main?page=0&size=9&sort=fundResult.sweightTotal,DESC&projection=fundList&riskLevel=1,2,3,4,5,6,7,8&taxBenefit=0,1&location=1,2&keyword=%25${eventText}%25`
+        searchResult = _.concat(searchResult, [{ "userId": event.source.userId, "text": textURL, "currentStep": undefined }])
+        searchResult.filter(sr => sr.userId === event.source.userId).map(sr => { doSubmitSearch(sr, event) })
     } else {
         let msg = {
             "type": "text",
@@ -230,7 +234,7 @@ function handleMessageEvent(event) {
 function resultList(data) {
     let resultList = (data !== null || data !== undefined) && {
         "type": "template",
-        "altText": "this is a carousel template",
+        "altText": "กองทุนแนะนำ",
         "template": {
             "type": "carousel",
             "imageSize": "contain",
@@ -550,7 +554,14 @@ function doSubmitSearch(data, event) {
                                 return d
                             }
                         }).filter(d => d)
-                let msg = data != undefined ? resultList(fundDataList) : {
+                let msg = data != undefined ?
+                    [
+                        {
+                            "type": "text",
+                            "text": "นี่คือกองทุนแนะนำที่คุณหาอยู่.."
+                        },
+                        resultList(fundDataList)
+                    ] : {
                     "type": "text",
                     "text": "ไม่พบกองทุนที่คุณค้นหา กรุณาลองอีกครั้ง"
                 }
