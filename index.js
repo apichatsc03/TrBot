@@ -393,7 +393,6 @@ function getAnswerObj(currentQuestion, selectedValue) {
 
 function doSubmitQuiz(resultTest, event) {
     var data = _.assign({}, resultTest.data, { isOpenPortfolio: "N", isNextBuy: "Y" })
-    console.log(data);
     let message = {
         type: 'text',
         text: 'รอการประมวลผลสักครู่...'
@@ -535,7 +534,6 @@ function searchFilterOption(data, step) {
 }
 
 function doSubmitSearch(data, event) {
-    console.log(data);
     let message = {
         type: 'text',
         text: 'กำลังค้นหา...'
