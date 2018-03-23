@@ -60,7 +60,7 @@ let testResult = [];
 let searchResult = [];
 let titleMaxChar = 40;
 let textMaxChar = 60;
-let textRegex = /(\bsearch\b)/;
+let textRegex = /(\bหากองทุน\b)/;
 let fundRecommendList;
 
 
