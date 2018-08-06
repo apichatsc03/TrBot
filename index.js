@@ -446,7 +446,7 @@ function suitabilityTestResult(quiz, imgUrl, event) {
             },
             {
                 "type": "template",
-                "altText": "Quiz Complte",
+                "altText": "Quiz Complete",
                 "template": {
                     "type": "buttons",
                     "title": `รูปแบบการลงทุนที่เหมาะกับคุณ '${getTitle(quiz.score)}'`,
