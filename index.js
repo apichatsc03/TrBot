@@ -21,13 +21,13 @@ const client = new line.Client(config);
 
 const getTitle = (score) => {
     if (score >= 36) {
-        return ("เสี่ยงสูง ")
+        return ("เสี่ยงสูง")
     } else if (score >= 30) {
         return ("เสี่ยงปานกลางถึงสูง")
     } else if (score >= 23) {
         return ("เสี่ยงปานกลาง")
     } else if (score >= 17) {
-        return ("เสี่ยงต่ำถึงปานกลาง ")
+        return ("เสี่ยงต่ำถึงปานกลาง")
     } else if (score <= 16) {
         return ("เสี่ยงต่ำ")
     } else {
@@ -438,6 +438,8 @@ function doSubmitQuiz(resultTest, event) {
 }
 
 function suitabilityTestResult(quiz, imgUrl, event) {
+    console.log(quiz)
+    console.log(event)
     let msg =
         [
             {
@@ -463,6 +465,7 @@ function suitabilityTestResult(quiz, imgUrl, event) {
             }
         ]
     testResult = []
+    console.log(event)
     return client.replyMessage(event.replyToken, msg);
 }
 
