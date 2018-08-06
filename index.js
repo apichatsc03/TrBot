@@ -407,6 +407,7 @@ function doSubmitQuiz(resultTest, event) {
                     resultTest = _.remove(resultTest, function (n) { return n.userId !== event.source.userId; });
                     var quiz = resp.data
                     var imgUrl = getDescPhoto(quiz.score)
+                    console.log(resp.data)
                     if (imgUrl.original == undefined) {
                         msg = {
                             "type": "text",
