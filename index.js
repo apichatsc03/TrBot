@@ -407,7 +407,6 @@ function doSubmitQuiz(resultTest, event) {
                     resultTest = _.remove(resultTest, function (n) { return n.userId !== event.source.userId; });
                     var quiz = resp.data
                     var imgUrl = getDescPhoto(quiz.score)
-                    console.log(resp.data)
                     if (imgUrl.original == undefined) {
                         msg = {
                             "type": "text",
@@ -438,8 +437,6 @@ function doSubmitQuiz(resultTest, event) {
 }
 
 function suitabilityTestResult(quiz, imgUrl, event) {
-    console.log(quiz)
-    console.log(event)
     let msg =
         [
             {
@@ -465,7 +462,6 @@ function suitabilityTestResult(quiz, imgUrl, event) {
             }
         ]
     testResult = []
-    console.log(event)
     return client.replyMessage(event.replyToken, msg);
 }
 
