@@ -70,6 +70,7 @@ app.post('/webhook', line.middleware(config), (req, res) => {
     } else {
         Promise.all(req.body.events.map(handleEvent))
             .then((result) => res.json(result));
+        res.sendStatus(200)
     }
 });
 
