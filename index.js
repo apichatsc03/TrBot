@@ -75,7 +75,7 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 });
 
 function validate_signature(signature, body) {
-    return signature == crypto.createHmac('sha256', config.channelSecret).update(new Buffer(JSON.stringify(body), 'utf8')).digest('base64');
+    return signature == crypto.createHmac('sha256', config.channelSecret).update(Buffer.alloc(JSON.stringify(body), 'utf8')).digest('base64');
 }
 
 function handleEvent(event) {
